@@ -1,7 +1,8 @@
 # Pomodoro
 
-Pomodoro timer build with electro
+Pomodoro timer build with electron
 
+![Here may be screenshot](https://raw.githubusercontent.com/G07cha/pomodoro/master/screenshot.png)
 
 ## Dev
 
