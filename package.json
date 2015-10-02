@@ -1,0 +1,48 @@
+{
+  "name": "pomodoro",
+  "productName": "pomodoro",
+  "version": "0.0.1",
+  "description": "Pomodoro timer build with electron",
+  "license": "MIT",
+  "repository": "user/repo",
+  "author": {
+    "name": "",
+    "email": "",
+    "url": ""
+  },
+  "engines": {
+    "node": ">=4"
+  },
+  "electronVersion": "0.33.3",
+  "scripts": {
+    "test": "xo",
+    "start": "electron .",
+    "build": "electron-packager . $npm_package_productName --out=dist --ignore='^/dist$' --prune --asar --all --version=$npm_package_electronVersion"
+  },
+  "files": [
+    "index.js",
+    "index.html",
+    "index.css"
+  ],
+  "keywords": [
+    "electron-app"
+  ],
+  "dependencies": {
+    "electron-debug": "^0.2.1",
+    "jquery": "^2.1.4",
+    "menubar": "^2.2.1",
+    "timer-stopwatch": "^0.1.6"
+  },
+  "devDependencies": {
+    "electron-packager": "^5.0.0",
+    "electron-prebuilt": "^0.33.3",
+    "xo": "^0.9.0"
+  },
+  "xo": {
+    "esnext": true,
+    "envs": [
+      "node",
+      "browser"
+    ]
+  }
+}

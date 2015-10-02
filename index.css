@@ -1,0 +1,89 @@
+html,
+body {
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	font-family: -apple-system, 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+img.settings {
+	display: block;
+	position: absolute;
+	opacity: 0.4;
+	right: 10px;
+}
+
+img.settings:hover {
+	opacity: 1;
+	color: aqua;
+}
+
+h2 {
+	text-align: center;
+}
+
+div.timer {
+	margin: 6px 6px 20px;
+	display: inline-block;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+	text-align: center;
+}
+
+div.timer strong {
+	position: absolute;
+	top: 100px;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	line-height: 40px;
+	font-size: 30px;
+}
+
+div.timer canvas {
+	vertical-align: top;
+}
+
+div.panel {
+	display: block;
+	margin: 20px;
+}
+
+div#button {
+	display: block;
+	height: 30px;
+	margin: 20px;
+	position: absolute;
+	border: 1px solid transparent;
+	border-color: black;
+	box-shadow: 0 0 10px #ccc;
+}
+
+div#button p {
+	margin: 0;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-right: -50%;
+	transform: translate(-50%, -50%)
+}
+
+div#button:hover {
+	background-color: lightgray;
+}
+
+div.quit {
+	width: 50px;
+	right: 0;
+	bottom: 0;
+}
+
+div.reset {
+	left: 0;
+	bottom: 0;
+	width: 80px;
+}
