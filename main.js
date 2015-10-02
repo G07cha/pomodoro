@@ -1,9 +1,12 @@
 var remote = require('remote');
 var app = remote.require('app');
+var dialog = remote.require('dialog');
 window.$ = window.jQuery = require('jquery');
 var Stopwatch = require('timer-stopwatch');
 
 const workTimer = 1500000;
+const relaxTimer = 300000;
+var isRelaxTime = false;
 
 var timer = new Stopwatch(workTimer);
 
@@ -15,11 +18,27 @@ $(document).ready(function() {
 
 	timer.on('done', function() {
 		$('.timer').circleProgress('value', 1);
-		console.log('Timer is complete');
+		dialog.showMessageBox({
+			type: 'info',
+			title: 'Pomodoro',
+			message: (isRelaxTime) ? 'Back to work' : 'Timer ended it\'s time to relax',
+			buttons: ['OK'],
+			noLink: true
+		}, function() {
+			if(isRelaxTime) {
+				timer.reset(workTimer);
+				isRelaxTime = false;
+			} else {
+				timer.reset(relaxTimer);
+				isRelaxTime = true;
+			}
+			timer.start();
+		});
 	});
 	
 	$('div.timer').on('click', function() {
 		if(timer.runTimer === false) {
+			isRelaxTime = false;
 			timer.start();
 		} else {
 			timer.stop();
