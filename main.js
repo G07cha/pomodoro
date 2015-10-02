@@ -1,8 +1,10 @@
 var remote = require('remote');
 var app = remote.require('app');
 var dialog = remote.require('dialog');
+var browserWindow = remote.require('browser-window');
 window.$ = window.jQuery = require('jquery');
 var Stopwatch = require('timer-stopwatch');
+var settingsWindow = createWindow();
 
 const workTimer = 1500000;
 const relaxTimer = 300000;
@@ -45,6 +47,15 @@ $(document).ready(function() {
 		} else {
 			timer.stop();
 		}
+	});
+	
+	$('img.settings').on('click', function() {
+		if(settingsWindow) {
+			settingsWindow.show();
+		} else {
+			settingsWindow = createWindow();
+		}
+		// TODO add settings window here
 	});
 	
 	$('div.quit').on('click', function() {
@@ -90,3 +101,15 @@ $(document).ready(function() {
 		this.draw();
 	};
 });
+
+function createWindow() {
+	var win = new browserWindow({
+		width: 300,
+		height: 500,
+		show: false
+	});
+	
+	win.loadUrl('file://' + __dirname + '/settings.html');
+	
+	return win;
+}
