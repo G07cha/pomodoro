@@ -47,7 +47,7 @@ $(document).ready(function() {
 		if(parseInt(timer.ms) === workTimer) {
 			text = 'Click to start';
 		} else {
-			text = (parseInt(timer.ms / 1000) / 60).toFixed(2);
+			text = (parseInt(timer.ms / 1000 / 60)) + ':' + (parseInt(timer.ms / 1000) % 60);
 		}
 		
 		$(this).find('strong').text(text);
