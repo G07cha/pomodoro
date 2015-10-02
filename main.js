@@ -27,9 +27,11 @@ $(document).ready(function() {
 		}, function() {
 			if(isRelaxTime) {
 				timer.reset(workTimer);
+				$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
 				isRelaxTime = false;
 			} else {
 				timer.reset(relaxTimer);
+				$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
 				isRelaxTime = true;
 			}
 			timer.start();
