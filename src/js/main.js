@@ -101,7 +101,12 @@ $(document).ready(function() {
 		if(parseInt(timer.ms) === workTimer) {
 			text = 'Click to start';
 		} else {
-			text = (parseInt(timer.ms / 1000 / 60)) + ':' + (parseInt(timer.ms / 1000) % 60);
+			var seconds = parseInt(timer.ms / 1000) % 60;
+			if(seconds < 10) {
+				seconds = '0' + seconds;
+			}
+			
+			text = (parseInt(timer.ms / 1000 / 60)) + ':' + seconds;
 		}
 		
 		$(this).find('strong').text(text);
