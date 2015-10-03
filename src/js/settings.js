@@ -5,6 +5,8 @@ var browserWindow = remote.require('browser-window');
 window.$ = window.jQuery = require('jquery');
 var fs = require('fs');
 
+var settingsWindow = remote.getCurrentWindow();
+
 var workTimer = 25;
 var relaxTimer = 5;
 var launchOnStartup = false;
@@ -35,6 +37,8 @@ $(document).ready(function() {
 					title: 'Success',
 					message: 'Changes saved successfully!',
 					buttons: ['Ok']
+				}, function() {
+					settingsWindow.hide();
 				});
 			}
 		});
@@ -48,7 +52,7 @@ $(document).ready(function() {
 			buttons: ['Yes', 'No']
 		}, function(response) {
 			if(response === 0) {
-				//Exit from settings
+				settingsWindow.hide();
 			}
 		})
 	});
