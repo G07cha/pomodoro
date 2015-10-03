@@ -17,7 +17,8 @@
   "scripts": {
     "test": "xo",
     "start": "electron .",
-    "build": "electron-packager . $npm_package_productName --out=dist --ignore='^/dist$' --prune --asar --all --version=$npm_package_electronVersion"
+    "build-osx": "electron-packager . $npm_package_productName --out=dist --ignore='^/dist$' --overwrite --prune --asar --arch=all --platform=darwin --icon=./icon.icns --version=$npm_package_electronVersion",
+	  "build-win": "electron-packager . $npm_package_productName --out=dist --arch=all --platform=win32 icon=./icon.ico --ignore='^/dist$' --prune --asar --overwrite --version=$npm_package_electronVersion"
   },
   "files": [
     "index.js",

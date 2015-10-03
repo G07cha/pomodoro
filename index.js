@@ -13,9 +13,3 @@ process.on('uncaughtException', (err) => {
 	dialog.showErrorBox('Uncaught Exception: ' + err.message, err.stack || '');
 	mb.app.quit();
 });
-
-mb.on('ready', () => {
-	mb.positioner.browserWindow.icon = __dirname + 'src/img/icon.png'
-	console.log(JSON.stringify(mb, null, 2));
-
-});
