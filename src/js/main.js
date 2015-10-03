@@ -35,7 +35,13 @@ var timer = new Stopwatch(workTimer);
 
 $(document).ready(function() {	
 	timer.on('time', function(time) {
-		var progress = (workTimer - time.ms) / (workTimer / 100) * 0.01;
+		var progress;
+		if(isRelaxTime) {
+			progress = (relaxTimer - time.ms) / (relaxTimer / 100) * 0.01;
+		} else {
+			progress = (workTimer - time.ms) / (workTimer / 100) * 0.01;
+		}
+		
 		$('.timer').circleProgress('value', progress);
 	});
 
