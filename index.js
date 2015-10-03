@@ -5,11 +5,6 @@ const Menu = require('menu');
 // report crashes to the Electron project
 require('crash-reporter').start();
 
-// adds debug features like hotkeys for triggering dev tools and reload
-require('electron-debug')();
-
-// prevent window being garbage collected
-let mainWindow;
 let mb = menubar({
 	'preloadWindow': true
 });
@@ -20,4 +15,7 @@ process.on('uncaughtException', (err) => {
 });
 
 mb.on('ready', () => {
+	mb.positioner.browserWindow.icon = __dirname + 'src/img/icon.png'
+	console.log(JSON.stringify(mb, null, 2));
+
 });
