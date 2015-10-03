@@ -6,6 +6,7 @@ Author: Rostyslav Bryzgunov <kottenator@gmail.com>
 Version: 1.1.3
 License: MIT
 */
+
 (function($) {
 	function CircleProgress(config) {
 		this.init(config);
