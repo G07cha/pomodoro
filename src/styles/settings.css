@@ -1,0 +1,24 @@
+
+span,
+input,
+p {
+	margin-left: 20px;
+}
+
+h2 {
+	text-align: center;
+}
+
+input.launch {
+	margin-top: 25px;
+}
+
+#button {
+	bottom: 0;
+	height: 20px;
+	width: 60px;
+}
+
+#button.cancel {
+	right: 0;
+}

@@ -6,8 +6,8 @@ window.$ = window.jQuery = require('jquery');
 var Stopwatch = require('timer-stopwatch');
 var settingsWindow = createWindow();
 
-const workTimer = 1500000;
-const relaxTimer = 300000;
+workTimer = 1500000;
+relaxTimer = 300000;
 var isRelaxTime = false;
 
 var timer = new Stopwatch(workTimer);
