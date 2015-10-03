@@ -1,0 +1,16 @@
+{
+	"osx" : {
+		"title": "Pomodoro_OSX",
+		"background": "src/img/background.png",
+		"icon": "icon.icns",
+		"icon-size": 80,
+		"contents": [
+			{ "x": 320, "y": 250, "type": "link", "path": "/Applications" },
+			{ "x": 70, "y": 250, "type": "file" }
+		]
+	},
+	"win" : {
+		"title": "Pomodoro_Windows",
+		"icon": "icon.ico"
+	}
+}
