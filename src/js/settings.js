@@ -1,15 +1,19 @@
 var remote = require('remote');
 var dialog = remote.require('dialog');
 var app = remote.require('app');
+var fs = require('fs');
 var browserWindow = remote.require('browser-window');
 window.$ = window.jQuery = require('jquery');
-var fs = require('fs');
 
 var settingsWindow = remote.getCurrentWindow();
 
 var workTimer = 25;
 var relaxTimer = 5;
 var launchOnStartup = false;
+
+/*
+ * Load settings
+ */
 try {
 	var data = JSON.parse(fs.readFileSync(app.getDataPath() + '/config.json'));
 	workTimer = data.workTimer;
@@ -20,10 +24,16 @@ try {
 }
 
 $(document).ready(function() {
+	/*
+	 * Set sliders and checkbox with default value
+	 */
 	slider('work', workTimer);
 	slider('relax', relaxTimer);
 	$('.launch').attr('checked', launchOnStartup);
 	
+	/*
+	 * Save settings
+	 */
 	$('.save').on('click', function() {
 		fs.writeFile(app.getDataPath() + '/config.json', JSON.stringify({
 			workTimer: $('.workTimer').val(),
@@ -44,6 +54,9 @@ $(document).ready(function() {
 		});
 	});
 	
+	/*
+	 * Exit from settings without settings(Cancel action)
+	 */
 	$('.cancel').on('click', function() {
 		dialog.showMessageBox({
 			type: 'question',
@@ -51,6 +64,7 @@ $(document).ready(function() {
 			message: 'Settings will not save! Are you sure?',
 			buttons: ['Yes', 'No']
 		}, function(response) {
+			//0 === "Yes" button
 			if(response === 0) {
 				settingsWindow.hide();
 			}
@@ -58,6 +72,11 @@ $(document).ready(function() {
 	});
 });
 
+/**
+ * Update html slider with %value% 
+ * @param {String} name  Part of name(work or relax)
+ * @param {Number} value New slider value
+ */
 function slider(name, value) {
 	var timerSelector = '.' + name + 'Timer';
 	var valueSelector = timerSelector.replace('Timer', 'Value');

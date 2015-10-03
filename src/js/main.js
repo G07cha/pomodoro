@@ -2,12 +2,33 @@ var remote = require('remote');
 var app = remote.require('app');
 var dialog = remote.require('dialog');
 var browserWindow = remote.require('browser-window');
-window.$ = window.jQuery = require('jquery');
+var fs = require('fs');
 var Stopwatch = require('timer-stopwatch');
 var settingsWindow = createWindow();
+window.$ = window.jQuery = require('jquery');
 
-workTimer = 1500000;
-relaxTimer = 300000;
+var workTimer = 1500000;
+var relaxTimer = 300000;
+
+settingsWindow.on('blur', function() {
+	try {
+		var data = JSON.parse(fs.readFileSync(app.getDataPath() + '/config.json'));
+		workTimer = data.workTimer * 60 * 1000;
+		relaxTimer = data.relaxTimer * 60 * 1000;
+	} catch(err) {
+		console.log('Didn\'t found previous config. Using default settings');
+	}
+	$('.timer').circleProgress();
+})
+
+try {
+	var data = JSON.parse(fs.readFileSync(app.getDataPath() + '/config.json'));
+	workTimer = data.workTimer * 60 * 1000;
+	relaxTimer = data.relaxTimer * 60 * 1000;
+} catch(err) {
+	console.log('Didn\'t found previous config. Using default settings');
+}
+
 var isRelaxTime = false;
 
 var timer = new Stopwatch(workTimer);
@@ -63,7 +84,8 @@ $(document).ready(function() {
 	});
 	
 	$('div.reset').on('click', function() {
-		timer.reset();
+		timer.reset(workTimer);
+		$('.timer').circleProgress('value', 0);
 	});
 	
 	$('.timer').circleProgress({
@@ -106,6 +128,7 @@ function createWindow() {
 	var win = new browserWindow({
 		width: 300,
 		height: 500,
+		frame: false,
 		show: false
 	});
 	

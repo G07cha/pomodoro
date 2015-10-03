@@ -1,7 +1,10 @@
-
+body {
+	-webkit-app-region: drag;
+}
 span,
 input,
 p {
+	-webkit-app-region: no-drag;
 	margin-left: 20px;
 }
 
@@ -10,10 +13,12 @@ h2 {
 }
 
 input.launch {
+	-webkit-app-region: no-drag;
 	margin-top: 25px;
 }
 
 #button {
+	-webkit-app-region: no-drag;
 	bottom: 0;
 	height: 20px;
 	width: 60px;
