@@ -29,7 +29,7 @@ $(document).ready(function() {
 	 */
 	slider('work', workTimer);
 	slider('relax', relaxTimer);
-	$('.launch').attr('checked', launchOnStartup);
+//	$('.launch').attr('checked', launchOnStartup);
 	
 	/*
 	 * Save settings
@@ -38,7 +38,7 @@ $(document).ready(function() {
 		fs.writeFile(app.getDataPath() + '/config.json', JSON.stringify({
 			workTimer: $('.workTimer').val(),
 			relaxTimer: $('.relaxTimer').val(),
-			launchOnStartup: $('.launch').prop('checked')
+//			launchOnStartup: $('.launch').prop('checked')
 		}), function(err) {
 			if (err) {
 				dialog.showErrorBox('Failed to save settings', err);

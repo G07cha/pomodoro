@@ -11,7 +11,6 @@ require('electron-debug')();
 // prevent window being garbage collected
 let mainWindow;
 let mb = menubar({
-	'always-on-top': true,	//TODO: Remove this after app will go to production
 	'preloadWindow': true
 });
 
