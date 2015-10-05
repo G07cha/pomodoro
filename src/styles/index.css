@@ -1,5 +1,15 @@
+* {
+	-webkit-user-select: none;
+}
+
+*:active,
+*:hover {
+	cursor: default;
+}
+
 html,
 body {
+	cursor: default;
 	padding: 0;
 	margin: 0;
 }
@@ -9,6 +19,7 @@ body {
 }
 
 img.settings {
+	cursor: pointer;
 	display: block;
 	position: absolute;
 	opacity: 0.4;
@@ -35,6 +46,8 @@ div.timer {
 }
 
 div.timer strong {
+	cursor: pointer;
+
 	position: absolute;
 	top: 100px;
 	left: 0;
@@ -45,6 +58,8 @@ div.timer strong {
 }
 
 div.timer canvas {
+	cursor: pointer;
+
 	vertical-align: top;
 }
 
@@ -54,6 +69,7 @@ div.panel {
 }
 
 div#button {
+	cursor: pointer;
 	display: block;
 	height: 30px;
 	margin: 20px;
@@ -64,6 +80,7 @@ div#button {
 }
 
 div#button p {
+	cursor: pointer;
 	margin: 0;
 	position: absolute;
 	top: 50%;
