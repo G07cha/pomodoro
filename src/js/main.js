@@ -3,12 +3,14 @@ var app = remote.require('app');
 var dialog = remote.require('dialog');
 var browserWindow = remote.require('browser-window');
 var fs = require('fs');
+var hrt = require('human-readable-time');
 var Stopwatch = require('timer-stopwatch');
 var settingsWindow = createWindow();
 window.$ = window.jQuery = require('jquery');
 
 var workTimer = 1500000;
 var relaxTimer = 300000;
+var timeFormat = new hrt('%mm%:%ss%');
 
 settingsWindow.on('blur', function() {
 	try {
@@ -104,15 +106,10 @@ $(document).ready(function() {
 	}).on('circle-animation-progress', function(event, progress, stepValue) {
 		var text;
 		
-		if(parseInt(timer.ms) === workTimer) {
-			text = 'Click to start';
+		if(timer.runTimer) {
+			text = timeFormat(new Date(timer.ms));
 		} else {
-			var seconds = parseInt(timer.ms / 1000) % 60;
-			if(seconds < 10) {
-				seconds = '0' + seconds;
-			}
-			
-			text = (parseInt(timer.ms / 1000 / 60)) + ':' + seconds;
+			text = 'Click to start';
 		}
 		
 		$(this).find('strong').text(text);

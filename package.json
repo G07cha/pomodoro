@@ -17,12 +17,12 @@
   "scripts": {
     "test": "xo",
     "start": "electron .",
-	"build": "npm run build-osx && npm run build-win",
+    "build": "npm run build-osx && npm run build-win",
     "build-osx": "electron-packager . $npm_package_productName --out=dist --ignore='^/dist$' --overwrite --prune --asar --arch=all --platform=darwin --icon=./icon.icns --version=$npm_package_electronVersion",
-	"build-win": "electron-packager . $npm_package_productName --out=dist --arch=all --platform=win32 icon=./icon.ico --ignore='^/dist$' --prune --asar --overwrite --version=$npm_package_electronVersion",
-	"package": "npm run package-win && npm run package-osx",
-	"package-win": "electron-builder dist/pomodoro-win32-x64/ --platform=win --out=dist --config=config.json",
-	"package-osx": "electron-builder dist/pomodoro-darwin-x64/ --platform=osx --out=dist --config=config.json"
+    "build-win": "electron-packager . $npm_package_productName --out=dist --arch=all --platform=win32 icon=./icon.ico --ignore='^/dist$' --prune --asar --overwrite --version=$npm_package_electronVersion",
+    "package": "npm run package-win && npm run package-osx",
+    "package-win": "electron-builder dist/pomodoro-win32-x64/ --platform=win --out=dist --config=config.json",
+    "package-osx": "electron-builder dist/pomodoro-darwin-x64/ --platform=osx --out=dist --config=config.json"
   },
   "files": [
     "index.js",
@@ -34,6 +34,7 @@
   ],
   "dependencies": {
     "electron-debug": "^0.2.1",
+    "human-readable-time": "^0.2.0",
     "jquery": "^2.1.4",
     "menubar": "^2.2.1",
     "timer-stopwatch": "^0.1.6"
