@@ -9,15 +9,18 @@ var settingsWindow = remote.getCurrentWindow();
 
 var workTimer = 25;
 var relaxTimer = 5;
+var longRelaxTimer = 15;
 var launchOnStartup = false;
 
 /*
  * Load settings
  */
 try {
+	console.log(app.getDataPath());
 	var data = JSON.parse(fs.readFileSync(app.getDataPath() + '/config.json'));
 	workTimer = data.workTimer;
 	relaxTimer = data.relaxTimer;
+	longRelaxTimer = data.longRelaxTimer;
 	launchOnStartup = data.launchOnStartup;
 } catch(err) {
 	console.log('Didn\'t found previous config. Using default settings');
@@ -29,6 +32,7 @@ $(document).ready(function() {
 	 */
 	slider('work', workTimer);
 	slider('relax', relaxTimer);
+	slider('longRelax', longRelaxTimer);
 //	$('.launch').attr('checked', launchOnStartup);
 	
 	/*
@@ -36,8 +40,9 @@ $(document).ready(function() {
 	 */
 	$('.save').on('click', function() {
 		fs.writeFile(app.getDataPath() + '/config.json', JSON.stringify({
-			workTimer: $('.workTimer').val(),
-			relaxTimer: $('.relaxTimer').val(),
+			workTimer: $('input.work').val(),
+			relaxTimer: $('input.relax').val(),
+			longRelaxTimer: $('input.longRelax').val(),
 //			launchOnStartup: $('.launch').prop('checked')
 		}), function(err) {
 			if (err) {
@@ -78,8 +83,8 @@ $(document).ready(function() {
  * @param {Number} value New slider value
  */
 function slider(name, value) {
-	var timerSelector = '.' + name + 'Timer';
-	var valueSelector = timerSelector.replace('Timer', 'Value');
+	var timerSelector = 'input.' + name;
+	var valueSelector = 'span.' + name;
 	$(timerSelector).attr('value', value);
 	$(valueSelector).append(value);
 	$(timerSelector).change(function() {

@@ -19,11 +19,12 @@ body {
 }
 
 img.settings {
+	margin: 10px;
 	cursor: pointer;
-	display: block;
+	display: inline-block;
 	position: absolute;
 	opacity: 0.4;
-	right: 10px;
+	right: 0;
 }
 
 img.settings:hover {
@@ -31,13 +32,29 @@ img.settings:hover {
 	color: aqua;
 }
 
+img.pomodoro {
+	display: inline-block;
+	margin-top: 10px;
+	margin-left: 10px;
+	opacity: 0.3;
+}
+
+#counter {
+	display: inline-block;
+	position: absolute;
+	top: 13px;
+	opacity: 0.3;
+}
+
 h2 {
+	margin-left: 65px;
+	position: absolute;
+	display: inline-block;
 	text-align: center;
 }
 
 div.timer {
 	margin: 6px 6px 20px;
-	display: inline-block;
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -58,8 +75,8 @@ div.timer strong {
 }
 
 div.timer canvas {
+	margin-top: 30px;
 	cursor: pointer;
-
 	vertical-align: top;
 }
 

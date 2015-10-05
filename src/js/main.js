@@ -10,6 +10,9 @@ window.$ = window.jQuery = require('jquery');
 
 var workTimer = 1500000;
 var relaxTimer = 300000;
+var longRelaxTimer = 900000;
+var pomodoroCount = 0;
+
 var timeFormat = new hrt('%mm%:%ss%');
 
 settingsWindow.on('blur', function() {
@@ -17,6 +20,7 @@ settingsWindow.on('blur', function() {
 		var data = JSON.parse(fs.readFileSync(app.getDataPath() + '/config.json'));
 		workTimer = data.workTimer * 60 * 1000;
 		relaxTimer = data.relaxTimer * 60 * 1000;
+		longRelaxTimer = data.longRelaxTimer * 60 * 1000;
 	} catch(err) {
 		console.log('Didn\'t found previous config. Using default settings');
 	}
@@ -27,6 +31,7 @@ try {
 	var data = JSON.parse(fs.readFileSync(app.getDataPath() + '/config.json'));
 	workTimer = data.workTimer * 60 * 1000;
 	relaxTimer = data.relaxTimer * 60 * 1000;
+	longRelaxTimer = data.longRelaxTimer * 60 * 1000;
 } catch(err) {
 	console.log('Didn\'t found previous config. Using default settings');
 }
@@ -39,7 +44,11 @@ $(document).ready(function() {
 	timer.on('time', function(time) {
 		var progress;
 		if(isRelaxTime) {
-			progress = (relaxTimer - time.ms) / (relaxTimer / 100) * 0.01;
+			if(pomodoroCount % 4 === 0) {
+				progress = (longRelaxTimer - time.ms) / (longRelaxTimer / 100) * 0.01;
+			} else {
+				progress = (relaxTimer - time.ms) / (relaxTimer / 100) * 0.01;
+			}
 		} else {
 			progress = (workTimer - time.ms) / (workTimer / 100) * 0.01;
 		}
@@ -61,7 +70,14 @@ $(document).ready(function() {
 				$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
 				isRelaxTime = false;
 			} else {
-				timer.reset(relaxTimer);
+				pomodoroCount++;
+				$('#counter').text(pomodoroCount);
+				if(pomodoroCount % 4 === 0) {
+					timer.reset(longRelaxTimer);
+				} else {
+					timer.reset(relaxTimer);
+				}
+				
 				$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
 				isRelaxTime = true;
 			}
