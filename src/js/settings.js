@@ -16,8 +16,8 @@ var launchOnStartup = false;
  * Load settings
  */
 try {
-	console.log(app.getDataPath());
 	var data = JSON.parse(fs.readFileSync(app.getDataPath() + '/config.json'));
+	
 	workTimer = data.workTimer;
 	relaxTimer = data.relaxTimer;
 	longRelaxTimer = data.longRelaxTimer;

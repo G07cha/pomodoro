@@ -2,6 +2,8 @@ var remote = require('remote');
 var app = remote.require('app');
 var dialog = remote.require('dialog');
 var browserWindow = remote.require('browser-window');
+var globalShortcut = remote.require('global-shortcut');
+
 var fs = require('fs');
 var hrt = require('human-readable-time');
 var Stopwatch = require('timer-stopwatch');
@@ -12,7 +14,7 @@ var workTimer = 1500000;
 var relaxTimer = 300000;
 var longRelaxTimer = 900000;
 var pomodoroCount = 0;
-
+var isRelaxTime = false;
 var timeFormat = new hrt('%mm%:%ss%');
 
 settingsWindow.on('blur', function() {
@@ -36,9 +38,15 @@ try {
 	console.log('Didn\'t found previous config. Using default settings');
 }
 
-var isRelaxTime = false;
-
 var timer = new Stopwatch(workTimer);
+
+globalShortcut.register('ctrl+x', function() {
+	if(timer.runTimer === false) {
+		timer.start();
+	} else {
+		timer.stop();
+	}
+});
 
 $(document).ready(function() {	
 	timer.on('time', function(time) {
@@ -87,7 +95,6 @@ $(document).ready(function() {
 	
 	$('div.timer').on('click', function() {
 		if(timer.runTimer === false) {
-			isRelaxTime = false;
 			timer.start();
 		} else {
 			timer.stop();
