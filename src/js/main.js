@@ -40,7 +40,7 @@ try {
 
 var timer = new Stopwatch(workTimer);
 
-globalShortcut.register('ctrl+x', function() {
+globalShortcut.register('ctrl+alt+s', function() {
 	if(timer.runTimer === false) {
 		timer.start();
 	} else {
@@ -107,7 +107,6 @@ $(document).ready(function() {
 		} else {
 			settingsWindow = createWindow();
 		}
-		// TODO add settings window here
 	});
 	
 	$('div.quit').on('click', function() {
