@@ -62,6 +62,7 @@ $(document).ready(function() {
 	});
 	
 	$('div.reset').on('click', function() {
+		$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
 		ipc.send('reset-timer');
 	});
 	
