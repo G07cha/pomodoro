@@ -12,13 +12,16 @@ const AutoLaunch = require('auto-launch');
 // report crashes to the Electron project
 require('crash-reporter').start();
 
-// Enable autolaunch
-var autolauncher = new AutoLaunch({
-	name: 'Pomodoro',
-	path: '/Applications/Pomodoro.app' 
-});
+let options = {};
+options.name = 'Pomodoro';
 
-autolauncher.enable();
+if(process.platform === 'darwin') {
+	options.path = '/Applications/Pomodoro.app';
+} else if(process.platform === 'win32') {
+	options.path = 'C:\Program Files\Pomodoro_Windows';
+}
+
+let autolauncher = new AutoLaunch(options);
 
 let timeFormat = new Hrt('%mm%:%ss%');
 let workTimer = 1500000;
