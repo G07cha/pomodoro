@@ -141,7 +141,7 @@ function getProgress() {
 	}
 	
 	if(progress < 0) {
-		progress = 0;
+		progress = 0.01;
 	}
 	return progress;
 }
