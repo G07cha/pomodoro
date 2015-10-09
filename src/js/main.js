@@ -7,7 +7,6 @@ var ipc = require('ipc');
 
 var fs = require('fs');
 var hrt = require('human-readable-time');
-var Stopwatch = require('timer-stopwatch');
 var settingsWindow = createWindow();
 window.$ = window.jQuery = require('jquery');
 

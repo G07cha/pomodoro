@@ -6,6 +6,8 @@ const ipc = require('ipc');
 const dialog = require('dialog');
 const Stopwatch = require('timer-stopwatch');
 const Hrt = require('human-readable-time');
+const fs = require('fs');
+
 
 // report crashes to the Electron project
 require('crash-reporter').start();
@@ -18,13 +20,13 @@ let pomodoroCount = 0;
 let isRelaxTime = false;
 let sender;
 
-getConfig();
-
-global.timer = new Stopwatch(workTimer);
-
 let mb = menubar({
 	'preloadWindow': true
 });
+
+getConfig();
+
+global.timer = new Stopwatch(workTimer);
 
 process.on('uncaughtException', (err) => {
 	dialog.showErrorBox('Uncaught Exception: ' + err.message, err.stack || '');
@@ -83,6 +85,15 @@ ipc.on('settings-updated', function(event) {
 	event.sender.send('update-timer', getProgress());
 });
 
+ipc.on('request-config', function(event) {
+	getConfig();
+	
+	event.returnValue = { 
+		workTimer: workTimer / 60 / 1000, 
+		relaxTimer: relaxTimer / 60 / 1000, 
+		longRelaxTimer: longRelaxTimer / 60 / 1000
+	};
+});
 
 function getConfig() {
 	try {
@@ -91,6 +102,7 @@ function getConfig() {
 		relaxTimer = data.relaxTimer * 60 * 1000;
 		longRelaxTimer = data.longRelaxTimer * 60 * 1000;
 	} catch(err) {
+		console.log(err);
 		console.log('Didn\'t found previous config. Using default settings');
 	}
 }

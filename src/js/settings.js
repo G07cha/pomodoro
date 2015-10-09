@@ -13,19 +13,13 @@ var relaxTimer = 5;
 var longRelaxTimer = 15;
 var launchOnStartup = false;
 
-/*
- * Load settings
- */
-try {
-	var data = JSON.parse(fs.readFileSync(app.getDataPath() + '/config.json'));
-	
-	workTimer = data.workTimer;
-	relaxTimer = data.relaxTimer;
-	longRelaxTimer = data.longRelaxTimer;
-	launchOnStartup = data.launchOnStartup;
-} catch(err) {
-	console.log('Didn\'t found previous config. Using default settings');
-}
+var configs = ipc.sendSync('request-config');
+
+workTimer = configs.workTimer;
+relaxTimer = configs.relaxTimer;
+longRelaxTimer = configs.longRelaxTimer;
+launchOnStartup = configs.launchOnStartup;
+
 
 $(document).ready(function() {
 	/*
@@ -34,7 +28,7 @@ $(document).ready(function() {
 	slider('work', workTimer);
 	slider('relax', relaxTimer);
 	slider('longRelax', longRelaxTimer);
-//	$('.launch').attr('checked', launchOnStartup);
+	//	$('.launch').attr('checked', launchOnStartup);
 	
 	/*
 	 * Save settings
