@@ -91,7 +91,12 @@ ipc.on('start-timer', function(event) {
 
 ipc.on('settings-updated', function(event) {
 	getConfig();
-	event.sender.send('update-timer', getProgress());
+	
+	if(sender) {
+		sender.send('update-timer', getProgress());
+	} else {
+		event.sender.send('update-timer', getProgress());
+	}
 });
 
 ipc.on('request-config', function(event) {
@@ -135,5 +140,8 @@ function getProgress() {
 		progress = (workTimer - timer.ms) / (workTimer / 100) * 0.01;
 	}
 	
+	if(progress < 0) {
+		progress = 0;
+	}
 	return progress;
 }

@@ -12,10 +12,6 @@ window.$ = window.jQuery = require('jquery');
 
 var timeFormat = new hrt('%mm%:%ss%');
 
-settingsWindow.on('blur', function() {
-	ipc.send('settings-updated');
-});
-
 
 globalShortcut.register('ctrl+alt+s', function() {
 	ipc.send('start-timer');
