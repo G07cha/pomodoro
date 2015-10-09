@@ -15,7 +15,6 @@ var timeFormat = new hrt('%mm%:%ss%');
 
 settingsWindow.on('blur', function() {
 	ipc.send('settings-updated');
-	$('.timer').circleProgress();
 });
 
 
@@ -24,28 +23,29 @@ globalShortcut.register('ctrl+alt+s', function() {
 });
 
 ipc.on('update-timer', function(event) {
-	var progress = ipc.sendSync('request-update');
-	$('.timer').circleProgress('value', progress);
+	$('.timer').circleProgress('value', remote.getGlobal('progress'));
 });
 
-ipc.on('end-timer', function(event, arg) {
+ipc.on('end-timer', function() {
 	$('.timer').circleProgress('value', 1);
+	
+	var isRelaxTime = remote.getGlobal('isRelaxTime');
 	
 	dialog.showMessageBox({
 		type: 'info',
 		title: 'Pomodoro',
-		message: (arg.isRelaxTime) ? 'Back to work' : 'Timer ended it\'s time to relax',
+		message: (isRelaxTime) ? 'Back to work' : 'Timer ended it\'s time to relax',
 		buttons: ['OK'],
 		noLink: true
 	}, function() {
-		if(arg.isRelaxTime) {
+		if(isRelaxTime) {
 			$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
 		} else {
-			$('#counter').text(arg.pomodoroCount);
+			$('#counter').text(remote.getGlobal('pomodoroCount'));
 			$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
 		}
 		
-		event.returnValue = true;
+		ipc.send('start-timer');
 	});
 });
 

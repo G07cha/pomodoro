@@ -18,16 +18,9 @@ let pomodoroCount = 0;
 let isRelaxTime = false;
 let sender;
 
-try {
-	var data = JSON.parse(fs.readFileSync(mb.app.getDataPath() + '/config.json'));
-	workTimer = data.workTimer * 60 * 1000;
-	relaxTimer = data.relaxTimer * 60 * 1000;
-	longRelaxTimer = data.longRelaxTimer * 60 * 1000;
-} catch(err) {
-	console.log('Didn\'t found previous config. Using default settings');
-}
+getConfig();
 
-global.global.timer = new Stopwatch(workTimer);
+global.timer = new Stopwatch(workTimer);
 
 let mb = menubar({
 	'preloadWindow': true
@@ -44,43 +37,19 @@ mb.on('will-quit', () => {
 
 global.timer.on('time', function(time) {
 	mb.tray.setTitle(timeFormat(new Date(time.ms)));
-	var progress;
-	if(isRelaxTime) {
-		if(pomodoroCount % 4 === 0) {
-			progress = (longRelaxTimer - time.ms) / (longRelaxTimer / 100) * 0.01;
-		} else {
-			progress = (relaxTimer - time.ms) / (relaxTimer / 100) * 0.01;
-		}
-	} else {
-		progress = (workTimer - time.ms) / (workTimer / 100) * 0.01;
-	}
-	
+	global.progress = getProgress();
 	sender.send('update-timer');
 });
 
-ipc.on('request-update', function(event) {
-	var progress;
-	if(isRelaxTime) {
-		if(pomodoroCount % 4 === 0) {
-			progress = (longRelaxTimer - timer.ms) / (longRelaxTimer / 100) * 0.01;
-		} else {
-			progress = (relaxTimer - timer.ms) / (relaxTimer / 100) * 0.01;
-		}
-	} else {
-		progress = (workTimer - timer.ms) / (workTimer / 100) * 0.01;
-	}
-	
-	event.returnValue = progress;
-})
-
 global.timer.on('done', function() {
-	ipc.sendSync('end-timer', { 
-		isRelaxTime: isRelaxTime,
-		pomodoroCount: pomodoroCount 
-	});
+	global.isRelaxTime = isRelaxTime;
+	global.pomodoroCount = pomodoroCount;
+	
+	sender.send('end-timer');
 	
 	if(isRelaxTime) {
 		global.timer.reset(workTimer);
+		isRelaxTime = false;
 	} else {
 		pomodoroCount++;
 		if(pomodoroCount % 4 === 0) {
@@ -91,8 +60,6 @@ global.timer.on('done', function() {
 		
 		isRelaxTime = true;
 	}
-	
-	global.timer.start();
 });
 
 ipc.on('reset-timer', function(event) {
@@ -112,15 +79,23 @@ ipc.on('start-timer', function(event) {
 });
 
 ipc.on('settings-updated', function(event) {
+	getConfig();
+	event.sender.send('update-timer', getProgress());
+});
+
+
+function getConfig() {
 	try {
-		var data = JSON.parse(fs.readFileSync(app.getDataPath() + '/config.json'));
+		var data = JSON.parse(fs.readFileSync(mb.app.getDataPath() + '/config.json'));
 		workTimer = data.workTimer * 60 * 1000;
 		relaxTimer = data.relaxTimer * 60 * 1000;
 		longRelaxTimer = data.longRelaxTimer * 60 * 1000;
 	} catch(err) {
 		console.log('Didn\'t found previous config. Using default settings');
 	}
-	
+}
+
+function getProgress() {
 	var progress;
 	if(isRelaxTime) {
 		if(pomodoroCount % 4 === 0) {
@@ -132,10 +107,5 @@ ipc.on('settings-updated', function(event) {
 		progress = (workTimer - timer.ms) / (workTimer / 100) * 0.01;
 	}
 	
-	event.sender.send('update-timer', progress);
-});
-
-
-function getConfig() {
-	
+	return progress;
 }
