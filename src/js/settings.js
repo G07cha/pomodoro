@@ -2,6 +2,7 @@ var remote = require('remote');
 var dialog = remote.require('dialog');
 var app = remote.require('app');
 var fs = require('fs');
+var ipc = require('ipc');
 var browserWindow = remote.require('browser-window');
 window.$ = window.jQuery = require('jquery');
 
@@ -48,6 +49,7 @@ $(document).ready(function() {
 			if (err) {
 				dialog.showErrorBox('Failed to save settings', err);
 			} else {
+				ipc.send('settings-updated');
 				dialog.showMessageBox({
 					title: 'Success',
 					message: 'Changes saved successfully!',

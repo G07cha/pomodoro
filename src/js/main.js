@@ -3,6 +3,7 @@ var app = remote.require('app');
 var dialog = remote.require('dialog');
 var browserWindow = remote.require('browser-window');
 var globalShortcut = remote.require('global-shortcut');
+var ipc = require('ipc');
 
 var fs = require('fs');
 var hrt = require('human-readable-time');
@@ -10,95 +11,47 @@ var Stopwatch = require('timer-stopwatch');
 var settingsWindow = createWindow();
 window.$ = window.jQuery = require('jquery');
 
-var workTimer = 1500000;
-var relaxTimer = 300000;
-var longRelaxTimer = 900000;
-var pomodoroCount = 0;
-var isRelaxTime = false;
 var timeFormat = new hrt('%mm%:%ss%');
 
 settingsWindow.on('blur', function() {
-	try {
-		var data = JSON.parse(fs.readFileSync(app.getDataPath() + '/config.json'));
-		workTimer = data.workTimer * 60 * 1000;
-		relaxTimer = data.relaxTimer * 60 * 1000;
-		longRelaxTimer = data.longRelaxTimer * 60 * 1000;
-	} catch(err) {
-		console.log('Didn\'t found previous config. Using default settings');
-	}
+	ipc.send('settings-updated');
 	$('.timer').circleProgress();
-})
-
-try {
-	var data = JSON.parse(fs.readFileSync(app.getDataPath() + '/config.json'));
-	workTimer = data.workTimer * 60 * 1000;
-	relaxTimer = data.relaxTimer * 60 * 1000;
-	longRelaxTimer = data.longRelaxTimer * 60 * 1000;
-} catch(err) {
-	console.log('Didn\'t found previous config. Using default settings');
-}
-
-var timer = new Stopwatch(workTimer);
-
-globalShortcut.register('ctrl+alt+s', function() {
-	if(timer.runTimer === false) {
-		timer.start();
-	} else {
-		timer.stop();
-	}
 });
 
-$(document).ready(function() {	
-	timer.on('time', function(time) {
-		var progress;
-		if(isRelaxTime) {
-			if(pomodoroCount % 4 === 0) {
-				progress = (longRelaxTimer - time.ms) / (longRelaxTimer / 100) * 0.01;
-			} else {
-				progress = (relaxTimer - time.ms) / (relaxTimer / 100) * 0.01;
-			}
+
+globalShortcut.register('ctrl+alt+s', function() {
+	ipc.send('start-timer');
+});
+
+ipc.on('update-timer', function(event) {
+	var progress = ipc.sendSync('request-update');
+	$('.timer').circleProgress('value', progress);
+});
+
+ipc.on('end-timer', function(event, arg) {
+	$('.timer').circleProgress('value', 1);
+	
+	dialog.showMessageBox({
+		type: 'info',
+		title: 'Pomodoro',
+		message: (arg.isRelaxTime) ? 'Back to work' : 'Timer ended it\'s time to relax',
+		buttons: ['OK'],
+		noLink: true
+	}, function() {
+		if(arg.isRelaxTime) {
+			$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
 		} else {
-			progress = (workTimer - time.ms) / (workTimer / 100) * 0.01;
+			$('#counter').text(arg.pomodoroCount);
+			$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
 		}
 		
-		$('.timer').circleProgress('value', progress);
+		event.returnValue = true;
 	});
+});
 
-	timer.on('done', function() {
-		$('.timer').circleProgress('value', 1);
-		dialog.showMessageBox({
-			type: 'info',
-			title: 'Pomodoro',
-			message: (isRelaxTime) ? 'Back to work' : 'Timer ended it\'s time to relax',
-			buttons: ['OK'],
-			noLink: true
-		}, function() {
-			if(isRelaxTime) {
-				timer.reset(workTimer);
-				$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
-				isRelaxTime = false;
-			} else {
-				pomodoroCount++;
-				$('#counter').text(pomodoroCount);
-				if(pomodoroCount % 4 === 0) {
-					timer.reset(longRelaxTimer);
-				} else {
-					timer.reset(relaxTimer);
-				}
-				
-				$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
-				isRelaxTime = true;
-			}
-			timer.start();
-		});
-	});
-	
+$(document).ready(function() {
 	$('div.timer').on('click', function() {
-		if(timer.runTimer === false) {
-			timer.start();
-		} else {
-			timer.stop();
-		}
+		ipc.send('start-timer');
 	});
 	
 	$('img.settings').on('click', function() {
@@ -114,8 +67,7 @@ $(document).ready(function() {
 	});
 	
 	$('div.reset').on('click', function() {
-		timer.reset(workTimer);
-		$('.timer').circleProgress('value', 0);
+		ipc.send('reset-timer');
 	});
 	
 	$('.timer').circleProgress({
@@ -128,6 +80,7 @@ $(document).ready(function() {
 	}).on('circle-animation-progress', function(event, progress, stepValue) {
 		var text;
 		
+		var timer = remote.getGlobal('timer');
 		if(timer.runTimer) {
 			text = timeFormat(new Date(timer.ms));
 		} else {
@@ -154,6 +107,7 @@ $(document).ready(function() {
 	};
 });
 
+// For creating settings window
 function createWindow() {
 	var win = new browserWindow({
 		width: 300,
