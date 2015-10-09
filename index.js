@@ -15,7 +15,7 @@ require('crash-reporter').start();
 // Enable autolaunch
 var autolauncher = new AutoLaunch({
 	name: 'Pomodoro',
-	path: '/Applications/pomodoro.app' 
+	path: '/Applications/Pomodoro.app' 
 });
 
 autolauncher.enable();
