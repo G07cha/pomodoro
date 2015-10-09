@@ -7,10 +7,18 @@ const dialog = require('dialog');
 const Stopwatch = require('timer-stopwatch');
 const Hrt = require('human-readable-time');
 const fs = require('fs');
-
+const AutoLaunch = require('auto-launch');
 
 // report crashes to the Electron project
 require('crash-reporter').start();
+
+// Enable autolaunch
+var autolauncher = new AutoLaunch({
+	name: 'Pomodoro',
+	path: '/Applications/pomodoro.app' 
+});
+
+autolauncher.enable();
 
 let timeFormat = new Hrt('%mm%:%ss%');
 let workTimer = 1500000;
@@ -18,6 +26,7 @@ let relaxTimer = 300000;
 let longRelaxTimer = 900000;
 let pomodoroCount = 0;
 let isRelaxTime = false;
+let launchOnStartup = false;
 let sender;
 
 let mb = menubar({
@@ -91,7 +100,8 @@ ipc.on('request-config', function(event) {
 	event.returnValue = { 
 		workTimer: workTimer / 60 / 1000, 
 		relaxTimer: relaxTimer / 60 / 1000, 
-		longRelaxTimer: longRelaxTimer / 60 / 1000
+		longRelaxTimer: longRelaxTimer / 60 / 1000,
+		launchOnStartup: launchOnStartup
 	};
 });
 
@@ -101,6 +111,12 @@ function getConfig() {
 		workTimer = data.workTimer * 60 * 1000;
 		relaxTimer = data.relaxTimer * 60 * 1000;
 		longRelaxTimer = data.longRelaxTimer * 60 * 1000;
+		launchOnStartup = data.launchOnStartup;
+		if(launchOnStartup) {
+			autolauncher.enable();
+		} else {
+			autolauncher.disable();
+		}
 	} catch(err) {
 		console.log(err);
 		console.log('Didn\'t found previous config. Using default settings');

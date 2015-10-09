@@ -28,7 +28,7 @@ $(document).ready(function() {
 	slider('work', workTimer);
 	slider('relax', relaxTimer);
 	slider('longRelax', longRelaxTimer);
-	//	$('.launch').attr('checked', launchOnStartup);
+	$('.launch').attr('checked', launchOnStartup);
 	
 	/*
 	 * Save settings
@@ -38,7 +38,7 @@ $(document).ready(function() {
 			workTimer: $('input.work').val(),
 			relaxTimer: $('input.relax').val(),
 			longRelaxTimer: $('input.longRelax').val(),
-//			launchOnStartup: $('.launch').prop('checked')
+			launchOnStartup: $('.launch').prop('checked')
 		}), function(err) {
 			if (err) {
 				dialog.showErrorBox('Failed to save settings', err);
