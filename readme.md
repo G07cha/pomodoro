@@ -10,6 +10,7 @@ Time managment tool for Windows and OS X based on [Pomodoro Technique](https://e
 - Nice spinner provided by [kottenator](https://github.com/kottenator/jquery-circle-progress)
 - Minimalistic design
 - Start/stop timer with shortcut(Ctrl + Alt + S)
+- Timer in menu bar
 
 ## Dev
 
