@@ -1,6 +1,6 @@
 {
 	"osx" : {
-		"title": "Pomodoro_OSX",
+		"title": "Pomodoro",
 		"background": "src/img/background.png",
 		"icon": "icon.icns",
 		"icon-size": 80,
@@ -10,7 +10,7 @@
 		]
 	},
 	"win" : {
-		"title": "Pomodoro_Windows",
+		"title": "Pomodoro",
 		"icon": "icon.ico"
 	}
 }

@@ -23,8 +23,8 @@
     "build-osx": "electron-packager . $npm_package_productName --out=dist --ignore='^/dist$' --overwrite --prune --asar --arch=all --platform=darwin --icon=./icon.icns --version=$npm_package_electronVersion",
 	  "build-win": "electron-packager . $npm_package_productName --out=dist --arch=all --platform=win32 --ignore='^/dist$' --prune --asar --overwrite --icon=./icon.ico --version=$npm_package_electronVersion",
     "package": "npm run package-win32 && npm run package-win64 && npm run package-osx",
-    "package-win64": "electron-builder dist/pomodoro-win32-x64/ --platform=win --out=dist --config=config.json && mv 'dist/Pomodoro_Windows Setup.exe' dist/Pomodoro_Windows64.exe",
-    "package-win32": "electron-builder dist/pomodoro-win32-ia32/ --platform=win --out=dist --config=config.json && mv 'dist/Pomodoro_Windows Setup.exe' dist/Pomodoro_Windows32.exe",
+    "package-win64": "electron-builder dist/pomodoro-win32-x64/ --platform=win --out=dist --config=config.json && mv 'dist/Pomodoro Setup.exe' dist/Pomodoro_Windows64.exe",
+    "package-win32": "electron-builder dist/pomodoro-win32-ia32/ --platform=win --out=dist --config=config.json && mv 'dist/Pomodoro Setup.exe' dist/Pomodoro_Windows32.exe",
     "package-osx": "electron-builder dist/pomodoro-darwin-x64/pomodoro.app --platform=osx --out=dist --config=config.json"
   },
   "files": [
