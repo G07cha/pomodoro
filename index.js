@@ -7,21 +7,11 @@ const dialog = require('dialog');
 const Stopwatch = require('timer-stopwatch');
 const Hrt = require('human-readable-time');
 const fs = require('fs');
+const path = require('path');
 const AutoLaunch = require('auto-launch');
 
 // report crashes to the Electron project
 require('crash-reporter').start();
-
-let options = {};
-options.name = 'Pomodoro';
-
-if(process.platform === 'darwin') {
-	options.path = '/Applications/Pomodoro.app';
-} else if(process.platform === 'win32') {
-	options.path = 'C:\Program Files\Pomodoro_Windows';
-}
-
-let autolauncher = new AutoLaunch(options);
 
 let timeFormat = new Hrt('%mm%:%ss%');
 let workTimer = 1500000;
@@ -35,6 +25,17 @@ let sender;
 let mb = menubar({
 	'preloadWindow': true
 });
+
+let options = {};
+options.name = 'Pomodoro';
+
+if(process.platform === 'darwin') {
+	options.path = path.join(mb.app.getAppPath(), 'Pomodoro.app');
+} else if(process.platform === 'win32') {
+	options.path = path.join(mb.app.getAppPath(), 'Pomodoro.exe');
+}
+
+let autolauncher = new AutoLaunch(options);
 
 getConfig();
 
@@ -117,7 +118,8 @@ ipc.on('request-config', function(event) {
 
 function getConfig() {
 	try {
-		var data = JSON.parse(fs.readFileSync(mb.app.getDataPath() + '/config.json'));
+		var dataPath = path.join(mb.app.getDataPath(), 'config.json');
+		var data = JSON.parse(fs.readFileSync(dataPath));
 		workTimer = data.workTimer * 60 * 1000;
 		relaxTimer = data.relaxTimer * 60 * 1000;
 		longRelaxTimer = data.longRelaxTimer * 60 * 1000;
