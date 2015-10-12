@@ -87,6 +87,8 @@ ipc.on('start-timer', function(event) {
 	sender = event.sender;
 	if(global.timer.runTimer) {
 		global.timer.stop();
+		sender.send('update-timer');
+		mb.tray.setTitle('Paused');
 	} else {
 		global.timer.start();
 	}

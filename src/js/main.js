@@ -18,7 +18,12 @@ globalShortcut.register('ctrl+alt+s', function() {
 });
 
 ipc.on('update-timer', function(event) {
-	$('.timer').circleProgress('value', remote.getGlobal('progress'));
+	if(remote.getGlobal('timer').runTimer) {
+		$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
+		$('.timer').circleProgress('value', remote.getGlobal('progress'));
+	} else {
+		$('.timer').circleProgress({fill: { gradient: ["gray", "lightgray"]}});
+	}
 });
 
 ipc.on('end-timer', function() {
