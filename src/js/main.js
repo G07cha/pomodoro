@@ -23,6 +23,7 @@ ipc.on('update-timer', function(event) {
 		$('.timer').circleProgress('value', remote.getGlobal('progress'));
 	} else {
 		$('.timer').circleProgress({fill: { gradient: ["gray", "lightgray"]}});
+		$('.timer').circleProgress('value', remote.getGlobal('progress'));
 	}
 });
 

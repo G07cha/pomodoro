@@ -51,7 +51,9 @@ mb.on('will-quit', () => {
 });
 
 global.timer.on('time', function(time) {
-	mb.tray.setTitle(timeFormat(new Date(time.ms)));
+	if(time.ms !== workTimer) {
+		mb.tray.setTitle(timeFormat(new Date(time.ms)));
+	}
 	global.progress = getProgress();
 	sender.send('update-timer');
 });
@@ -78,8 +80,8 @@ global.timer.on('done', function() {
 });
 
 ipc.on('reset-timer', function(event) {
-	mb.tray.setTitle('');
 	global.timer.reset(workTimer);
+	mb.tray.setTitle('');
 	
 	event.sender.send('update-timer', 0);
 });
