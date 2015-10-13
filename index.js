@@ -46,8 +46,12 @@ process.on('uncaughtException', (err) => {
 	mb.app.quit();
 });
 
-mb.on('will-quit', () => {
+mb.app.on('will-quit', () => {
 	globalShortcut.unregisterAll();
+});
+
+mb.app.on('quit', () => {
+	mb = null;
 });
 
 global.timer.on('time', function(time) {
