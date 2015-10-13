@@ -27,3 +27,9 @@ input.launch {
 #button.cancel {
 	right: 0;
 }
+
+div {
+	margin-left: 20px;
+	width: 200px;
+	display: inline-block;
+}

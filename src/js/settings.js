@@ -35,9 +35,9 @@ $(document).ready(function() {
 	 */
 	$('.save').on('click', function() {
 		fs.writeFile(app.getDataPath() + '/config.json', JSON.stringify({
-			workTimer: $('input.work').val(),
-			relaxTimer: $('input.relax').val(),
-			longRelaxTimer: $('input.longRelax').val(),
+			workTimer: $('div.work').slider('value'),
+			relaxTimer: $('div.relax').slider('value'),
+			longRelaxTimer: $('div.longRelax').slider('value'),
 			launchOnStartup: $('.launch').prop('checked')
 		}), function(err) {
 			if (err) {
@@ -79,12 +79,13 @@ $(document).ready(function() {
  * @param {Number} value New slider value
  */
 function slider(name, value) {
-	var timerSelector = 'input.' + name;
-	var valueSelector = 'span.' + name;
-	$(timerSelector).attr('value', value);
-	$(valueSelector).append(value);
-	$(timerSelector).change(function() {
-		$(valueSelector).empty();
-		$(valueSelector).append($(this).val());
+	$('div.' + name).slider({
+		value: value,
+		min: 1,
+		max: 60,
+		slide: function(event, ui) {
+			$('span.' + name).html(ui.value);
+		}
 	});
+	$('span.' + name).html($('div.' + name).slider('value'));
 }

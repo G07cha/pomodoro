@@ -6,15 +6,17 @@
 		<link rel="stylesheet" href="src/styles/settings.css">
 		<link rel="stylesheet" href="src/styles/index.css">
 		<script src="src/js/settings.js"></script>
+		<link rel="stylesheet" href="external/jquery-ui-1.11.4/jquery-ui.min.css"></link>
+		<script type="text/javascript" src="external/jquery-ui-1.11.4/jquery-ui.min.js"></script>
 	</head>
 	<body>
 		<h3>Settings</h3>
 		<p id="text">Work interval</p>
-		<input type="range" min="5" max="60" value="0" step="1" class="work"><span class="work"></span>
+		<div class="work"></div><span class="work"></span>
 		<p id="text">Relax interval</p>
-		<input type="range" min="1" max="10" value="0" step="1" class="relax"><span class="relax"></span><br>
+		<div class="relax"></div><span class="relax"></span>
 		<p id="text">Long relax interval</p>
-		<input type="range" min="5" max="30" value="0" step="1" class="longRelax"><span class="longRelax"></span><br>
+		<div class="longRelax"></div><span class="longRelax"></span>
 		<div id="text"><input class="launch" type="checkbox" value="launchOnStartup">Launch on startup</div>
 		<div id="button" class="save"><p>Save</p></div>
 		<div id="button" class="cancel"><p>Cancel</p></div>
