@@ -14,9 +14,9 @@ const AutoLaunch = require('auto-launch');
 require('crash-reporter').start();
 
 let timeFormat = new Hrt('%mm%:%ss%');
-let workTimer = 1500;
-let relaxTimer = 3000;
-let longRelaxTimer = 9000;
+let workTimer = 1500000;
+let relaxTimer = 300000;
+let longRelaxTimer = 900000;
 let pomodoroCount = 0;
 let isRelaxTime = true;
 let launchOnStartup = false;
