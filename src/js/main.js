@@ -17,18 +17,17 @@ globalShortcut.register('ctrl+alt+s', function() {
 	ipc.send('start-timer');
 });
 
-ipc.on('update-timer', function(event) {
+ipc.on('update-timer', function(event, arg) {
 	if(remote.getGlobal('timer').runTimer) {
 		if(remote.getGlobal('isRelaxTime')) {
 			$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
 		} else {
 			$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
 		}
-		$('.timer').circleProgress('value', remote.getGlobal('progress'));
 	} else {
 		$('.timer').circleProgress({fill: { gradient: ["gray", "lightgray"]}});
-		$('.timer').circleProgress('value', remote.getGlobal('progress'));
 	}
+	$('.timer').circleProgress('value', remote.getGlobal('progress'));
 });
 
 ipc.on('end-timer', function() {

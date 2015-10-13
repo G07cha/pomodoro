@@ -89,6 +89,7 @@ global.timer.on('done', function() {
 ipc.on('reset-timer', function(event) {
 	global.timer.reset(workTimer);
 	mb.tray.setTitle('');
+	global.progress = getProgress();
 	
 	event.sender.send('update-timer', 0);
 });
@@ -147,13 +148,13 @@ function getConfig() {
 function getProgress() {
 	var progress;
 	if(isRelaxTime) {
+		progress = (workTimer - timer.ms) / (workTimer / 100) * 0.01;
+	} else {
 		if(pomodoroCount % 4 === 0) {
 			progress = (longRelaxTimer - timer.ms) / (longRelaxTimer / 100) * 0.01;
 		} else {
 			progress = (relaxTimer - timer.ms) / (relaxTimer / 100) * 0.01;
 		}
-	} else {
-		progress = (workTimer - timer.ms) / (workTimer / 100) * 0.01;
 	}
 	
 	if(progress < 0) {
