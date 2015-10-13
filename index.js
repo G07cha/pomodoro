@@ -14,11 +14,11 @@ const AutoLaunch = require('auto-launch');
 require('crash-reporter').start();
 
 let timeFormat = new Hrt('%mm%:%ss%');
-let workTimer = 1500000;
-let relaxTimer = 300000;
-let longRelaxTimer = 900000;
+let workTimer = 1500;
+let relaxTimer = 3000;
+let longRelaxTimer = 9000;
 let pomodoroCount = 0;
-let isRelaxTime = false;
+let isRelaxTime = true;
 let launchOnStartup = false;
 let sender;
 
@@ -40,6 +40,7 @@ let autolauncher = new AutoLaunch(options);
 getConfig();
 
 global.timer = new Stopwatch(workTimer);
+global.isRelaxTime = isRelaxTime;
 
 process.on('uncaughtException', (err) => {
 	dialog.showErrorBox('Uncaught Exception: ' + err.message, err.stack || '');
@@ -55,7 +56,9 @@ mb.app.on('quit', () => {
 });
 
 global.timer.on('time', function(time) {
-	if(time.ms !== workTimer) {
+	if(time.ms !== workTimer
+	   || time.ms !== relaxTimer
+	   || time.ms !== longRelaxTimer) {
 		mb.tray.setTitle(timeFormat(new Date(time.ms)));
 	}
 	global.progress = getProgress();
@@ -123,22 +126,22 @@ ipc.on('request-config', function(event) {
 });
 
 function getConfig() {
-	try {
-		var dataPath = path.join(mb.app.getDataPath(), 'config.json');
-		var data = JSON.parse(fs.readFileSync(dataPath));
-		workTimer = data.workTimer * 60 * 1000;
-		relaxTimer = data.relaxTimer * 60 * 1000;
-		longRelaxTimer = data.longRelaxTimer * 60 * 1000;
-		launchOnStartup = data.launchOnStartup;
-		if(launchOnStartup) {
-			autolauncher.enable();
-		} else {
-			autolauncher.disable();
-		}
-	} catch(err) {
-		console.log(err);
-		console.log('Didn\'t found previous config. Using default settings');
-	}
+//	try {
+//		var dataPath = path.join(mb.app.getDataPath(), 'config.json');
+//		var data = JSON.parse(fs.readFileSync(dataPath));
+//		workTimer = data.workTimer * 60 * 1000;
+//		relaxTimer = data.relaxTimer * 60 * 1000;
+//		longRelaxTimer = data.longRelaxTimer * 60 * 1000;
+//		launchOnStartup = data.launchOnStartup;
+//		if(launchOnStartup) {
+//			autolauncher.enable();
+//		} else {
+//			autolauncher.disable();
+//		}
+//	} catch(err) {
+//		console.log(err);
+//		console.log('Didn\'t found previous config. Using default settings');
+//	}
 }
 
 function getProgress() {
