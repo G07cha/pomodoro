@@ -126,22 +126,22 @@ ipc.on('request-config', function(event) {
 });
 
 function getConfig() {
-//	try {
-//		var dataPath = path.join(mb.app.getDataPath(), 'config.json');
-//		var data = JSON.parse(fs.readFileSync(dataPath));
-//		workTimer = data.workTimer * 60 * 1000;
-//		relaxTimer = data.relaxTimer * 60 * 1000;
-//		longRelaxTimer = data.longRelaxTimer * 60 * 1000;
-//		launchOnStartup = data.launchOnStartup;
-//		if(launchOnStartup) {
-//			autolauncher.enable();
-//		} else {
-//			autolauncher.disable();
-//		}
-//	} catch(err) {
-//		console.log(err);
-//		console.log('Didn\'t found previous config. Using default settings');
-//	}
+	try {
+		var dataPath = path.join(mb.app.getDataPath(), 'config.json');
+		var data = JSON.parse(fs.readFileSync(dataPath));
+		workTimer = data.workTimer * 60 * 1000;
+		relaxTimer = data.relaxTimer * 60 * 1000;
+		longRelaxTimer = data.longRelaxTimer * 60 * 1000;
+		launchOnStartup = data.launchOnStartup;
+		if(launchOnStartup) {
+			autolauncher.enable();
+		} else {
+			autolauncher.disable();
+		}
+	} catch(err) {
+		console.log(err);
+		console.log('Didn\'t found previous config. Using default settings');
+	}
 }
 
 function getProgress() {
