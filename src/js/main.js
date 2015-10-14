@@ -20,9 +20,9 @@ globalShortcut.register('ctrl+alt+s', function() {
 ipc.on('update-timer', function(event, arg) {
 	if(remote.getGlobal('timer').runTimer) {
 		if(remote.getGlobal('isRelaxTime')) {
-			$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
-		} else {
 			$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
+		} else {
+			$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
 		}
 	} else {
 		$('.timer').circleProgress({fill: { gradient: ["gray", "lightgray"]}});
@@ -38,7 +38,7 @@ ipc.on('end-timer', function() {
 	dialog.showMessageBox({
 		type: 'info',
 		title: 'Pomodoro',
-		message: (isRelaxTime) ? 'Back to work' : 'Timer ended it\'s time to relax',
+		message: (isRelaxTime) ? 'Timer ended it\'s time to relax' : 'Back to work',
 		buttons: ['OK'],
 		noLink: true
 	}, function() {

@@ -18,7 +18,7 @@ let workTimer = 1500000;
 let relaxTimer = 300000;
 let longRelaxTimer = 900000;
 let pomodoroCount = 0;
-let isRelaxTime = true;
+let isRelaxTime = false;
 let launchOnStartup = false;
 let sender;
 
@@ -66,11 +66,7 @@ global.timer.on('time', function(time) {
 });
 
 global.timer.on('done', function() {
-	global.isRelaxTime = isRelaxTime;
-	global.pomodoroCount = pomodoroCount;
-	
 	sender.send('end-timer');
-	
 	if(isRelaxTime) {
 		global.timer.reset(workTimer);
 		isRelaxTime = false;
@@ -84,6 +80,9 @@ global.timer.on('done', function() {
 		
 		isRelaxTime = true;
 	}
+	
+	global.isRelaxTime = isRelaxTime;
+	global.pomodoroCount = pomodoroCount;
 });
 
 ipc.on('reset-timer', function(event) {
@@ -147,15 +146,18 @@ function getConfig() {
 
 function getProgress() {
 	var progress;
+	var max;
 	if(isRelaxTime) {
-		progress = (workTimer - timer.ms) / (workTimer / 100) * 0.01;
-	} else {
 		if(pomodoroCount % 4 === 0) {
-			progress = (longRelaxTimer - timer.ms) / (longRelaxTimer / 100) * 0.01;
+			max = longRelaxTimer;
 		} else {
-			progress = (relaxTimer - timer.ms) / (relaxTimer / 100) * 0.01;
+			max = relaxTimer;
 		}
+	} else {
+		max = workTimer;
 	}
+	
+	progress = (max - timer.ms) / (max / 100) * 0.01;
 	
 	if(progress < 0) {
 		progress = 0.01;
