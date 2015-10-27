@@ -67,7 +67,8 @@ $(document).ready(function() {
 	});
 	
 	$('div.quit').on('click', function() {
-		app.quit();
+		ipc.send('quit');
+//		app.quit();
 	});
 	
 	$('div.reset').on('click', function() {

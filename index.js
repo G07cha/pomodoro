@@ -125,6 +125,10 @@ ipc.on('request-config', function(event) {
 	};
 });
 
+ipc.on('quit', function(event) {
+	mb.app.quit();
+});
+
 function getConfig() {
 	try {
 		var dataPath = path.join(mb.app.getDataPath(), 'config.json');
