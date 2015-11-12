@@ -17,18 +17,16 @@ input.launch {
 	margin-top: 25px;
 }
 
-#button {
+.btn {
 	-webkit-app-region: no-drag;
 	bottom: 0;
-	height: 20px;
-	width: 60px;
 }
 
-#button.cancel {
+.btn.cancel {
 	right: 0;
 }
 
-div {
+.count {
 	margin-left: 20px;
 	width: 200px;
 	display: inline-block;

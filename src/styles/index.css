@@ -64,7 +64,6 @@ div.timer {
 
 div.timer strong {
 	cursor: pointer;
-
 	position: absolute;
 	top: 125px;
 	left: 0;
@@ -82,7 +81,6 @@ div.timer canvas {
 
 div.panel {
 	display: block;
-	margin: 20px;
 }
 
 .btn {

@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Electron boilerplate</title>
+        <link rel="stylesheet" href="src/styles/bootstrap.min.css">
 		<link rel="stylesheet" href="src/styles/settings.css">
 		<link rel="stylesheet" href="src/styles/index.css">
 		<script src="src/js/settings.js"></script>
@@ -12,13 +13,15 @@
 	<body>
 		<h3>Settings</h3>
 		<p id="text">Work interval</p>
-		<div class="work"></div><span class="work"></span>
+		<div class="work count"></div><span class="work"></span>
 		<p id="text">Relax interval</p>
-		<div class="relax"></div><span class="relax"></span>
+        <div class="relax count"></div><span class="relax"></span>
 		<p id="text">Long relax interval</p>
-		<div class="longRelax"></div><span class="longRelax"></span>
-		<div id="text"><input class="launch" type="checkbox" value="launchOnStartup">Launch on startup</div>
-		<div id="button" class="save"><p>Save</p></div>
-		<div id="button" class="cancel"><p>Cancel</p></div>
+        <div class="longRelax count"></div><span class="longRelax"></span>
+		<div id="text" class="count"><input class="launch" type="checkbox" value="launchOnStartup">Launch on startup</div>
+        <div class="panel">
+            <button type="button" class="btn btn-primary save">Save</button>
+            <button type="button" class="btn btn-danger cancel">Cancel</button>
+        </div>
 	</body>
 </html>
