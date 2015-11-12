@@ -19,6 +19,7 @@ let relaxTimer = 300000;
 let longRelaxTimer = 900000;
 let pomodoroCount = 0;
 let isRelaxTime = false;
+let showTimer = true;
 let launchOnStartup = false;
 let sender;
 
@@ -56,11 +57,15 @@ mb.app.on('quit', () => {
 });
 
 global.timer.on('time', function(time) {
-	if(time.ms !== workTimer
-	   || time.ms !== relaxTimer
-	   || time.ms !== longRelaxTimer) {
-		mb.tray.setTitle(timeFormat(new Date(time.ms)));
-	}
+	if(showTimer) {
+        if (time.ms !== workTimer
+	       || time.ms !== relaxTimer
+	       || time.ms !== longRelaxTimer) {
+		  mb.tray.setTitle(timeFormat(new Date(time.ms)));
+        }
+	} else {
+        mb.tray.setTitle('');
+    }
 	global.progress = getProgress();
 	sender.send('update-timer');
 });
@@ -121,6 +126,7 @@ ipc.on('request-config', function(event) {
 		workTimer: workTimer / 60 / 1000, 
 		relaxTimer: relaxTimer / 60 / 1000, 
 		longRelaxTimer: longRelaxTimer / 60 / 1000,
+        showTimer: showTimer,
 		launchOnStartup: launchOnStartup
 	};
 });
@@ -136,6 +142,7 @@ function getConfig() {
 		workTimer = data.workTimer * 60 * 1000;
 		relaxTimer = data.relaxTimer * 60 * 1000;
 		longRelaxTimer = data.longRelaxTimer * 60 * 1000;
+        showTimer = data.showTimer;
 		launchOnStartup = data.launchOnStartup;
 		if(launchOnStartup) {
 			autolauncher.enable();

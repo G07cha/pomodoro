@@ -18,6 +18,7 @@ var configs = ipc.sendSync('request-config');
 workTimer = configs.workTimer;
 relaxTimer = configs.relaxTimer;
 longRelaxTimer = configs.longRelaxTimer;
+showTimer = configs.showTimer;
 launchOnStartup = configs.launchOnStartup;
 
 
@@ -28,6 +29,7 @@ $(document).ready(function() {
 	slider('work', workTimer);
 	slider('relax', relaxTimer);
 	slider('longRelax', longRelaxTimer);
+	$('.showTimer').attr('checked', showTimer);
 	$('.launch').attr('checked', launchOnStartup);
 	
 	/*
@@ -38,6 +40,7 @@ $(document).ready(function() {
 			workTimer: $('div.work').slider('value'),
 			relaxTimer: $('div.relax').slider('value'),
 			longRelaxTimer: $('div.longRelax').slider('value'),
+			showTimer: $('.showTimer').prop('checked'),
 			launchOnStartup: $('.launch').prop('checked')
 		}), function(err) {
 			if (err) {
