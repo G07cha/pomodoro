@@ -4,12 +4,8 @@
   "version": "0.0.1",
   "description": "Pomodoro timer build with electron",
   "license": "MIT",
-  "repository": "user/repo",
-  "author": {
-    "name": "",
-    "email": "",
-    "url": ""
-  },
+  "repository": "https://github.com/G07cha/pomodoro.git",
+  "author": "g07cha",
   "engines": {
     "node": ">=4"
   },
@@ -27,32 +23,16 @@
     "package-win32": "electron-builder dist/pomodoro-win32-ia32/ --platform=win --out=dist --config=config.json && mv 'dist/Pomodoro Setup.exe' dist/Pomodoro_Windows32.exe",
     "package-osx": "electron-builder dist/pomodoro-darwin-x64/pomodoro.app --platform=osx --out=dist --config=config.json"
   },
-  "files": [
-    "index.js",
-    "index.html",
-    "index.css"
-  ],
-  "keywords": [
-    "electron-app"
-  ],
   "dependencies": {
     "auto-launch": "^0.1.19",
-    "electron-debug": "^0.2.1",
     "human-readable-time": "^0.2.0",
     "jquery": "^2.1.4",
     "menubar": "^2.2.1",
     "timer-stopwatch": "^0.1.6"
   },
   "devDependencies": {
+    "electron-debug": "^0.2.1",
     "electron-packager": "^5.0.0",
-    "electron-prebuilt": "^0.33.3",
-    "xo": "^0.9.0"
-  },
-  "xo": {
-    "esnext": true,
-    "envs": [
-      "node",
-      "browser"
-    ]
+    "electron-prebuilt": "^0.33.9"
   }
 }
