@@ -66,12 +66,11 @@ $(document).ready(function() {
 		}
 	});
 	
-	$('div.quit').on('click', function() {
+	$('.quit').on('click', function() {
 		ipc.send('quit');
-//		app.quit();
 	});
 	
-	$('div.reset').on('click', function() {
+	$('.reset').on('click', function() {
 		$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
 		ipc.send('reset-timer');
 	});

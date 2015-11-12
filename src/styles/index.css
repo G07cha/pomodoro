@@ -85,39 +85,18 @@ div.panel {
 	margin: 20px;
 }
 
-div#button {
-	cursor: pointer;
-	display: block;
-	height: 30px;
+.btn {
+    cursor: pointer;
 	margin: 20px;
 	position: absolute;
-	border: 1px solid transparent;
-	border-color: black;
-	box-shadow: 0 0 10px #ccc;
 }
 
-div#button p {
-	cursor: pointer;
-	margin: 0;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin-right: -50%;
-	transform: translate(-50%, -50%)
-}
-
-div#button:hover {
-	background-color: lightgray;
-}
-
-div.quit {
-	width: 50px;
+.quit {
 	right: 0;
 	bottom: 0;
 }
 
-div.reset {
+.reset {
 	left: 0;
 	bottom: 0;
-	width: 80px;
 }
