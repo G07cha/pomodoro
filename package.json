@@ -9,7 +9,7 @@
   "engines": {
     "node": ">=4"
   },
-  "electronVersion": "0.33.3",
+  "electronVersion": "0.34.3",
   "scripts": {
     "test": "xo",
     "start": "electron .",
@@ -20,7 +20,7 @@
     "build-win": "electron-packager . $npm_package_productName --out=dist --arch=all --platform=win32 --ignore='^/dist$' --prune --asar --overwrite --icon=./icon.ico --version=$npm_package_electronVersion",
     "package": "npm run package-win32 && npm run package-win64 && npm run package-osx",
     "package-win64": "electron-builder dist/pomodoro-win32-x64/ --platform=win --out=dist --config=config.json && mv 'dist/Pomodoro Setup.exe' dist/Pomodoro_Windows64.exe",
-    "package-win32": "electron-builder dist/pomodoro-win32-ia32/ --platform=win --out=dist --config=config.json && mv 'dist/Pomodoro Setup.exe' dist/Pomodoro_Windows32.exe",
+    "package-win32": "electron-builder dist/pomodoro-win32-ia32 --platform=win --out=dist --config=config.json && mv 'dist/Pomodoro Setup.exe' dist/Pomodoro_Windows32.exe",
     "package-osx": "electron-builder dist/pomodoro-darwin-x64/pomodoro.app --platform=osx --out=dist --config=config.json"
   },
   "dependencies": {
@@ -31,8 +31,9 @@
     "timer-stopwatch": "^0.1.6"
   },
   "devDependencies": {
-    "electron-debug": "^0.2.1",
+    "electron-builder": "^2.1.1",
+    "electron-debug": "^0.4.0",
     "electron-packager": "^5.0.0",
-    "electron-prebuilt": "^0.33.9"
+    "electron-prebuilt": "^0.34.3"
   }
 }
