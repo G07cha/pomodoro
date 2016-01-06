@@ -50,6 +50,7 @@ process.on('uncaughtException', (err) => {
 
 mb.app.on('will-quit', () => {
 	globalShortcut.unregisterAll();
+	global.timer.stop();
 });
 
 mb.app.on('quit', () => {
