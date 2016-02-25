@@ -1,0 +1,23 @@
+{
+  "name": "pomodoro",
+  "description": "Pomodoro timer build with electron",
+  "main": "index.js",
+  "authors": [
+    "g07cha"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/G07cha/pomodoro",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "jquery-circle-progress": "^1.1.3"
+  }
+}
