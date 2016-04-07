@@ -7,6 +7,7 @@ const dialog = require('dialog');
 const Stopwatch = require('timer-stopwatch');
 const Hrt = require('human-readable-time');
 const fs = require('fs');
+
 const path = require('path');
 const AutoLaunch = require('auto-launch');
 
@@ -152,7 +153,7 @@ function getConfig() {
 		}
 	} catch(err) {
 		console.log(err);
-		console.log('Didn\'t found previous config. Using default settings');
+		console.log('Didn\'t find previous config. Using default settings');
 	}
 }
 
