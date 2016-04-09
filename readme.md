@@ -16,6 +16,7 @@ Time managment tool for Windows and OS X based on [Pomodoro Technique](https://e
 
 ```
 npm install
+bower install
 ```
 
 ### Run
