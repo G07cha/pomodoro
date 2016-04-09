@@ -28,6 +28,7 @@
     "human-readable-time": "^0.2.0",
     "jquery": "^2.1.4",
     "menubar": "^2.2.1",
+    "photon": "git+https://github.com/connors/photon.git",
     "timer-stopwatch": "^0.1.6"
   },
   "devDependencies": {

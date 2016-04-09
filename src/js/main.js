@@ -32,9 +32,9 @@ ipc.on('update-timer', function(event, arg) {
 
 ipc.on('end-timer', function() {
 	$('.timer').circleProgress('value', 1);
-	
+
 	var isRelaxTime = remote.getGlobal('isRelaxTime');
-	
+
 	dialog.showMessageBox({
 		type: 'info',
 		title: 'Pomodoro',
@@ -48,7 +48,7 @@ ipc.on('end-timer', function() {
 			$('#counter').text(remote.getGlobal('pomodoroCount'));
 			$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
 		}
-		
+
 		ipc.send('start-timer');
 	});
 });
@@ -57,24 +57,24 @@ $(document).ready(function() {
 	$('div.timer').on('click', function() {
 		ipc.send('start-timer');
 	});
-	
-	$('img.settings').on('click', function() {
+
+	$('#settingsBtn').on('click', function() {
 		if(settingsWindow) {
 			settingsWindow.show();
 		} else {
 			settingsWindow = createWindow();
 		}
 	});
-	
-	$('.quit').on('click', function() {
+
+	$('#quitBtn').on('click', function() {
 		ipc.send('quit');
 	});
-	
-	$('.reset').on('click', function() {
+
+	$('#resetBtn').on('click', function() {
 		$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
 		ipc.send('reset-timer');
 	});
-	
+
 	$('.timer').circleProgress({
 		value: 0,
 		size: 250,
@@ -84,17 +84,17 @@ $(document).ready(function() {
 		}
 	}).on('circle-animation-progress', function(event, progress, stepValue) {
 		var text;
-		
+
 		var timer = remote.getGlobal('timer');
 		if(timer.runTimer) {
 			text = timeFormat(new Date(timer.ms));
 		} else {
 			text = 'Click to start';
 		}
-		
+
 		$(this).find('strong').text(text);
 	});
-	
+
 	$.circleProgress.defaults.setValue = function(newValue) {
 		if (this.animation) {
 			var canvas = $(this.canvas),
@@ -120,8 +120,8 @@ function createWindow() {
 		frame: false,
 		show: false
 	});
-	
-	win.loadUrl('file://' + __dirname + '/settings.html');
-	
+
+	win.loadUrl('file://' + __dirname + '/src/settings.html');
+
 	return win;
 }

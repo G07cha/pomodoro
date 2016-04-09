@@ -2,21 +2,22 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="node_modules/photon/dist/css/photon.css">
 		<link rel="stylesheet" href="src/styles/index.css">
 		<script src="src/js/main.js"></script>
 		<script src="bower_components/jquery-circle-progress/dist/circle-progress.js"></script>
 	</head>
 	<body>
-		<img class="pomodoro" src="IconTemplate.png"></img><span id="counter">0</span>
-		<img class="settings" src="src/img/settingsIcon.png"></img>
-		<h2>Pomodoro Timer</h2>
+		<div class="panel">
+			<img class="pomodoro" src="src/img/IconTemplate.png"></img><span id="counter">0</span>
+			<span class="icon icon-cog" id="settingsBtn"></span>
+		</div>
 		<div class="timer">
 			<strong></strong>
 		</div>
-		<div class="pnl">
-      <button type="button" class="btn btn-primary reset">Reset</button>
-      <button type="button" class="btn btn-danger quit">Quit</button>
+		<div class="footer">
+			<button class="btn btn-large btn-default" id="resetBtn">Reset</button>
+			<button class="btn btn-large btn-negative" id="quitBtn">Quit</button>
 		</div>
 	</body>
 </html>

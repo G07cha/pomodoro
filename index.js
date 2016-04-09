@@ -83,10 +83,10 @@ global.timer.on('done', function() {
 		} else {
 			global.timer.reset(relaxTimer);
 		}
-		
+
 		isRelaxTime = true;
 	}
-	
+
 	global.isRelaxTime = isRelaxTime;
 	global.pomodoroCount = pomodoroCount;
 });
@@ -95,7 +95,7 @@ ipc.on('reset-timer', function(event) {
 	global.timer.reset(workTimer);
 	mb.tray.setTitle('');
 	global.progress = getProgress();
-	
+
 	event.sender.send('update-timer', 0);
 });
 
@@ -112,7 +112,7 @@ ipc.on('start-timer', function(event) {
 
 ipc.on('settings-updated', function(event) {
 	getConfig();
-	
+
 	if(sender) {
 		sender.send('update-timer', getProgress());
 	} else {
@@ -122,10 +122,10 @@ ipc.on('settings-updated', function(event) {
 
 ipc.on('request-config', function(event) {
 	getConfig();
-	
-	event.returnValue = { 
-		workTimer: workTimer / 60 / 1000, 
-		relaxTimer: relaxTimer / 60 / 1000, 
+
+	event.returnValue = {
+		workTimer: workTimer / 60 / 1000,
+		relaxTimer: relaxTimer / 60 / 1000,
 		longRelaxTimer: longRelaxTimer / 60 / 1000,
         showTimer: showTimer,
 		launchOnStartup: launchOnStartup
@@ -168,9 +168,9 @@ function getProgress() {
 	} else {
 		max = workTimer;
 	}
-	
+
 	progress = (max - timer.ms) / (max / 100) * 0.01;
-	
+
 	if(progress < 0) {
 		progress = 0.01;
 	}

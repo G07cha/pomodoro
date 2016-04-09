@@ -2,10 +2,11 @@
 	-webkit-user-select: none;
 }
 
-*:active,
-*:hover {
-	cursor: default;
+@font-face {
+	font-family: Photon;
+	src: url('../../node_modules/photon/fonts/photon-entypo.ttf');
 }
+
 
 html,
 body {
@@ -15,46 +16,42 @@ body {
 }
 
 body {
-	font-family: -apple-system, 'Helvetica Neue', Helvetica, sans-serif;
+	font-family: Photon;
 }
 
-img.settings {
-	margin: 10px;
+.panel {
+	width: 100%;
+	display: block;
+}
+
+#settingsBtn {
+	font-size: 20px;
 	cursor: pointer;
 	display: inline-block;
 	position: absolute;
 	opacity: 0.4;
-	right: 0;
+	right: 10px;
 }
 
-img.settings:hover {
+#settingsBtn:hover {
 	opacity: 1;
-	color: aqua;
 }
 
 img.pomodoro {
 	display: inline-block;
-	margin-top: 10px;
 	margin-left: 10px;
+	margin-top: 5px;
 	opacity: 0.3;
 }
 
 #counter {
 	display: inline-block;
 	position: absolute;
-	top: 13px;
 	opacity: 0.3;
-}
-
-h2 {
-	margin-left: 65px;
-	position: absolute;
-	display: inline-block;
-	text-align: center;
+	top: 8px;
 }
 
 div.timer {
-	margin: 6px 6px 20px;
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -65,36 +62,32 @@ div.timer {
 div.timer strong {
 	cursor: pointer;
 	position: absolute;
-	top: 125px;
+	top: 105px;
 	left: 0;
 	width: 100%;
 	text-align: center;
 	line-height: 40px;
-	font-size: 30px;
+	font-size: 24px;
 }
 
 div.timer canvas {
-	margin-top: 30px;
 	cursor: pointer;
 	vertical-align: top;
 }
 
-.pnl {
+.footer {
+	position: absolute;
+	width: 100%;
+	bottom: 10px;
+	left: 10px;
 	display: block;
 }
 
+.footer #quitBtn {
+	float: right;
+	margin-right: 20px;
+}
+
 .btn {
-    cursor: pointer;
-	margin: 20px;
-	position: absolute;
-}
-
-.quit {
-	right: 0;
-	bottom: 0;
-}
-
-.reset {
-	left: 0;
-	bottom: 0;
+  cursor: pointer;
 }
