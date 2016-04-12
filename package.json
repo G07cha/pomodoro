@@ -24,17 +24,16 @@
     "package-osx": "electron-builder dist/pomodoro-darwin-x64/pomodoro.app --platform=osx --out=dist --config=config.json"
   },
   "dependencies": {
-    "auto-launch": "^0.1.19",
+    "auto-launch": "^2.0.1",
     "human-readable-time": "^0.2.0",
-    "jquery": "^2.1.4",
-    "menubar": "^2.2.1",
+    "jquery": "^2.2.3",
+    "menubar": "^4.1.0",
     "photon": "git+https://github.com/connors/photon.git",
-    "timer-stopwatch": "^0.1.6"
+    "timer-stopwatch": "^0.2.0"
   },
   "devDependencies": {
-    "electron-builder": "^2.1.1",
-    "electron-debug": "^0.4.0",
-    "electron-packager": "^5.0.0",
-    "electron-prebuilt": "^0.34.3"
+    "electron-builder": "^3.5.0",
+    "electron-packager": "^6.0.2",
+    "electron-prebuilt": "^0.37.5"
   }
 }

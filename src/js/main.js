@@ -121,7 +121,7 @@ function createWindow() {
 		show: false
 	});
 
-	win.loadUrl('file://' + __dirname + '/src/settings.html');
+	win.loadURL('file://' + __dirname + '/src/settings.html');
 
 	return win;
 }

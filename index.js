@@ -2,16 +2,13 @@
 const menubar = require('menubar');
 const Menu = require('menu');
 const globalShortcut = require('global-shortcut');
-const ipc = require('ipc');
+const ipc = require('electron').ipcMain;
 const dialog = require('dialog');
 const Stopwatch = require('timer-stopwatch');
 const Hrt = require('human-readable-time');
 const fs = require('fs');
 const path = require('path');
 const AutoLaunch = require('auto-launch');
-
-// report crashes to the Electron project
-require('crash-reporter').start();
 
 let timeFormat = new Hrt('%mm%:%ss%');
 let workTimer = 1500000;
@@ -50,7 +47,6 @@ process.on('uncaughtException', (err) => {
 
 mb.app.on('will-quit', () => {
 	globalShortcut.unregisterAll();
-	global.timer.stop();
 });
 
 mb.app.on('quit', () => {
@@ -138,7 +134,7 @@ ipc.on('quit', function(event) {
 
 function getConfig() {
 	try {
-		var dataPath = path.join(mb.app.getDataPath(), 'config.json');
+		var dataPath = path.join(mb.app.getPath('userData'), 'config.json');
 		var data = JSON.parse(fs.readFileSync(dataPath));
 		workTimer = data.workTimer * 60 * 1000;
 		relaxTimer = data.relaxTimer * 60 * 1000;
