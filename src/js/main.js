@@ -11,7 +11,15 @@ var settingsWindow = createWindow();
 window.$ = window.jQuery = require('jquery');
 
 var timeFormat = new hrt('%mm%:%ss%');
-
+var plainAlert = false;
+var customAlertWindowPath = __dirname + '/dummy.html';
+var customAlertWindow = new browserWindow({
+	width: 800,
+	height: 600,
+	frame: false,
+	show: false
+});
+customAlertWindow.loadUrl('file://' + customAlertWindowPath);
 
 globalShortcut.register('ctrl+alt+s', function() {
 	ipc.send('start-timer');
@@ -35,22 +43,32 @@ ipc.on('end-timer', function() {
 	
 	var isRelaxTime = remote.getGlobal('isRelaxTime');
 	
-	dialog.showMessageBox({
-		type: 'info',
-		title: 'Pomodoro',
-		message: (isRelaxTime) ? 'Timer ended it\'s time to relax' : 'Back to work',
-		buttons: ['OK'],
-		noLink: true
-	}, function() {
-		if(isRelaxTime) {
-			$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
+	if (plainAlert) {
+		dialog.showMessageBox({
+			type: 'info',
+			title: 'Pomodoro',
+			message: (isRelaxTime) ? 'Timer ended it\'s time to relax' : 'Back to work',
+			buttons: ['OK'],
+			noLink: true
+		}, function() {
+			if(isRelaxTime) {
+				$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
+			} else {
+				$('#counter').text(remote.getGlobal('pomodoroCount'));
+				$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
+			}
+			
+			ipc.send('start-timer');
+		});
+	} else {
+		if (isRelaxTime) {
+			customAlertWindow.show();
 		} else {
-			$('#counter').text(remote.getGlobal('pomodoroCount'));
-			$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
+			customAlertWindow.hide();
 		}
 		
 		ipc.send('start-timer');
-	});
+	}
 });
 
 $(document).ready(function() {
