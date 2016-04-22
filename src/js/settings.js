@@ -12,6 +12,8 @@ var workTimer = 25;
 var relaxTimer = 5;
 var longRelaxTimer = 15;
 var launchOnStartup = false;
+var useCustomAlert = false;
+var customAlertFilePath;
 
 var configs = ipc.sendSync('request-config');
 
@@ -20,7 +22,8 @@ relaxTimer = configs.relaxTimer;
 longRelaxTimer = configs.longRelaxTimer;
 showTimer = configs.showTimer;
 launchOnStartup = configs.launchOnStartup;
-
+useCustomAlert = configs.useCustomAlert;
+customAlertFilePath = configs.customAlertFilePath;
 
 $(document).ready(function() {
 	/*
@@ -32,6 +35,9 @@ $(document).ready(function() {
 	$('.showTimer').attr('checked', showTimer);
 	$('.launch').attr('checked', launchOnStartup);
 	
+	$('.customAlert').attr('checked', useCustomAlert);
+	$('.customAlertPath').val(customAlertFilePath);
+
 	/*
 	 * Save settings
 	 */
@@ -41,7 +47,9 @@ $(document).ready(function() {
 			relaxTimer: $('div.relax').slider('value'),
 			longRelaxTimer: $('div.longRelax').slider('value'),
 			showTimer: $('.showTimer').prop('checked'),
-			launchOnStartup: $('.launch').prop('checked')
+			launchOnStartup: $('.launch').prop('checked'),
+			useCustomAlert: $('.customAlert').prop('checked'),
+			customAlertFilePath: $('.customAlertPath').val()
 		}), function(err) {
 			if (err) {
 				dialog.showErrorBox('Failed to save settings', err);
@@ -73,6 +81,28 @@ $(document).ready(function() {
 				settingsWindow.hide();
 			}
 		})
+	});
+
+	function toggleProps() {
+		if ($('.customAlert').prop('checked')) {
+			$('.customAlertPath').show();
+			$('.testCustomAlert').show();
+		} else {
+			$('.customAlertPath').hide();
+			$('.testCustomAlert').hide();
+		}
+	}
+
+	toggleProps();
+	$('.customAlert').on('click', function() {
+		toggleProps();
+	});
+
+	$('.testCustomAlert').on('click', function() {
+		ipc.send('test-alert-window', {
+			file: $('.customAlertPath').val(),
+			timeout: 4000
+		});
 	});
 });
 

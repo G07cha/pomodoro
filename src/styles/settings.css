@@ -26,6 +26,10 @@ input.launch {
 	right: 0;
 }
 
+.btnForm {
+	-webkit-app-region: no-drag;
+}
+
 .count {
 	margin-left: 20px;
 	width: 200px;

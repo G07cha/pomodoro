@@ -11,18 +11,17 @@ var settingsWindow = createWindow();
 window.$ = window.jQuery = require('jquery');
 
 var timeFormat = new hrt('%mm%:%ss%');
-var plainAlert = false;
-var customAlertWindowPath = __dirname + '/dummy.html';
-var customAlertWindow = new browserWindow({
-	width: 800,
-	height: 600,
-	frame: false,
-	show: false
-});
-customAlertWindow.loadUrl('file://' + customAlertWindowPath);
 
 globalShortcut.register('ctrl+alt+s', function() {
 	ipc.send('start-timer');
+});
+
+globalShortcut.register('ctrl+alt+e', function() {
+	ipc.send('show-alert-window');
+});
+
+globalShortcut.register('ctrl+alt+f', function() {
+	ipc.send('hide-alert-window');
 });
 
 ipc.on('update-timer', function(event, arg) {
@@ -42,8 +41,9 @@ ipc.on('end-timer', function() {
 	$('.timer').circleProgress('value', 1);
 	
 	var isRelaxTime = remote.getGlobal('isRelaxTime');
+	var customAlert = remote.getGlobal('useCustomAlert');
 	
-	if (plainAlert) {
+	if (!customAlert) {
 		dialog.showMessageBox({
 			type: 'info',
 			title: 'Pomodoro',
@@ -62,9 +62,9 @@ ipc.on('end-timer', function() {
 		});
 	} else {
 		if (isRelaxTime) {
-			customAlertWindow.show();
+			ipc.send('show-alert-window');
 		} else {
-			customAlertWindow.hide();
+			ipc.send('hide-alert-window');
 		}
 		
 		ipc.send('start-timer');
@@ -133,12 +133,11 @@ $(document).ready(function() {
 // For creating settings window
 function createWindow() {
 	var win = new browserWindow({
-		width: 300,
+		width: 350,
 		height: 500,
 		frame: false,
 		show: false
 	});
-	
 	win.loadUrl('file://' + __dirname + '/settings.html');
 	
 	return win;
