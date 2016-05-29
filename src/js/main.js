@@ -1,24 +1,19 @@
-var remote = require('remote');
-var app = remote.require('app');
-var dialog = remote.require('dialog');
-var browserWindow = remote.require('browser-window');
-var globalShortcut = remote.require('global-shortcut');
-var ipc = require('ipc');
+'use strict';
 
-var fs = require('fs');
-var hrt = require('human-readable-time');
-var settingsWindow = createWindow();
+const {remote, ipcRenderer} = require('electron');
+const {dialog, globalShortcut, BrowserWindow} = remote;
+const hrt = require('human-readable-time');
 window.$ = window.jQuery = require('jquery');
 
-var timeFormat = new hrt('%mm%:%ss%');
-
+const timeFormat = new hrt('%mm%:%ss%');
+var settingsWindow = createWindow();
 
 globalShortcut.register('ctrl+alt+s', function() {
-	ipc.send('start-timer');
+	ipcRenderer.send('start-timer');
 });
 
-ipc.on('update-timer', function(event, arg) {
-	if(remote.getGlobal('timer').runTimer) {
+ipcRenderer.on('update-timer', function(event, value) {
+	if(remote.getGlobal('timer').state) {
 		if(remote.getGlobal('isRelaxTime')) {
 			$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
 		} else {
@@ -27,18 +22,17 @@ ipc.on('update-timer', function(event, arg) {
 	} else {
 		$('.timer').circleProgress({fill: { gradient: ["gray", "lightgray"]}});
 	}
-	$('.timer').circleProgress('value', remote.getGlobal('progress'));
+	$('.timer').circleProgress('value', value);
 });
 
-ipc.on('end-timer', function() {
+ipcRenderer.on('end-timer', function() {
+	const isRelaxTime = remote.getGlobal('isRelaxTime');
 	$('.timer').circleProgress('value', 1);
-
-	var isRelaxTime = remote.getGlobal('isRelaxTime');
 
 	dialog.showMessageBox({
 		type: 'info',
 		title: 'Pomodoro',
-		message: (isRelaxTime) ? 'Timer ended it\'s time to relax' : 'Back to work',
+		message: isRelaxTime ? 'Timer ended it\'s time to relax' : 'Back to work',
 		buttons: ['OK'],
 		noLink: true
 	}, function() {
@@ -49,13 +43,13 @@ ipc.on('end-timer', function() {
 			$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
 		}
 
-		ipc.send('start-timer');
+		ipcRenderer.send('start-timer');
 	});
 });
 
 $(document).ready(function() {
 	$('div.timer').on('click', function() {
-		ipc.send('start-timer');
+		ipcRenderer.send('start-timer');
 	});
 
 	$('#settingsBtn').on('click', function() {
@@ -67,12 +61,12 @@ $(document).ready(function() {
 	});
 
 	$('#quitBtn').on('click', function() {
-		ipc.send('quit');
+		ipcRenderer.send('quit');
 	});
 
 	$('#resetBtn').on('click', function() {
 		$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
-		ipc.send('reset-timer');
+		ipcRenderer.send('reset-timer');
 	});
 
 	$('.timer').circleProgress({
@@ -82,46 +76,24 @@ $(document).ready(function() {
 		fill: {
 			gradient: ["blue", "skyblue"]
 		}
-	}).on('circle-animation-progress', function(event, progress, stepValue) {
-		var text;
-
-		var timer = remote.getGlobal('timer');
-		if(timer.runTimer) {
-			text = timeFormat(new Date(timer.ms));
-		} else {
-			text = 'Click to start';
-		}
+	}).on('circle-animation-progress', function() {
+		let timer = remote.getGlobal('timer');
+		let text = timer.state ?
+				timeFormat(new Date(timer.ms)) : 'Click to start'
 
 		$(this).find('strong').text(text);
 	});
-
-	$.circleProgress.defaults.setValue = function(newValue) {
-		if (this.animation) {
-			var canvas = $(this.canvas),
-				q = canvas.queue();
-
-			if (q[0] == 'inprogress') {
-				canvas.stop(true, true);
-			}
-
-			this.animationStartValue = this.lastFrameValue;
-		}
-
-		this.value = newValue;
-		this.draw();
-	};
 });
 
 // For creating settings window
 function createWindow() {
-	var win = new browserWindow({
+	var win = new BrowserWindow({
 		width: 300,
 		height: 500,
 		frame: false,
 		show: false
 	});
-
-	win.loadURL('file://' + __dirname + '/src/settings.html');
+	win.loadURL('file://' + __dirname + '/settings.html');
 
 	return win;
 }

@@ -1,9 +1,6 @@
 'use strict';
+const {globalShortcut, ipcMain, dialog} = require('electron');
 const menubar = require('menubar');
-const Menu = require('menu');
-const globalShortcut = require('global-shortcut');
-const ipc = require('electron').ipcMain;
-const dialog = require('dialog');
 const Stopwatch = require('timer-stopwatch');
 const Hrt = require('human-readable-time');
 const fs = require('fs');
@@ -18,20 +15,21 @@ let pomodoroCount = 0;
 let isRelaxTime = false;
 let showTimer = true;
 let launchOnStartup = false;
-let sender;
 
 let mb = menubar({
-	'preloadWindow': true
+	dir: path.join(__dirname, '/src'),
+	preloadWindow: true,
+	tooltip: 'Pomodoro timer',
+	height: 330,
+	width: 340,
+	icon: path.join(__dirname, '/icons/IconTemplate.png')
 });
-
-let options = {};
-options.name = 'Pomodoro';
-
-if(process.platform === 'darwin') {
-	options.path = path.join(mb.app.getAppPath(), 'Pomodoro.app');
-} else if(process.platform === 'win32') {
-	options.path = path.join(mb.app.getAppPath(), 'Pomodoro.exe');
-}
+let options = {
+	name: 'Pomodoro',
+	path: (process.platform === 'darwin') ?
+		path.join(mb.app.getAppPath(), 'Pomodoro.app') :
+		path.join(mb.app.getAppPath(), 'Pomodoro.exe')
+};
 
 let autolauncher = new AutoLaunch(options);
 
@@ -39,36 +37,39 @@ getConfig();
 
 global.timer = new Stopwatch(workTimer);
 global.isRelaxTime = isRelaxTime;
+global.progress = 0;
 
 process.on('uncaughtException', (err) => {
+	console.log(err.stack);
 	dialog.showErrorBox('Uncaught Exception: ' + err.message, err.stack || '');
 	mb.app.quit();
 });
 
 mb.app.on('will-quit', () => {
 	globalShortcut.unregisterAll();
+	global.timer.stop();
 });
 
 mb.app.on('quit', () => {
 	mb = null;
 });
 
-global.timer.on('time', function(time) {
+global.timer.onTime(function(time) {
 	if(showTimer) {
-        if (time.ms !== workTimer
+    if (time.ms !== workTimer
 	       || time.ms !== relaxTimer
 	       || time.ms !== longRelaxTimer) {
 		  mb.tray.setTitle(timeFormat(new Date(time.ms)));
-        }
-	} else {
-        mb.tray.setTitle('');
     }
+	} else {
+    mb.tray.setTitle('');
+  }
 	global.progress = getProgress();
-	sender.send('update-timer');
+	mb.window.webContents.send('update-timer', getProgress());
 });
 
-global.timer.on('done', function() {
-	sender.send('end-timer');
+global.timer.onDone(function() {
+	mb.window.webContents.send('end-timer');
 	if(isRelaxTime) {
 		global.timer.reset(workTimer);
 		isRelaxTime = false;
@@ -87,65 +88,54 @@ global.timer.on('done', function() {
 	global.pomodoroCount = pomodoroCount;
 });
 
-ipc.on('reset-timer', function(event) {
+ipcMain.on('reset-timer', function(event) {
 	global.timer.reset(workTimer);
 	mb.tray.setTitle('');
 	global.progress = getProgress();
 
-	event.sender.send('update-timer', 0);
+	mb.window.webContents.send('update-timer', 0);
 });
 
-ipc.on('start-timer', function(event) {
-	sender = event.sender;
-	if(global.timer.runTimer) {
-		global.timer.stop();
-		sender.send('update-timer');
-		mb.tray.setTitle('Paused');
-	} else {
-		global.timer.start();
-	}
+ipcMain.on('start-timer', function(event) {
+	global.timer.startstop();
+	event.sender.send('update-timer', getProgress());
+	if(global.timer.runTimer) mb.tray.setTitle('Paused');
 });
 
-ipc.on('settings-updated', function(event) {
+ipcMain.on('settings-updated', function(event) {
 	getConfig();
 
-	if(sender) {
-		sender.send('update-timer', getProgress());
-	} else {
-		event.sender.send('update-timer', getProgress());
-	}
+	mb.window.webContents.send('update-timer', getProgress());
 });
 
-ipc.on('request-config', function(event) {
+ipcMain.on('request-config', function(event) {
 	getConfig();
 
 	event.returnValue = {
 		workTimer: workTimer / 60 / 1000,
 		relaxTimer: relaxTimer / 60 / 1000,
 		longRelaxTimer: longRelaxTimer / 60 / 1000,
-        showTimer: showTimer,
+    showTimer: showTimer,
 		launchOnStartup: launchOnStartup
 	};
 });
 
-ipc.on('quit', function(event) {
+ipcMain.on('quit', function() {
 	mb.app.quit();
 });
 
 function getConfig() {
 	try {
-		var dataPath = path.join(mb.app.getPath('userData'), 'config.json');
-		var data = JSON.parse(fs.readFileSync(dataPath));
+		let dataPath = path.join(mb.app.getPath('userData'), 'config.json');
+		let data = JSON.parse(fs.readFileSync(dataPath));
+
 		workTimer = data.workTimer * 60 * 1000;
 		relaxTimer = data.relaxTimer * 60 * 1000;
 		longRelaxTimer = data.longRelaxTimer * 60 * 1000;
-        showTimer = data.showTimer;
+    showTimer = data.showTimer;
 		launchOnStartup = data.launchOnStartup;
-		if(launchOnStartup) {
-			autolauncher.enable();
-		} else {
-			autolauncher.disable();
-		}
+
+		launchOnStartup ? autolauncher.enable() : autolauncher.disable();
 	} catch(err) {
 		console.log(err);
 		console.log('Didn\'t found previous config. Using default settings');
@@ -153,8 +143,8 @@ function getConfig() {
 }
 
 function getProgress() {
-	var progress;
-	var max;
+	let progress, max;
+
 	if(isRelaxTime) {
 		if(pomodoroCount % 4 === 0) {
 			max = longRelaxTimer;

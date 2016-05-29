@@ -9,7 +9,7 @@
   "engines": {
     "node": ">=4"
   },
-  "electronVersion": "0.36.7",
+  "electronVersion": "1.0.1",
   "scripts": {
     "test": "xo",
     "start": "electron .",
@@ -32,8 +32,9 @@
     "timer-stopwatch": "^0.2.0"
   },
   "devDependencies": {
+    "devtron": "^1.0.1",
     "electron-builder": "^3.5.0",
-    "electron-packager": "^6.0.2",
-    "electron-prebuilt": "^0.37.5"
+    "electron-packager": "^7.0.1",
+    "electron-prebuilt": "^1.0.1"
   }
 }

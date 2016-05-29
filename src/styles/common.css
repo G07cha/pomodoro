@@ -1,0 +1,32 @@
+* {
+	-webkit-user-select: none;
+}
+
+@font-face {
+	font-family: Photon;
+	src: url('../../node_modules/photon/fonts/photon-entypo.ttf');
+}
+
+html,
+body {
+	cursor: default;
+	padding: 0;
+	margin: 0;
+}
+
+body {
+  background-color: white;
+	font-family: Photon;
+}
+
+.footer {
+	position: absolute;
+	width: 100%;
+	bottom: 10px;
+	left: 10px;
+	display: block;
+}
+
+.btn {
+  cursor: pointer;
+}
