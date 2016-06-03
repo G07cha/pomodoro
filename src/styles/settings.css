@@ -19,15 +19,16 @@ input.launch {
 
 .btn {
 	-webkit-app-region: no-drag;
-	bottom: 0;
-}
-
-.btn.cancel {
-	right: 0;
 }
 
 .count {
 	margin-left: 20px;
 	width: 200px;
 	display: inline-block;
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
 }

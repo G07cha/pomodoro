@@ -32,7 +32,7 @@ $(document).ready(function() {
 	/*
 	 * Save settings
 	 */
-	$('.save').on('click', function() {
+	$('#saveBtn').on('click', function() {
 		fs.writeFile(app.getDataPath() + '/config.json', JSON.stringify({
 			workTimer: $('div.work').slider('value'),
 			relaxTimer: $('div.relax').slider('value'),
@@ -58,7 +58,7 @@ $(document).ready(function() {
 	/*
 	 * Exit from settings without settings(Cancel action)
 	 */
-	$('.cancel').on('click', function() {
+	$('#cancelBtn').on('click', function() {
 		dialog.showMessageBox({
 			type: 'question',
 			title: 'Warning',

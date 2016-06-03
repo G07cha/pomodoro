@@ -11,21 +11,25 @@
 		<script type="text/javascript" src="../bower_components/jquery-ui/jquery-ui.min.js"></script>
 	</head>
 	<body>
-		<h3>Settings</h3>
-		<p id="text">Work interval</p>
-		<div class="work count"></div><span class="work"></span>
+		<div class="window">
+			<h3>Settings</h3>
+			<p id="text">Work interval</p>
+			<div class="work count"></div><span class="work"></span>
 
-		<p id="text">Relax interval</p>
-    <div class="relax count"></div><span class="relax"></span>
+			<p id="text">Relax interval</p>
+			<div class="relax count"></div><span class="relax"></span>
 
-		<p id="text">Long relax interval</p>
-    <div class="longRelax count"></div><span class="longRelax"></span>
-    <br><br>
-    <div id="text" class="count"><input class="showTimer" type="checkbox"> Show timer in menubar</div>
-		<div id="text" class="count"><input class="launch" type="checkbox"> Launch on startup</div>
-    <div class="footer">
-			<button class="btn btn-large btn-default">Default</button>
-      <button class="btn btn-large btn-danger cancel">Cancel</button>
-    </div>
+			<p id="text">Long relax interval</p>
+			<div class="longRelax count"></div><span class="longRelax"></span>
+			<br><br>
+			<div id="text" class="count"><input class="showTimer" type="checkbox"> Show timer in menubar</div>
+			<div id="text" class="count"><input class="launch" type="checkbox"> Launch on startup</div>
+			<footer class="toolbar toolbar-footer">
+				<div class="toolbar-actions">
+					<button class="btn btn-large btn-primary" id="saveBtn">Save</button>
+					<button class="btn btn-large btn-default pull-right" id="cancelBtn">Cancel</button>
+				</div>
+			</footer>
+		</div>
 	</body>
 </html>

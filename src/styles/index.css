@@ -1,15 +1,13 @@
-.panel {
+.header {
 	width: 100%;
-	display: block;
 }
 
 #settingsBtn {
+	margin-right: 10px;
 	font-size: 20px;
 	cursor: pointer;
 	display: inline-block;
-	position: absolute;
 	opacity: 0.4;
-	right: 10px;
 }
 
 #settingsBtn:hover {
@@ -31,11 +29,8 @@ img.pomodoro {
 }
 
 div.timer {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
+	width: 100%;
 	position: relative;
-	text-align: center;
 }
 
 div.timer strong {
@@ -44,7 +39,6 @@ div.timer strong {
 	top: 105px;
 	left: 0;
 	width: 100%;
-	text-align: center;
 	line-height: 40px;
 	font-size: 24px;
 }
@@ -52,9 +46,4 @@ div.timer strong {
 div.timer canvas {
 	cursor: pointer;
 	vertical-align: top;
-}
-
-.footer #quitBtn {
-	float: right;
-	margin-right: 20px;
 }
