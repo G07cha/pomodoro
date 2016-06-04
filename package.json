@@ -26,14 +26,14 @@
   "dependencies": {
     "auto-launch": "^2.0.1",
     "human-readable-time": "^0.2.0",
-    "jquery": "^2.2.3",
-    "menubar": "^4.1.0",
+    "jquery": "^2.2.4",
+    "menubar": "^4.1.1",
     "photon": "git+https://github.com/connors/photon.git",
     "timer-stopwatch": "^0.2.0"
   },
   "devDependencies": {
     "devtron": "^1.0.1",
-    "electron-builder": "^3.5.0",
+    "electron-builder": "^4.2.2",
     "electron-packager": "^7.0.1",
     "electron-prebuilt": "^1.0.1"
   }
