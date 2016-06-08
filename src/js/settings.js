@@ -33,7 +33,7 @@ $(document).ready(function() {
 	 * Save settings
 	 */
 	$('#saveBtn').on('click', function() {
-		fs.writeFile(app.getDataPath() + '/config.json', JSON.stringify({
+		fs.writeFile(app.getPath('userData') + '/config.json', JSON.stringify({
 			workTimer: $('div.work').slider('value'),
 			relaxTimer: $('div.relax').slider('value'),
 			longRelaxTimer: $('div.longRelax').slider('value'),
