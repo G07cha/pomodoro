@@ -37,7 +37,6 @@ getConfig();
 
 global.timer = new Stopwatch(workTimer);
 global.isRelaxTime = isRelaxTime;
-global.progress = 0;
 
 process.on('uncaughtException', (err) => {
 	console.log(err.stack);
@@ -54,7 +53,7 @@ mb.app.on('quit', () => {
 	mb = null;
 });
 
-global.timer.onTime(function(time) {
+global.timer.on('time', function(time) {
 	if(showTimer) {
     if (time.ms !== workTimer
 	       || time.ms !== relaxTimer
@@ -64,24 +63,24 @@ global.timer.onTime(function(time) {
 	} else {
     mb.tray.setTitle('');
   }
-	global.progress = getProgress();
+
 	mb.window.webContents.send('update-timer', getProgress());
 });
 
-global.timer.onDone(function() {
+global.timer.on('done', function() {
 	mb.window.webContents.send('end-timer');
+
 	if(isRelaxTime) {
-		global.timer.reset(workTimer);
 		isRelaxTime = false;
+		global.timer.reset(workTimer);
 	} else {
+		isRelaxTime = true;
 		pomodoroCount++;
 		if(pomodoroCount % 4 === 0) {
 			global.timer.reset(longRelaxTimer);
 		} else {
 			global.timer.reset(relaxTimer);
 		}
-
-		isRelaxTime = true;
 	}
 
 	global.isRelaxTime = isRelaxTime;
@@ -92,14 +91,13 @@ ipcMain.on('reset-timer', function(event) {
 	global.timer.reset(workTimer);
 	mb.tray.setTitle('');
 	global.progress = getProgress();
-
 	mb.window.webContents.send('update-timer', 0);
 });
 
-ipcMain.on('start-timer', function(event) {
+ipcMain.on('toggle-timer', function() {
 	global.timer.startstop();
-	event.sender.send('update-timer', getProgress());
-	if(global.timer.runTimer) mb.tray.setTitle('Paused');
+	mb.window.webContents.send('update-timer', getProgress());
+	if(global.timer.runTimer === false) mb.tray.setTitle('Paused');
 });
 
 ipcMain.on('settings-updated', function(event) {
