@@ -1,100 +1,49 @@
-* {
-	-webkit-user-select: none;
+.header {
+	width: 100%;
 }
 
-*:active,
-*:hover {
-	cursor: default;
-}
-
-html,
-body {
-	cursor: default;
-	padding: 0;
-	margin: 0;
-}
-
-body {
-	font-family: -apple-system, 'Helvetica Neue', Helvetica, sans-serif;
-}
-
-img.settings {
-	margin: 10px;
+#settingsBtn {
+	margin-right: 10px;
+	font-size: 20px;
 	cursor: pointer;
 	display: inline-block;
-	position: absolute;
 	opacity: 0.4;
-	right: 0;
 }
 
-img.settings:hover {
+#settingsBtn:hover {
 	opacity: 1;
-	color: aqua;
 }
 
 img.pomodoro {
 	display: inline-block;
-	margin-top: 10px;
 	margin-left: 10px;
+	margin-top: 5px;
 	opacity: 0.3;
 }
 
 #counter {
 	display: inline-block;
 	position: absolute;
-	top: 13px;
 	opacity: 0.3;
-}
-
-h2 {
-	margin-left: 65px;
-	position: absolute;
-	display: inline-block;
-	text-align: center;
+	top: 8px;
 }
 
 div.timer {
-	margin: 6px 6px 20px;
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
+	width: 100%;
 	position: relative;
-	text-align: center;
 }
 
 div.timer strong {
 	cursor: pointer;
 	position: absolute;
-	top: 125px;
+	top: 105px;
 	left: 0;
 	width: 100%;
-	text-align: center;
 	line-height: 40px;
-	font-size: 30px;
+	font-size: 24px;
 }
 
 div.timer canvas {
-	margin-top: 30px;
 	cursor: pointer;
 	vertical-align: top;
-}
-
-.pnl {
-	display: block;
-}
-
-.btn {
-    cursor: pointer;
-	margin: 20px;
-	position: absolute;
-}
-
-.quit {
-	right: 0;
-	bottom: 0;
-}
-
-.reset {
-	left: 0;
-	bottom: 0;
 }

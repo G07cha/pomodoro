@@ -1,19 +1,16 @@
-var remote = require('remote');
-var dialog = remote.require('dialog');
-var app = remote.require('app');
-var fs = require('fs');
-var ipc = require('ipc');
-var browserWindow = remote.require('browser-window');
+const {remote, ipcRenderer} = require('electron');
+const {app, BrowserWindow, dialog} = remote;
+const fs = require('fs');
 window.$ = window.jQuery = require('jquery');
 
-var settingsWindow = remote.getCurrentWindow();
+const settingsWindow = remote.getCurrentWindow();
 
 var workTimer = 25;
 var relaxTimer = 5;
 var longRelaxTimer = 15;
 var launchOnStartup = false;
 
-var configs = ipc.sendSync('request-config');
+var configs = ipcRenderer.sendSync('request-config');
 
 workTimer = configs.workTimer;
 relaxTimer = configs.relaxTimer;
@@ -31,12 +28,12 @@ $(document).ready(function() {
 	slider('longRelax', longRelaxTimer);
 	$('.showTimer').attr('checked', showTimer);
 	$('.launch').attr('checked', launchOnStartup);
-	
+
 	/*
 	 * Save settings
 	 */
-	$('.save').on('click', function() {
-		fs.writeFile(app.getDataPath() + '/config.json', JSON.stringify({
+	$('#saveBtn').on('click', function() {
+		fs.writeFile(app.getPath('userData') + '/config.json', JSON.stringify({
 			workTimer: $('div.work').slider('value'),
 			relaxTimer: $('div.relax').slider('value'),
 			longRelaxTimer: $('div.longRelax').slider('value'),
@@ -46,7 +43,7 @@ $(document).ready(function() {
 			if (err) {
 				dialog.showErrorBox('Failed to save settings', err);
 			} else {
-				ipc.send('settings-updated');
+				ipcRenderer.send('settings-updated');
 				dialog.showMessageBox({
 					title: 'Success',
 					message: 'Changes saved successfully!',
@@ -57,11 +54,11 @@ $(document).ready(function() {
 			}
 		});
 	});
-	
+
 	/*
 	 * Exit from settings without settings(Cancel action)
 	 */
-	$('.cancel').on('click', function() {
+	$('#cancelBtn').on('click', function() {
 		dialog.showMessageBox({
 			type: 'question',
 			title: 'Warning',
@@ -77,7 +74,7 @@ $(document).ready(function() {
 });
 
 /**
- * Update html slider with %value% 
+ * Update html slider with %value%
  * @param {String} name  Part of name(work or relax)
  * @param {Number} value New slider value
  */

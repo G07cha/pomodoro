@@ -1,127 +1,99 @@
-var remote = require('remote');
-var app = remote.require('app');
-var dialog = remote.require('dialog');
-var browserWindow = remote.require('browser-window');
-var globalShortcut = remote.require('global-shortcut');
-var ipc = require('ipc');
+'use strict';
 
-var fs = require('fs');
-var hrt = require('human-readable-time');
-var settingsWindow = createWindow();
+const {remote, ipcRenderer} = require('electron');
+const {dialog, globalShortcut, BrowserWindow} = remote;
+
+const hrt = require('human-readable-time');
+const timeFormat = new hrt('%mm%:%ss%');
+
 window.$ = window.jQuery = require('jquery');
 
-var timeFormat = new hrt('%mm%:%ss%');
-
+var settingsWindow = createWindow();
+var circleTimer;
 
 globalShortcut.register('ctrl+alt+s', function() {
-	ipc.send('start-timer');
+	ipcRenderer.send('toggle-timer');
 });
 
-ipc.on('update-timer', function(event, arg) {
+ipcRenderer.on('update-timer', function(event, value) {
 	if(remote.getGlobal('timer').runTimer) {
 		if(remote.getGlobal('isRelaxTime')) {
-			$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
+			circleTimer.mode = 'relax';
 		} else {
-			$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
+			circleTimer.mode = 'work';
 		}
 	} else {
-		$('.timer').circleProgress({fill: { gradient: ["gray", "lightgray"]}});
+		circleTimer.pause();
 	}
-	$('.timer').circleProgress('value', remote.getGlobal('progress'));
+
+	circleTimer.value = value;
 });
 
-ipc.on('end-timer', function() {
-	$('.timer').circleProgress('value', 1);
-	
-	var isRelaxTime = remote.getGlobal('isRelaxTime');
-	
+ipcRenderer.on('end-timer', function() {
+	const isRelaxTime = remote.getGlobal('isRelaxTime');
+	circleTimer.value = 1;
+
 	dialog.showMessageBox({
 		type: 'info',
 		title: 'Pomodoro',
-		message: (isRelaxTime) ? 'Timer ended it\'s time to relax' : 'Back to work',
+		message: isRelaxTime ? 'Timer ended it\'s time to relax' : 'Back to work',
 		buttons: ['OK'],
 		noLink: true
 	}, function() {
 		if(isRelaxTime) {
-			$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
+			circleTimer.mode = 'work';
 		} else {
 			$('#counter').text(remote.getGlobal('pomodoroCount'));
-			$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
+			circleTimer.mode = 'relax';
 		}
-		
-		ipc.send('start-timer');
+
+		ipcRenderer.send('toggle-timer');
 	});
 });
 
 $(document).ready(function() {
 	$('div.timer').on('click', function() {
-		ipc.send('start-timer');
+		ipcRenderer.send('toggle-timer');
 	});
-	
-	$('img.settings').on('click', function() {
+
+	$('#settingsBtn').on('click', function() {
 		if(settingsWindow) {
 			settingsWindow.show();
 		} else {
 			settingsWindow = createWindow();
 		}
 	});
-	
-	$('.quit').on('click', function() {
-		ipc.send('quit');
-	});
-	
-	$('.reset').on('click', function() {
-		$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
-		ipc.send('reset-timer');
-	});
-	
-	$('.timer').circleProgress({
-		value: 0,
-		size: 250,
-		lineCap: 'round',
-		fill: {
-			gradient: ["blue", "skyblue"]
-		}
-	}).on('circle-animation-progress', function(event, progress, stepValue) {
-		var text;
-		
-		var timer = remote.getGlobal('timer');
-		if(timer.runTimer) {
-			text = timeFormat(new Date(timer.ms));
-		} else {
-			text = 'Click to start';
-		}
-		
-		$(this).find('strong').text(text);
-	});
-	
-	$.circleProgress.defaults.setValue = function(newValue) {
-		if (this.animation) {
-			var canvas = $(this.canvas),
-				q = canvas.queue();
 
-			if (q[0] == 'inprogress') {
-				canvas.stop(true, true);
-			}
+	$('#quitBtn').on('click', function() {
+		ipcRenderer.send('quit');
+	});
 
-			this.animationStartValue = this.lastFrameValue;
+	$('#resetBtn').on('click', function() {
+		circleTimer.reset();
+		ipcRenderer.send('reset-timer');
+	});
+
+
+	circleTimer = new CircleController('.timer', {
+		onAnimation: function() {
+			let timer = remote.getGlobal('timer');
+			let text = timer.state ?
+					timeFormat(new Date(timer.ms)) : 'Click to start'
+
+			$(this).find('strong').text(text);
 		}
-
-		this.value = newValue;
-		this.draw();
-	};
+	});
 });
 
 // For creating settings window
 function createWindow() {
-	var win = new browserWindow({
+	var win = new BrowserWindow({
 		width: 300,
 		height: 500,
 		frame: false,
 		show: false
 	});
-	
-	win.loadUrl('file://' + __dirname + '/settings.html');
-	
+	win.loadURL('file://' + __dirname + '/settings.html');
+
 	return win;
 }
