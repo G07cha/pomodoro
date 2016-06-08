@@ -29,7 +29,7 @@
     "jquery": "^2.2.4",
     "menubar": "^4.1.1",
     "photon": "git+https://github.com/connors/photon.git",
-    "timer-stopwatch": "^0.2.0"
+    "timer-stopwatch": "0.1.6"
   },
   "devDependencies": {
     "devtron": "^1.0.1",
