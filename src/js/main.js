@@ -2,32 +2,36 @@
 
 const {remote, ipcRenderer} = require('electron');
 const {dialog, globalShortcut, BrowserWindow} = remote;
+
 const hrt = require('human-readable-time');
+const timeFormat = new hrt('%mm%:%ss%');
+
 window.$ = window.jQuery = require('jquery');
 
-const timeFormat = new hrt('%mm%:%ss%');
 var settingsWindow = createWindow();
+var circleTimer;
 
 globalShortcut.register('ctrl+alt+s', function() {
-	ipcRenderer.send('start-timer');
+	ipcRenderer.send('toggle-timer');
 });
 
 ipcRenderer.on('update-timer', function(event, value) {
-	if(remote.getGlobal('timer').state) {
+	if(remote.getGlobal('timer').runTimer) {
 		if(remote.getGlobal('isRelaxTime')) {
-			$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
+			circleTimer.mode = 'relax';
 		} else {
-			$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
+			circleTimer.mode = 'work';
 		}
 	} else {
-		$('.timer').circleProgress({fill: { gradient: ["gray", "lightgray"]}});
+		circleTimer.pause();
 	}
-	$('.timer').circleProgress('value', value);
+
+	circleTimer.value = value;
 });
 
 ipcRenderer.on('end-timer', function() {
 	const isRelaxTime = remote.getGlobal('isRelaxTime');
-	$('.timer').circleProgress('value', 1);
+	circleTimer.value = 1;
 
 	dialog.showMessageBox({
 		type: 'info',
@@ -37,19 +41,19 @@ ipcRenderer.on('end-timer', function() {
 		noLink: true
 	}, function() {
 		if(isRelaxTime) {
-			$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
+			circleTimer.mode = 'work';
 		} else {
 			$('#counter').text(remote.getGlobal('pomodoroCount'));
-			$('.timer').circleProgress({fill: { gradient: ["orange", "yellow"]}});
+			circleTimer.mode = 'relax';
 		}
 
-		ipcRenderer.send('start-timer');
+		ipcRenderer.send('toggle-timer');
 	});
 });
 
 $(document).ready(function() {
 	$('div.timer').on('click', function() {
-		ipcRenderer.send('start-timer');
+		ipcRenderer.send('toggle-timer');
 	});
 
 	$('#settingsBtn').on('click', function() {
@@ -65,23 +69,19 @@ $(document).ready(function() {
 	});
 
 	$('#resetBtn').on('click', function() {
-		$('.timer').circleProgress({fill: { gradient: ["blue", "skyblue"]}});
+		circleTimer.reset();
 		ipcRenderer.send('reset-timer');
 	});
 
-	$('.timer').circleProgress({
-		value: 0,
-		size: 250,
-		lineCap: 'round',
-		fill: {
-			gradient: ["blue", "skyblue"]
-		}
-	}).on('circle-animation-progress', function() {
-		let timer = remote.getGlobal('timer');
-		let text = timer.state ?
-				timeFormat(new Date(timer.ms)) : 'Click to start'
 
-		$(this).find('strong').text(text);
+	circleTimer = new CircleController('.timer', {
+		onAnimation: function() {
+			let timer = remote.getGlobal('timer');
+			let text = timer.state ?
+					timeFormat(new Date(timer.ms)) : 'Click to start'
+
+			$(this).find('strong').text(text);
+		}
 	});
 });
 
