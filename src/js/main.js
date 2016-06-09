@@ -77,7 +77,7 @@ $(document).ready(function() {
 	circleTimer = new CircleController('.timer', {
 		onAnimation: function() {
 			let timer = remote.getGlobal('timer');
-			let text = timer.state ?
+			let text = timer.runTimer ?
 					timeFormat(new Date(timer.ms)) : 'Click to start'
 
 			$(this).find('strong').text(text);
