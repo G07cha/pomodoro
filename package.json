@@ -1,7 +1,6 @@
 {
   "name": "pomodoro",
-  "productName": "Pomodoro",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "description": "Pomodoro timer build with electron",
   "license": "MIT",
   "repository": "https://github.com/G07cha/pomodoro.git",
@@ -13,19 +12,11 @@
   "scripts": {
     "test": "xo",
     "start": "electron .",
-    "production": "npm run clean && npm run build && npm run package",
-    "clean": "rm -rf ./dist",
-    "build": "npm run build-osx && npm run build-win",
-    "build-osx": "electron-packager . $npm_package_productName --out=dist --ignore='^/dist$' --overwrite --prune --arch=all --platform=darwin --icon=./icons/icon.icns --version=$npm_package_electronVersion",
-    "build-win": "electron-packager . $npm_package_productName --out=dist --arch=all --platform=win32 --ignore='^/dist$' --prune --overwrite --icon=./icons/icon.ico --version=$npm_package_electronVersion",
-    "package": "npm run package-win32 && npm run package-win64 && npm run package-osx",
-    "package-win64": "electron-builder dist/pomodoro-win32-x64/ --platform=win --out=dist --config=package-config.json && mv 'dist/Pomodoro Setup.exe' dist/Pomodoro_Windows64.exe",
-    "package-win32": "electron-builder dist/pomodoro-win32-ia32 --platform=win --out=dist --config=package-config.json && mv 'dist/Pomodoro Setup.exe' dist/Pomodoro_Windows32.exe",
-    "package-osx": "electron-builder dist/pomodoro-darwin-x64/pomodoro.app --platform=osx --out=dist --config=package-config.json"
+    "package": "build -ow"
   },
   "dependencies": {
     "auto-launch": "^2.0.1",
-    "human-readable-time": "^0.2.0",
+    "human-readable-time": "^0.2.4",
     "jquery": "^2.2.4",
     "menubar": "^4.1.1",
     "photon": "git+https://github.com/connors/photon.git",
@@ -33,8 +24,33 @@
   },
   "devDependencies": {
     "devtron": "^1.0.1",
-    "electron-builder": "^4.2.2",
+    "electron-builder": "^5.2.1",
     "electron-packager": "^7.0.1",
     "electron-prebuilt": "^1.0.1"
+  },
+  "build": {
+    "productName": "Pomodoro",
+    "app-bundle-id": "com.g07cha.pomodoro",
+    "app-category-type": "public.app-category.productivity",
+    "osx": {
+      "background": "build/background.png",
+      "icon": "build/icon.icns",
+      "contents": [
+        {
+          "x": 320,
+          "y": 250,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 70,
+          "y": 250,
+          "type": "file"
+        }
+      ]
+    },
+    "win": {
+      "iconUrl": "https://github.com/G07cha/pomodoro/blob/master/icons/icon.ico?raw=true"
+    }
   }
 }

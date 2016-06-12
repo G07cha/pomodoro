@@ -23,7 +23,7 @@ let mb = menubar({
 	tooltip: 'Pomodoro timer',
 	height: 330,
 	width: 340,
-	icon: path.join(__dirname, '/icons/IconTemplate.png')
+	icon: path.join(__dirname, '/build/IconTemplate.png')
 });
 let options = {
 	name: 'Pomodoro',
