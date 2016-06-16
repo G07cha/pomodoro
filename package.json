@@ -33,7 +33,7 @@
   },
   "build": {
     "productName": "Pomodoro",
-    "app-bundle-id": "com.g07cha.pomodoro",
+    "appId": "com.g07cha.pomodoro",
     "app-category-type": "public.app-category.productivity",
     "osx": {
       "background": "build/background.png",
