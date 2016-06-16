@@ -53,6 +53,7 @@
       ]
     },
     "win": {
+      "icon": "build/icon.ico",
       "iconUrl": "https://github.com/G07cha/pomodoro/blob/master/icons/icon.ico?raw=true"
     }
   }
