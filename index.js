@@ -16,6 +16,7 @@ let pomodoroCount = 0;
 let isRelaxTime = false;
 let showTimer = true;
 let launchOnStartup = false;
+let icon = (process.platform === 'darwin') ? '/build/IconTemplate.png' : '/build/winIcon.png'
 
 let mb = menubar({
 	dir: path.join(__dirname, '/src'),
@@ -23,7 +24,7 @@ let mb = menubar({
 	tooltip: 'Pomodoro timer',
 	height: 330,
 	width: 340,
-	icon: path.join(__dirname, '/build/IconTemplate.png')
+	icon: path.join(__dirname, icon)
 });
 let options = {
 	name: 'Pomodoro',
