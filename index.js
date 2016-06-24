@@ -16,7 +16,7 @@ let pomodoroCount = 0;
 let isRelaxTime = false;
 let showTimer = true;
 let launchOnStartup = false;
-let icon = (process.platform === 'darwin') ? '/build/IconTemplate.png' : '/build/winIcon.png'
+let icon = (process.platform === 'darwin') ? '/src/img/IconTemplate.png' : '/src/img/winIcon.png'
 
 let mb = menubar({
 	dir: path.join(__dirname, '/src'),
@@ -26,14 +26,8 @@ let mb = menubar({
 	width: 340,
 	icon: path.join(__dirname, icon)
 });
-let options = {
-	name: 'Pomodoro',
-	path: (process.platform === 'darwin') ?
-		path.join(mb.app.getAppPath(), 'Pomodoro.app') :
-		path.join(mb.app.getAppPath(), 'Pomodoro.exe')
-};
 
-let autolauncher = new AutoLaunch(options);
+let autolauncher = new AutoLaunch({ name: 'Pomodoro' });
 
 getConfig();
 
@@ -135,7 +129,10 @@ function getConfig() {
     showTimer = data.showTimer;
 		launchOnStartup = data.launchOnStartup;
 
-		launchOnStartup ? autolauncher.enable() : autolauncher.disable();
+		(launchOnStartup ? autolauncher.enable() : autolauncher.disable())
+		.then(function(err) {
+			dialog.showErrorBox('Error on adding launch on startup functionality', err);
+		});
 	} catch(err) {
 		console.log(err);
 		console.log('Didn\'t find previous config. Using default settings');
