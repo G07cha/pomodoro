@@ -44,13 +44,7 @@ $(document).ready(function() {
 				dialog.showErrorBox('Failed to save settings', err);
 			} else {
 				ipcRenderer.send('settings-updated');
-				dialog.showMessageBox({
-					title: 'Success',
-					message: 'Changes saved successfully!',
-					buttons: ['Ok']
-				}, function() {
-					settingsWindow.hide();
-				});
+				settingsWindow.hide();
 			}
 		});
 	});
