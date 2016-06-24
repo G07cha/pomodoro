@@ -13,7 +13,7 @@
     "pretest": "electron-packager ./ --platform=darwin --arch=x64 --out=dist --overwrite",
     "test": "ava",
     "start": "electron .",
-    "package": "build -mw"
+    "package": "build -mw --ia32 --x64"
   },
   "dependencies": {
     "auto-launch": "^2.0.1",
@@ -36,23 +36,10 @@
     "appId": "com.g07cha.pomodoro",
     "app-category-type": "public.app-category.productivity",
     "mac": {
-      "background": "build/background.png",
-      "icon": "build/icon.icns",
-      "contents": [
-        {
-          "x": 320,
-          "y": 250,
-          "type": "link",
-          "path": "/Applications"
-        },
-        {
-          "x": 70,
-          "y": 250,
-          "type": "file"
-        }
-      ]
+      "icon": "build/icon.icns"
     },
     "win": {
+      "target": "nsis",
       "icon": "build/icon.ico",
       "iconUrl": "https://github.com/G07cha/pomodoro/blob/master/icons/icon.ico?raw=true"
     }
