@@ -16,20 +16,20 @@
     "package": "build -mw --ia32 --x64"
   },
   "dependencies": {
-    "auto-launch": "^2.0.1",
+    "auto-launch": "^2.1.0",
     "human-readable-time": "^0.2.4",
     "jquery": "^2.2.4",
-    "menubar": "^4.1.2",
+    "menubar": "^5.0.0",
     "photon": "git+https://github.com/connors/photon.git",
     "timer-stopwatch": "0.1.6"
   },
   "devDependencies": {
     "ava": "^0.15.2",
     "devtron": "^1.2.1",
-    "electron-builder": "^5.6.2",
-    "electron-packager": "^7.0.4",
-    "electron-prebuilt": "^1.2.5",
-    "spectron": "^3.2.3"
+    "electron-builder": "^5.12.1",
+    "electron-packager": "^7.3.0",
+    "electron-prebuilt": "^1.2.7",
+    "spectron": "^3.2.6"
   },
   "build": {
     "productName": "Pomodoro",
