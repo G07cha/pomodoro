@@ -16,7 +16,7 @@ let pomodoroCount = 0;
 let isRelaxTime = false;
 let showTimer = true;
 let launchOnStartup = false;
-let icon = (process.platform === 'darwin') ? '/src/img/IconTemplate@2x.png' : '/src/img/winIcon.png'
+let icon = (process.platform === 'darwin') ? '/src/img/IconTemplate.png' : '/src/img/winIcon.png'
 
 let mb = menubar({
 	dir: path.join(__dirname, '/src'),
