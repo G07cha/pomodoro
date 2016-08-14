@@ -19,7 +19,6 @@
   "dependencies": {
     "bootstrap": "^3.3.6",
     "jquery-circle-progress": "^1.1.3",
-    "retinajs": "retina.js#^2.1.0",
-    "jquery-ui": "jquery-ui#1.12.0"
+    "jquery-ui": "^1.12.0"
   }
 }
