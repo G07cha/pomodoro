@@ -5,6 +5,7 @@ const {dialog, globalShortcut, BrowserWindow} = remote;
 
 const hrt = require('human-readable-time');
 const timeFormat = new hrt('%mm%:%ss%');
+const retina = require('retinajs');
 
 window.$ = window.jQuery = require('jquery');
 
@@ -52,6 +53,7 @@ ipcRenderer.on('end-timer', function() {
 });
 
 $(document).ready(function() {
+	retinajs();
 	$('div.timer').on('click', function() {
 		ipcRenderer.send('toggle-timer');
 	});
