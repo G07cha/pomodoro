@@ -21,7 +21,8 @@
     "jquery": "^2.2.4",
     "menubar": "^5.0.0",
     "photon": "git+https://github.com/connors/photon.git",
-    "timer-stopwatch": "0.1.6"
+    "timer-stopwatch": "0.1.6",
+    "retinajs": "^2.1.0"
   },
   "devDependencies": {
     "ava": "^0.15.2",
