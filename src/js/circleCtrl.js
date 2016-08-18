@@ -3,18 +3,19 @@ const modes = ['relax', 'work', 'pause'];
 
 class CircleController {
   constructor(selector, options = {}) {
-    this.selector = selector;
+    this.element = $(selector);
     this.workGradient = options.workGradient || ['blue', 'skyblue'];
     this.relaxGradient = options.relaxGradient || ['orange', 'yellow'];
     this.pauseGradient = options.pauseGradient || ["gray", "lightgray"];
-    $(selector).circleProgress({
+
+    this.element.circleProgress({
   		value: options.value || 0,
   		size: options.size || 250,
   		lineCap: options.lineCap || 'round',
   		fill: { gradient: this.workGradient }
   	}).on('circle-animation-progress', options.onAnimation);
-    overrideDefaults();
 
+    overrideDefaults();
   }
 
   reset(mode = 'work') {
@@ -27,7 +28,7 @@ class CircleController {
 
   set mode(newMode) {
     if(modes.indexOf(newMode) > -1) {
-      $(this.selector).circleProgress({
+      this.element.circleProgress({
         fill: {
           gradient: this[newMode + 'Gradient']
         }
@@ -40,7 +41,7 @@ class CircleController {
 
   set value(value) {
     if(value >= 0 && value <= 1) {
-      $(this.selector).circleProgress('value', value);
+      this.element.circleProgress('value', value);
     } else {
       throw new Error('Incorrect value passed, value should be between 0 and 1');
     }
