@@ -21,14 +21,14 @@
     "jquery": "^2.2.4",
     "menubar": "^5.0.0",
     "photon": "git+https://github.com/connors/photon.git",
-    "timer-stopwatch": "0.1.6",
-    "retinajs": "^2.1.0"
+    "retinajs": "^2.1.0",
+    "timer-stopwatch": "0.1.6"
   },
   "devDependencies": {
-    "ava": "^0.15.2",
+    "ava": "^0.16.0",
     "devtron": "^1.2.1",
-    "electron-builder": "^5.12.1",
-    "electron-packager": "^7.3.0",
+    "electron-builder": "^5.26.0",
+    "electron-packager": "^7.6.0",
     "electron-prebuilt": "^1.2.7",
     "spectron": "^3.2.6"
   },
