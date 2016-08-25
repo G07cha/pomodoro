@@ -6,7 +6,7 @@
   "repository": "https://github.com/G07cha/pomodoro.git",
   "author": "g07cha",
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   },
   "electronVersion": "1.0.1",
   "scripts": {
