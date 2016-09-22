@@ -8,7 +8,6 @@ const timeFormat = new hrt('%mm%:%ss%');
 const retina = require('retinajs');
 
 window.$ = window.jQuery = require('jquery');
-require("../bower_components/jquery-circle-progress/dist/circle-progress.js")()
 
 var settingsWindow = createWindow();
 var circleTimer;
