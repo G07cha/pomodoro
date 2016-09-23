@@ -18,7 +18,7 @@
   ],
   "dependencies": {
     "bootstrap": "^3.3.6",
-    "jquery-circle-progress": "^1.1.3",
-    "jquery-ui": "^1.12.0"
+    "jquery-circle-progress": "^1.2.0",
+    "jquery-ui": "^1.12.1"
   }
 }
