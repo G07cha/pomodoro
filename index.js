@@ -134,7 +134,6 @@ function getConfig() {
 			dialog.showErrorBox('Error on adding launch on startup functionality', err);
 		});
 	} catch(err) {
-		console.log(err);
 		console.log('Didn\'t find previous config. Using default settings');
 	}
 }
