@@ -13,23 +13,25 @@
     "pretest": "electron-packager ./ --platform=darwin --arch=x64 --out=dist --overwrite",
     "test": "ava",
     "start": "electron .",
-    "package": "build -mw --ia32 --x64"
+    "package": "build -mw --ia32 --x64",
+    "lint": "eslint ."
   },
   "dependencies": {
     "auto-launch": "^5.0.1",
     "human-readable-time": "^0.2.4",
-    "menubar": "^5.0.0",
+    "menubar": "^5.2.0",
     "photon": "git+https://github.com/connors/photon.git",
     "retinajs": "^2.1.0",
-    "timer-stopwatch": "0.1.6"
+    "timer-stopwatch": "^0.2.0"
   },
   "devDependencies": {
-    "ava": "^0.16.0",
+    "ava": "^0.17.0",
     "devtron": "^1.4.0",
-    "electron-builder": "^7.13.0",
-    "electron-packager": "^8.1.0",
-    "electron-prebuilt": "^1.4.3",
-    "spectron": "^3.4.0"
+    "electron-builder": "^12.3.0",
+    "electron-packager": "^8.5.1",
+    "electron-prebuilt": "^1.4.13",
+    "eslint": "^3.16.1",
+    "spectron": "^3.5.0"
   },
   "build": {
     "productName": "Pomodoro",
