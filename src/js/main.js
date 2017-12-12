@@ -18,7 +18,7 @@ globalShortcut.register('ctrl+alt+s', function() {
 });
 
 ipcRenderer.on('update-timer', function(event, value) {
-	if(remote.getGlobal('timer').runTimer) {
+	if(remote.getGlobal('timer').state) {
 		if(remote.getGlobal('isRelaxTime')) {
 			circleTimer.mode = 'relax';
 		} else {
@@ -80,7 +80,7 @@ $(document).ready(function() {
 	circleTimer = new CircleController('.timer', {
 		onAnimation: function() {
 			let timer = remote.getGlobal('timer');
-			let text = timer.runTimer ?
+			let text = timer.state ?
 					timeFormat(new Date(timer.ms)) : 'Click to start'
 
 			$(this).find('strong').text(text);

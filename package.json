@@ -8,7 +8,7 @@
   "engines": {
     "node": ">=6"
   },
-  "electronVersion": "1.0.1",
+  "electronVersion": "1.7.8",
   "scripts": {
     "pretest": "electron-packager ./ --platform=darwin --arch=x64 --out=dist --overwrite",
     "test": "ava",
@@ -23,11 +23,12 @@
     "menubar": "^5.2.0",
     "photon": "git+https://github.com/connors/photon.git",
     "retinajs": "^2.1.0",
-    "timer-stopwatch": "^0.2.0"
+    "timer-stopwatch-dev": "^0.2.0",
   },
   "devDependencies": {
     "ava": "^0.17.0",
     "devtron": "^1.4.0",
+    "electron": "^1.7.8",
     "electron-builder": "^12.3.0",
     "electron-packager": "^8.5.1",
     "electron-prebuilt": "^1.4.13",
