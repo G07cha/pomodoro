@@ -1,7 +1,7 @@
 'use strict';
 const {globalShortcut, ipcMain, dialog} = require('electron');
 const menubar = require('menubar');
-const Stopwatch = require('timer-stopwatch');
+const Stopwatch = require('timer-stopwatch-dev');
 const Hrt = require('human-readable-time');
 const fs = require('fs');
 
@@ -49,7 +49,7 @@ mb.app.on('quit', () => {
 	mb = null;
 });
 
-global.timer.on('time', function(time) {
+global.timer.onTime(function(time) {
 	if(showTimer) {
     if (time.ms !== workTimer
 	       || time.ms !== relaxTimer
@@ -63,7 +63,7 @@ global.timer.on('time', function(time) {
 	mb.window.webContents.send('update-timer', getProgress());
 });
 
-global.timer.on('done', function() {
+global.timer.onDone(function() {
 	mb.window.webContents.send('end-timer');
 
 	if(isRelaxTime) {
@@ -93,7 +93,7 @@ ipcMain.on('reset-timer', function(event) {
 ipcMain.on('toggle-timer', function() {
 	global.timer.startstop();
 	mb.window.webContents.send('update-timer', getProgress());
-	if(global.timer.runTimer === false) mb.tray.setTitle('Paused');
+	if(global.timer.isStopped()) mb.tray.setTitle('Paused');
 });
 
 ipcMain.on('settings-updated', function(event) {
