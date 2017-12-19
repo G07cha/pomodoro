@@ -23,7 +23,7 @@
     "menubar": "^5.2.0",
     "photon": "git+https://github.com/connors/photon.git",
     "retinajs": "^2.1.0",
-    "timer-stopwatch-dev": "^1.0.0",
+    "timer-stopwatch-dev": "^1.1.0"
   },
   "devDependencies": {
     "ava": "^0.17.0",

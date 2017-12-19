@@ -93,7 +93,7 @@ ipcMain.on('reset-timer', function(event) {
 ipcMain.on('toggle-timer', function() {
 	global.timer.startstop();
 	mb.window.webContents.send('update-timer', getProgress());
-	if(global.timer.state === false) mb.tray.setTitle('Paused');
+	if(global.timer.isStopped()) mb.tray.setTitle('Paused');
 });
 
 ipcMain.on('settings-updated', function(event) {
