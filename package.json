@@ -13,7 +13,7 @@
     "pretest": "electron-packager ./ --platform=darwin --arch=x64 --out=dist --overwrite",
     "test": "ava",
     "start": "electron .",
-    "package": "build -mw --ia32 --x64",
+    "release": "build --ia32 --x64 --draft",
     "lint": "eslint ."
   },
   "dependencies": {
