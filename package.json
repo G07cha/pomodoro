@@ -10,7 +10,7 @@
   },
   "electronVersion": "1.7.8",
   "scripts": {
-    "postinstall": "bower install",
+    "postinstall": "bower install --allow-root",
     "pretest": "electron-packager ./ --platform=darwin --arch=x64 --out=dist --overwrite",
     "test": "ava",
     "start": "electron .",
