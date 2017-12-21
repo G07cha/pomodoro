@@ -1,4 +1,4 @@
-# Pomodoro
+# Pomodoro ![Build status](https://travis-ci.org/G07cha/pomodoro.svg?branch=master)
 
 Time managment tool for Windows and OS X based on [Pomodoro Technique](https://en.wikipedia.org/wiki/Pomodoro_Technique). Build with love and [electron](https://github.com/atom/electron).
 
