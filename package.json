@@ -30,7 +30,7 @@
     "ava": "^0.17.0",
     "bower": "^1.8.2",
     "devtron": "^1.4.0",
-    "electron": "^1.7.8",
+    "electron": "^1.7.11",
     "electron-builder": "^12.3.0",
     "electron-packager": "^8.5.1",
     "electron-prebuilt": "^1.4.13",
