@@ -6,6 +6,7 @@ const {dialog, globalShortcut, BrowserWindow} = remote;
 const hrt = require('human-readable-time');
 const timeFormat = new hrt('%mm%:%ss%');
 const retina = require('retinajs');
+const windowStateKeeper = require('electron-window-state');
 
 window.$ = window.jQuery = require('jquery');
 require("../bower_components/jquery-circle-progress/dist/circle-progress.js")()
@@ -90,12 +91,19 @@ $(document).ready(function() {
 
 // For creating settings window
 function createWindow() {
+	let windowState = windowStateKeeper();
+
 	var win = new BrowserWindow({
 		width: 300,
 		height: 500,
 		frame: false,
-		show: false
+		show: false,
+		x: windowState.x,
+		y: windowState.y
 	});
+
+	windowState.manage(win);
+
 	win.loadURL('file://' + __dirname + '/settings.html');
 
 	return win;
