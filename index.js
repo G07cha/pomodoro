@@ -57,7 +57,9 @@ mb.on('ready', () => {
 })
 
 mb.on('after-show', () => {
-	mb.window.setPosition(windowState.x, windowState.y, false);
+	if (typeof(windowState.x) == 'number' && typeof(windowState.y) == 'number') {
+		mb.window.setPosition(windowState.x, windowState.y, false);
+	}
 })
 
 global.timer.onTime(function(time) {
