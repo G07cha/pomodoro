@@ -4,6 +4,7 @@ const menubar = require('menubar');
 const Stopwatch = require('timer-stopwatch-dev');
 const Hrt = require('human-readable-time');
 const fs = require('fs');
+const windowStateKeeper = require('electron-window-state');
 
 const path = require('path');
 const AutoLaunch = require('auto-launch');
@@ -16,7 +17,8 @@ let pomodoroCount = 0;
 let isRelaxTime = false;
 let showTimer = true;
 let launchOnStartup = false;
-let icon = (process.platform === 'darwin') ? '/src/img/IconTemplate.png' : '/src/img/winIcon.png'
+let icon = (process.platform === 'darwin') ? '/src/img/IconTemplate.png' : '/src/img/winIcon.png';
+let windowState;
 
 let mb = menubar({
 	dir: path.join(__dirname, '/src'),
@@ -48,6 +50,17 @@ mb.app.on('will-quit', () => {
 mb.app.on('quit', () => {
 	mb = null;
 });
+
+mb.on('ready', () => {
+	windowState = windowStateKeeper()
+	windowState.manage(mb.window);
+})
+
+mb.on('after-show', () => {
+	if (typeof(windowState.x) == 'number' && typeof(windowState.y) == 'number') {
+		mb.window.setPosition(windowState.x, windowState.y, false);
+	}
+})
 
 global.timer.onTime(function(time) {
 	if(showTimer) {

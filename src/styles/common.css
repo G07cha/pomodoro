@@ -9,3 +9,11 @@ body {
 .btn {
   cursor: pointer;
 }
+
+.draggable {
+  -webkit-app-region: drag
+}
+
+.undraggable {
+  -webkit-app-region: no-drag
+}
