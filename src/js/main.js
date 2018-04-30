@@ -69,6 +69,9 @@ $(document).ready(function() {
 	});
 
 	$('#quitBtn').on('click', function() {
+		if(settingsWindow) {
+			settingsWindow.close();
+		}
 		ipcRenderer.send('quit');
 	});
 
