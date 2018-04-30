@@ -20,7 +20,7 @@
   "dependencies": {
     "auto-launch": "^5.0.5",
     "electron-window-state": "^4.1.1",
-    "human-readable-time": "^0.2.4",
+    "human-readable-time": "^0.3.0",
     "jquery": "^3.3.1",
     "menubar": "^5.2.0",
     "photon": "git+https://github.com/connors/photon.git",
@@ -28,14 +28,14 @@
     "timer-stopwatch-dev": "^1.1.0"
   },
   "devDependencies": {
-    "ava": "^0.17.0",
+    "ava": "^0.25.0",
     "bower": "^1.8.2",
     "devtron": "^1.4.0",
     "electron": "^1.8.4",
-    "electron-builder": "^12.3.0",
-    "electron-packager": "^8.5.1",
+    "electron-builder": "^20.11.1",
+    "electron-packager": "^12.0.1",
     "electron-prebuilt": "^1.4.13",
-    "eslint": "^3.16.1",
+    "eslint": "^4.19.1",
     "spectron": "^3.8.0"
   },
   "build": {
