@@ -2,17 +2,19 @@
 
 const {remote, ipcRenderer} = require('electron');
 const {dialog, globalShortcut, BrowserWindow} = remote;
+const path = require('path');
 
-const hrt = require('human-readable-time');
-const timeFormat = new hrt('%mm%:%ss%');
-const retina = require('retinajs');
+const HRT = require('human-readable-time');
+const timeFormat = new HRT('%mm%:%ss%');
 const windowStateKeeper = require('electron-window-state');
+const retinajs = require('retinajs');
 
-window.$ = window.jQuery = require('jquery');
-require("../bower_components/jquery-circle-progress/dist/circle-progress.js")()
+window.$ = require('jquery');
+window.jQuery = window.$
+require('../bower_components/jquery-circle-progress/dist/circle-progress.js')()
 
-var settingsWindow = createWindow();
-var circleTimer;
+let settingsWindow = createWindow();
+let circleTimer;
 
 globalShortcut.register('ctrl+alt+s', function() {
 	ipcRenderer.send('toggle-timer');
@@ -34,6 +36,7 @@ ipcRenderer.on('update-timer', function(event, value) {
 
 ipcRenderer.on('end-timer', function() {
 	const isRelaxTime = remote.getGlobal('isRelaxTime');
+
 	circleTimer.value = 1;
 
 	dialog.showMessageBox({
@@ -84,10 +87,10 @@ $(document).ready(function() {
 	circleTimer = new CircleController('.timer', {
 		onAnimation: function() {
 			let timer = remote.getGlobal('timer');
-			let text = timer.isRunning() ?
-					timeFormat(new Date(timer.ms)) : 'Click to start'
+			let text = timer.isRunning() ? timeFormat(new Date(timer.ms)) : 'Click to start'
 
-			$(this).find('strong').text(text);
+			$(this).find('strong')
+						.text(text);
 		}
 	});
 });
@@ -96,7 +99,7 @@ $(document).ready(function() {
 function createWindow() {
 	let windowState = windowStateKeeper();
 
-	var win = new BrowserWindow({
+	let win = new BrowserWindow({
 		width: 300,
 		height: 500,
 		frame: false,
@@ -107,7 +110,7 @@ function createWindow() {
 
 	windowState.manage(win);
 
-	win.loadURL('file://' + __dirname + '/settings.html');
+	win.loadURL(path.join('file://', __dirname, '/settings.html'));
 
 	return win;
 }

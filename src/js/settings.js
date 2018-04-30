@@ -1,16 +1,21 @@
+'use strict';
+
 const {remote, ipcRenderer} = require('electron');
-const {app, BrowserWindow, dialog} = remote;
+const {app, dialog} = remote;
 const fs = require('fs');
-window.$ = window.jQuery = require('jquery');
+
+window.$ = require('jquery');
+window.jQuery = window.$
 
 const settingsWindow = remote.getCurrentWindow();
 
-var workTimer = 25;
-var relaxTimer = 5;
-var longRelaxTimer = 15;
-var launchOnStartup = false;
+let workTimer = 25;
+let relaxTimer = 5;
+let longRelaxTimer = 15;
+let launchOnStartup = false;
+let showTimer = false;
 
-var configs = ipcRenderer.sendSync('request-config');
+let configs = ipcRenderer.sendSync('request-config');
 
 workTimer = configs.workTimer;
 relaxTimer = configs.relaxTimer;
@@ -20,6 +25,7 @@ launchOnStartup = configs.launchOnStartup;
 
 
 $(document).ready(function() {
+
 	/*
 	 * Set sliders and checkbox with default value
 	 */
@@ -59,7 +65,7 @@ $(document).ready(function() {
 			message: 'Settings will not save! Are you sure?',
 			buttons: ['Yes', 'No']
 		}, function(response) {
-			//0 === "Yes" button
+			// 0 === "Yes" button
 			if(response === 0) {
 				settingsWindow.hide();
 			}
@@ -71,6 +77,7 @@ $(document).ready(function() {
  * Update html slider with %value%
  * @param {String} name  Part of name(work or relax)
  * @param {Number} value New slider value
+ * @returns {void}
  */
 function slider(name, value) {
 	$('div.' + name).slider({

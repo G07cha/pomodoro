@@ -37,7 +37,7 @@ global.timer = new Stopwatch(workTimer);
 global.isRelaxTime = isRelaxTime;
 
 process.on('uncaughtException', (err) => {
-	console.log(err.stack);
+	console.log(err.stack); // eslint-disable-line no-console
 	dialog.showErrorBox('Uncaught Exception: ' + err.message, err.stack || '');
 	mb.app.quit();
 });
@@ -57,19 +57,19 @@ mb.on('ready', () => {
 })
 
 mb.on('after-show', () => {
-	if (typeof(windowState.x) == 'number' && typeof(windowState.y) == 'number') {
+	if (typeof (windowState.x) === 'number' && typeof (windowState.y) === 'number') {
 		mb.window.setPosition(windowState.x, windowState.y, false);
 	}
 })
 
 global.timer.onTime(function(time) {
-	if(showTimer) {
+  if(showTimer) {
     if (time.ms !== workTimer
-	       || time.ms !== relaxTimer
-	       || time.ms !== longRelaxTimer) {
-		  mb.tray.setTitle(timeFormat(new Date(time.ms)));
+         || time.ms !== relaxTimer
+         || time.ms !== longRelaxTimer) {
+      mb.tray.setTitle(timeFormat(new Date(time.ms)));
     }
-	} else {
+  } else {
     mb.tray.setTitle('');
   }
 
@@ -96,7 +96,7 @@ global.timer.onDone(function() {
 	global.pomodoroCount = pomodoroCount;
 });
 
-ipcMain.on('reset-timer', function(event) {
+ipcMain.on('reset-timer', function() {
 	global.timer.reset(workTimer);
 	mb.tray.setTitle('');
 	global.progress = getProgress();
@@ -109,7 +109,7 @@ ipcMain.on('toggle-timer', function() {
 	if(global.timer.isStopped()) mb.tray.setTitle('Paused');
 });
 
-ipcMain.on('settings-updated', function(event) {
+ipcMain.on('settings-updated', function() {
 	getConfig();
 
 	mb.window.webContents.send('update-timer', getProgress());
@@ -147,7 +147,7 @@ function getConfig() {
 			dialog.showErrorBox('Error on adding launch on startup functionality', err);
 		});
 	} catch(err) {
-		console.log('Didn\'t find previous config. Using default settings');
+		console.log('Didn\'t find previous config. Using default settings'); // eslint-disable-line no-console
 	}
 }
 
@@ -164,7 +164,7 @@ function getProgress() {
 		max = workTimer;
 	}
 
-	progress = (max - timer.ms) / (max / 100) * 0.01;
+	progress = (max - global.timer.ms) / (max / 100) * 0.01;
 
 	if(progress < 0) {
 		progress = 0.01;
