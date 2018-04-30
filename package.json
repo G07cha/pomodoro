@@ -14,7 +14,7 @@
     "pretest": "electron-packager ./ --platform=darwin --arch=x64 --out=dist --overwrite",
     "test": "ava",
     "start": "electron .",
-    "release": "build --ia32 --x64 --draft",
+    "release": "build --ia32 --x64 --mac",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -41,14 +41,17 @@
   "build": {
     "productName": "Pomodoro",
     "appId": "com.g07cha.pomodoro",
-    "category": "public.app-category.productivity",
+    "publish": {
+      "provider": "github",
+      "releaseType": "draft"
+    },
     "mac": {
+      "category": "public.app-category.productivity",
       "icon": "build/icon.icns"
     },
     "win": {
       "target": "nsis",
-      "icon": "build/icon.ico",
-      "iconUrl": "https://github.com/G07cha/pomodoro/blob/master/icons/icon.ico?raw=true"
+      "icon": "build/icon.ico"
     }
   }
 }
