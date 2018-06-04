@@ -1,6 +1,6 @@
 {
   "name": "pomodoro",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Pomodoro timer build with electron",
   "license": "MIT",
   "repository": "https://github.com/G07cha/pomodoro.git",
