@@ -13,7 +13,7 @@ window.$ = require('jquery');
 window.jQuery = window.$
 require('../bower_components/jquery-circle-progress/dist/circle-progress.js')()
 
-let settingsWindow = createWindow();
+let settingsWindow;
 let circleTimer;
 
 globalShortcut.register('ctrl+alt+s', function() {
@@ -103,7 +103,6 @@ function createWindow() {
 		width: 300,
 		height: 500,
 		frame: false,
-		show: false,
 		x: windowState.x,
 		y: windowState.y
 	});
