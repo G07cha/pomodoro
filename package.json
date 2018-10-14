@@ -14,7 +14,9 @@
     "pretest": "electron-packager ./ --platform=darwin --arch=x64 --out=dist --overwrite",
     "test": "ava",
     "start": "electron .",
-    "release": "build --ia32 --x64 --mac",
+    "release": "npm run release:win && npm run release:mac",
+    "release:win": "build --win",
+    "release:mac": "build --mac",
     "lint": "eslint ."
   },
   "dependencies": {
