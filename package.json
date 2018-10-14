@@ -31,9 +31,9 @@
     "ava": "^0.25.0",
     "bower": "^1.8.2",
     "devtron": "^1.4.0",
-    "electron": "^1.8.4",
-    "electron-builder": "^20.11.1",
-    "electron-packager": "^12.0.1",
+    "electron": "^1.8.8",
+    "electron-builder": "^20.28.4",
+    "electron-packager": "^12.2.0",
     "electron-prebuilt": "^1.4.13",
     "eslint": "^4.19.1",
     "spectron": "^3.8.0"
