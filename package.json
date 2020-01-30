@@ -38,6 +38,7 @@
     "electron-packager": "^14.2.0",
     "electron-prebuilt": "^1.4.13",
     "eslint": "^4.19.1",
+    "prettier": "^1.19.1",
     "spectron": "^3.8.0"
   },
   "build": {
