@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-const {remote, ipcRenderer} = require('electron');
-const {app, dialog} = remote;
-const fs = require('fs');
+const { remote, ipcRenderer } = require("electron");
+const { app, dialog } = remote;
+const fs = require("fs");
 
-window.$ = require('jquery');
-window.jQuery = window.$
+window.$ = require("jquery");
+window.jQuery = window.$;
 
 const settingsWindow = remote.getCurrentWindow();
 
@@ -15,7 +15,7 @@ let longRelaxTimer = 15;
 let launchOnStartup = false;
 let showTimer = false;
 
-let configs = ipcRenderer.sendSync('request-config');
+let configs = ipcRenderer.sendSync("request-config");
 
 workTimer = configs.workTimer;
 relaxTimer = configs.relaxTimer;
@@ -23,53 +23,58 @@ longRelaxTimer = configs.longRelaxTimer;
 showTimer = configs.showTimer;
 launchOnStartup = configs.launchOnStartup;
 
-
 $(document).ready(function() {
-
 	/*
 	 * Set sliders and checkbox with default value
 	 */
-	slider('work', workTimer);
-	slider('relax', relaxTimer);
-	slider('longRelax', longRelaxTimer);
-	$('.showTimer').attr('checked', showTimer);
-	$('.launch').attr('checked', launchOnStartup);
+	slider("work", workTimer);
+	slider("relax", relaxTimer);
+	slider("longRelax", longRelaxTimer);
+	$(".showTimer").attr("checked", showTimer);
+	$(".launch").attr("checked", launchOnStartup);
 
 	/*
 	 * Save settings
 	 */
-	$('#saveBtn').on('click', function() {
-		fs.writeFile(app.getPath('userData') + '/config.json', JSON.stringify({
-			workTimer: $('div.work').slider('value'),
-			relaxTimer: $('div.relax').slider('value'),
-			longRelaxTimer: $('div.longRelax').slider('value'),
-			showTimer: $('.showTimer').prop('checked'),
-			launchOnStartup: $('.launch').prop('checked')
-		}), function(err) {
-			if (err) {
-				dialog.showErrorBox('Failed to save settings', err);
-			} else {
-				ipcRenderer.send('settings-updated');
-				settingsWindow.hide();
+	$("#saveBtn").on("click", function() {
+		fs.writeFile(
+			app.getPath("userData") + "/config.json",
+			JSON.stringify({
+				workTimer: $("div.work").slider("value"),
+				relaxTimer: $("div.relax").slider("value"),
+				longRelaxTimer: $("div.longRelax").slider("value"),
+				showTimer: $(".showTimer").prop("checked"),
+				launchOnStartup: $(".launch").prop("checked")
+			}),
+			function(err) {
+				if (err) {
+					dialog.showErrorBox("Failed to save settings", err);
+				} else {
+					ipcRenderer.send("settings-updated");
+					settingsWindow.hide();
+				}
 			}
-		});
+		);
 	});
 
 	/*
 	 * Exit from settings without settings(Cancel action)
 	 */
-	$('#cancelBtn').on('click', function() {
-		dialog.showMessageBox({
-			type: 'question',
-			title: 'Warning',
-			message: 'Settings will not save! Are you sure?',
-			buttons: ['Yes', 'No']
-		}, function(response) {
-			// 0 === "Yes" button
-			if(response === 0) {
-				settingsWindow.hide();
+	$("#cancelBtn").on("click", function() {
+		dialog.showMessageBox(
+			{
+				type: "question",
+				title: "Warning",
+				message: "Settings will not save! Are you sure?",
+				buttons: ["Yes", "No"]
+			},
+			function(response) {
+				// 0 === "Yes" button
+				if (response === 0) {
+					settingsWindow.hide();
+				}
 			}
-		})
+		);
 	});
 });
 
@@ -80,13 +85,13 @@ $(document).ready(function() {
  * @returns {void}
  */
 function slider(name, value) {
-	$('div.' + name).slider({
+	$("div." + name).slider({
 		value: value,
 		min: 1,
 		max: 60,
 		slide: function(event, ui) {
-			$('span.' + name).html(ui.value);
+			$("span." + name).html(ui.value);
 		}
 	});
-	$('span.' + name).html($('div.' + name).slider('value'));
+	$("span." + name).html($("div." + name).slider("value"));
 }
