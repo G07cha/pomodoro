@@ -1,6 +1,6 @@
 'use strict';
 const {globalShortcut, ipcMain, dialog} = require('electron');
-const menubar = require('menubar');
+const { menubar } = require('menubar');
 const Stopwatch = require('timer-stopwatch-dev');
 const Hrt = require('human-readable-time');
 const fs = require('fs');
@@ -24,8 +24,10 @@ let mb = menubar({
 	dir: path.join(__dirname, '/src'),
 	preloadWindow: true,
 	tooltip: 'Pomodoro timer',
-	height: 330,
-	width: 340,
+	browserWindow: {
+		height: 330,
+		width: 340,
+	},
 	icon: path.join(__dirname, icon)
 });
 
