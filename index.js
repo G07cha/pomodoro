@@ -1,15 +1,15 @@
-"use strict";
-const { globalShortcut, ipcMain, dialog } = require("electron");
-const { menubar } = require("menubar");
-const Stopwatch = require("timer-stopwatch-dev");
-const Hrt = require("human-readable-time");
-const fs = require("fs");
-const windowStateKeeper = require("electron-window-state");
+'use strict';
+const { globalShortcut, ipcMain, dialog } = require('electron');
+const { menubar } = require('menubar');
+const Stopwatch = require('timer-stopwatch-dev');
+const Hrt = require('human-readable-time');
+const fs = require('fs');
+const windowStateKeeper = require('electron-window-state');
 
-const path = require("path");
-const AutoLaunch = require("auto-launch");
+const path = require('path');
+const AutoLaunch = require('auto-launch');
 
-let timeFormat = new Hrt("%mm%:%ss%");
+let timeFormat = new Hrt('%mm%:%ss%');
 let workTimer = 1500000;
 let relaxTimer = 300000;
 let longRelaxTimer = 900000;
@@ -17,16 +17,16 @@ let pomodoroCount = 0;
 let isRelaxTime = false;
 let showTimer = true;
 let launchOnStartup = false;
-let icon =
-	process.platform === "darwin"
-		? "/src/img/IconTemplate.png"
-		: "/src/img/winIcon.png";
+let icon
+	= process.platform === 'darwin'
+		? '/src/img/IconTemplate.png'
+		: '/src/img/winIcon.png';
 let windowState;
 
 let mb = menubar({
-	dir: path.join(__dirname, "/src"),
+	dir: path.join(__dirname, '/src'),
 	preloadWindow: true,
-	tooltip: "Pomodoro timer",
+	tooltip: 'Pomodoro timer',
 	browserWindow: {
 		height: 330,
 		width: 340
@@ -34,37 +34,37 @@ let mb = menubar({
 	icon: path.join(__dirname, icon)
 });
 
-let autolauncher = new AutoLaunch({ name: "Pomodoro" });
+let autolauncher = new AutoLaunch({ name: 'Pomodoro' });
 
 getConfig();
 
 global.timer = new Stopwatch(workTimer);
 global.isRelaxTime = isRelaxTime;
 
-process.on("uncaughtException", err => {
+process.on('uncaughtException', (err) => {
 	console.log(err.stack); // eslint-disable-line no-console
-	dialog.showErrorBox("Uncaught Exception: " + err.message, err.stack || "");
+	dialog.showErrorBox('Uncaught Exception: ' + err.message, err.stack || '');
 	mb.app.quit();
 });
 
-mb.app.on("will-quit", () => {
+mb.app.on('will-quit', () => {
 	globalShortcut.unregisterAll();
 	global.timer.stop();
 });
 
-mb.app.on("quit", () => {
+mb.app.on('quit', () => {
 	mb = null;
 });
 
-mb.on("ready", () => {
+mb.on('ready', () => {
 	windowState = windowStateKeeper();
 	windowState.manage(mb.window);
 });
 
-mb.on("after-show", () => {
+mb.on('after-show', () => {
 	if (
-		typeof windowState.x === "number" &&
-		typeof windowState.y === "number"
+		typeof windowState.x === 'number'
+		&& typeof windowState.y === 'number'
 	) {
 		mb.window.setPosition(windowState.x, windowState.y, false);
 	}
@@ -73,21 +73,21 @@ mb.on("after-show", () => {
 global.timer.onTime(function(time) {
 	if (showTimer) {
 		if (
-			time.ms !== workTimer ||
-			time.ms !== relaxTimer ||
-			time.ms !== longRelaxTimer
+			time.ms !== workTimer
+			|| time.ms !== relaxTimer
+			|| time.ms !== longRelaxTimer
 		) {
 			mb.tray.setTitle(timeFormat(new Date(time.ms)));
 		}
 	} else {
-		mb.tray.setTitle("");
+		mb.tray.setTitle('');
 	}
 
-	mb.window.webContents.send("update-timer", getProgress());
+	mb.window.webContents.send('update-timer', getProgress());
 });
 
 global.timer.onDone(function() {
-	mb.window.webContents.send("end-timer");
+	mb.window.webContents.send('end-timer');
 
 	if (isRelaxTime) {
 		isRelaxTime = false;
@@ -106,26 +106,26 @@ global.timer.onDone(function() {
 	global.pomodoroCount = pomodoroCount;
 });
 
-ipcMain.on("reset-timer", function() {
+ipcMain.on('reset-timer', function() {
 	global.timer.reset(workTimer);
-	mb.tray.setTitle("");
+	mb.tray.setTitle('');
 	global.progress = getProgress();
-	mb.window.webContents.send("update-timer", 0);
+	mb.window.webContents.send('update-timer', 0);
 });
 
-ipcMain.on("toggle-timer", function() {
+ipcMain.on('toggle-timer', function() {
 	global.timer.startstop();
-	mb.window.webContents.send("update-timer", getProgress());
-	if (global.timer.isStopped()) mb.tray.setTitle("Paused");
+	mb.window.webContents.send('update-timer', getProgress());
+	if (global.timer.isStopped()) mb.tray.setTitle('Paused');
 });
 
-ipcMain.on("settings-updated", function() {
+ipcMain.on('settings-updated', function() {
 	getConfig();
 
-	mb.window.webContents.send("update-timer", getProgress());
+	mb.window.webContents.send('update-timer', getProgress());
 });
 
-ipcMain.on("request-config", function(event) {
+ipcMain.on('request-config', function(event) {
 	getConfig();
 
 	event.returnValue = {
@@ -137,13 +137,13 @@ ipcMain.on("request-config", function(event) {
 	};
 });
 
-ipcMain.on("quit", function() {
+ipcMain.on('quit', function() {
 	mb.app.quit();
 });
 
 function getConfig() {
 	try {
-		let dataPath = path.join(mb.app.getPath("userData"), "config.json");
+		let dataPath = path.join(mb.app.getPath('userData'), 'config.json');
 		let data = JSON.parse(fs.readFileSync(dataPath));
 
 		workTimer = data.workTimer * 60 * 1000;
@@ -155,13 +155,13 @@ function getConfig() {
 		(launchOnStartup ? autolauncher.enable() : autolauncher.disable()).then(
 			function(err) {
 				dialog.showErrorBox(
-					"Error on adding launch on startup functionality",
+					'Error on adding launch on startup functionality',
 					err
 				);
 			}
 		);
 	} catch (err) {
-		console.log("Didn't find previous config. Using default settings"); // eslint-disable-line no-console
+		console.log('Didn\'t find previous config. Using default settings'); // eslint-disable-line no-console
 	}
 }
 
