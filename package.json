@@ -15,8 +15,8 @@
     "test": "ava",
     "start": "electron .",
     "release": "npm run release:win && npm run release:mac",
-    "release:win": "build --win",
-    "release:mac": "build --mac",
+    "release:win": "electron-builder --win",
+    "release:mac": "electron-builder --mac",
     "lint": "eslint ."
   },
   "dependencies": {
