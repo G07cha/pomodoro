@@ -1,7 +1,7 @@
 'use strict';
 
-const {remote, ipcRenderer} = require('electron');
-const {dialog, globalShortcut, BrowserWindow} = remote;
+const { remote, ipcRenderer } = require('electron');
+const { dialog, globalShortcut, BrowserWindow } = remote;
 const path = require('path');
 
 const HRT = require('human-readable-time');
@@ -10,8 +10,8 @@ const windowStateKeeper = require('electron-window-state');
 const retinajs = require('retinajs');
 
 window.$ = require('jquery');
-window.jQuery = window.$
-require('../bower_components/jquery-circle-progress/dist/circle-progress.js')()
+window.jQuery = window.$;
+require('../bower_components/jquery-circle-progress/dist/circle-progress.js')();
 
 let settingsWindow;
 let circleTimer;
@@ -21,8 +21,8 @@ globalShortcut.register('ctrl+alt+s', function() {
 });
 
 ipcRenderer.on('update-timer', function(event, value) {
-	if(remote.getGlobal('timer').isRunning()) {
-		if(remote.getGlobal('isRelaxTime')) {
+	if (remote.getGlobal('timer').isRunning()) {
+		if (remote.getGlobal('isRelaxTime')) {
 			circleTimer.mode = 'relax';
 		} else {
 			circleTimer.mode = 'work';
@@ -39,22 +39,27 @@ ipcRenderer.on('end-timer', function() {
 
 	circleTimer.value = 1;
 
-	dialog.showMessageBox({
-		type: 'info',
-		title: 'Pomodoro',
-		message: isRelaxTime ? 'Timer ended it\'s time to relax' : 'Back to work',
-		buttons: ['OK'],
-		noLink: true
-	}, function() {
-		if(isRelaxTime) {
-			circleTimer.mode = 'work';
-		} else {
-			$('#counter').text(remote.getGlobal('pomodoroCount'));
-			circleTimer.mode = 'relax';
-		}
+	dialog.showMessageBox(
+		{
+			type: 'info',
+			title: 'Pomodoro',
+			message: isRelaxTime
+				? 'Timer ended it\'s time to relax'
+				: 'Back to work',
+			buttons: ['OK'],
+			noLink: true
+		},
+		function() {
+			if (isRelaxTime) {
+				circleTimer.mode = 'work';
+			} else {
+				$('#counter').text(remote.getGlobal('pomodoroCount'));
+				circleTimer.mode = 'relax';
+			}
 
-		ipcRenderer.send('toggle-timer');
-	});
+			ipcRenderer.send('toggle-timer');
+		}
+	);
 });
 
 $(document).ready(function() {
@@ -64,7 +69,7 @@ $(document).ready(function() {
 	});
 
 	$('#settingsBtn').on('click', function() {
-		if(settingsWindow) {
+		if (settingsWindow) {
 			settingsWindow.show();
 		} else {
 			settingsWindow = createWindow();
@@ -72,7 +77,7 @@ $(document).ready(function() {
 	});
 
 	$('#quitBtn').on('click', function() {
-		if(settingsWindow) {
+		if (settingsWindow) {
 			settingsWindow.close();
 		}
 		ipcRenderer.send('quit');
@@ -83,14 +88,16 @@ $(document).ready(function() {
 		ipcRenderer.send('reset-timer');
 	});
 
-
 	circleTimer = new CircleController('.timer', {
 		onAnimation: function() {
 			let timer = remote.getGlobal('timer');
-			let text = timer.isRunning() ? timeFormat(new Date(timer.ms)) : 'Click to start'
+			let text = timer.isRunning()
+				? timeFormat(new Date(timer.ms))
+				: 'Click to start';
 
-			$(this).find('strong')
-						.text(text);
+			$(this)
+				.find('strong')
+				.text(text);
 		}
 	});
 });

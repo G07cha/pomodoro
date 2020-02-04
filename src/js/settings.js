@@ -1,11 +1,11 @@
 'use strict';
 
-const {remote, ipcRenderer} = require('electron');
-const {app, dialog} = remote;
+const { remote, ipcRenderer } = require('electron');
+const { app, dialog } = remote;
 const fs = require('fs');
 
 window.$ = require('jquery');
-window.jQuery = window.$
+window.jQuery = window.$;
 
 const settingsWindow = remote.getCurrentWindow();
 
@@ -23,7 +23,6 @@ longRelaxTimer = configs.longRelaxTimer;
 showTimer = configs.showTimer;
 launchOnStartup = configs.launchOnStartup;
 
-
 $(document).ready(function() {
 
 	/*
@@ -39,37 +38,44 @@ $(document).ready(function() {
 	 * Save settings
 	 */
 	$('#saveBtn').on('click', function() {
-		fs.writeFile(app.getPath('userData') + '/config.json', JSON.stringify({
-			workTimer: $('div.work').slider('value'),
-			relaxTimer: $('div.relax').slider('value'),
-			longRelaxTimer: $('div.longRelax').slider('value'),
-			showTimer: $('.showTimer').prop('checked'),
-			launchOnStartup: $('.launch').prop('checked')
-		}), function(err) {
-			if (err) {
-				dialog.showErrorBox('Failed to save settings', err);
-			} else {
-				ipcRenderer.send('settings-updated');
-				settingsWindow.hide();
+		fs.writeFile(
+			app.getPath('userData') + '/config.json',
+			JSON.stringify({
+				workTimer: $('div.work').slider('value'),
+				relaxTimer: $('div.relax').slider('value'),
+				longRelaxTimer: $('div.longRelax').slider('value'),
+				showTimer: $('.showTimer').prop('checked'),
+				launchOnStartup: $('.launch').prop('checked')
+			}),
+			function(err) {
+				if (err) {
+					dialog.showErrorBox('Failed to save settings', err);
+				} else {
+					ipcRenderer.send('settings-updated');
+					settingsWindow.hide();
+				}
 			}
-		});
+		);
 	});
 
 	/*
 	 * Exit from settings without settings(Cancel action)
 	 */
 	$('#cancelBtn').on('click', function() {
-		dialog.showMessageBox({
-			type: 'question',
-			title: 'Warning',
-			message: 'Settings will not save! Are you sure?',
-			buttons: ['Yes', 'No']
-		}, function(response) {
-			// 0 === "Yes" button
-			if(response === 0) {
-				settingsWindow.hide();
+		dialog.showMessageBox(
+			{
+				type: 'question',
+				title: 'Warning',
+				message: 'Settings will not save! Are you sure?',
+				buttons: ['Yes', 'No']
+			},
+			function(response) {
+				// 0 === "Yes" button
+				if (response === 0) {
+					settingsWindow.hide();
+				}
 			}
-		})
+		);
 	});
 });
 

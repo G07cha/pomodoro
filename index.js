@@ -1,6 +1,6 @@
 'use strict';
-const {globalShortcut, ipcMain, dialog} = require('electron');
-const menubar = require('menubar');
+const { globalShortcut, ipcMain, dialog } = require('electron');
+const { menubar } = require('menubar');
 const Stopwatch = require('timer-stopwatch-dev');
 const Hrt = require('human-readable-time');
 const fs = require('fs');
@@ -17,15 +17,20 @@ let pomodoroCount = 0;
 let isRelaxTime = false;
 let showTimer = true;
 let launchOnStartup = false;
-let icon = (process.platform === 'darwin') ? '/src/img/IconTemplate.png' : '/src/img/winIcon.png';
+let icon
+	= process.platform === 'darwin'
+		? '/src/img/IconTemplate.png'
+		: '/src/img/winIcon.png';
 let windowState;
 
 let mb = menubar({
 	dir: path.join(__dirname, '/src'),
 	preloadWindow: true,
 	tooltip: 'Pomodoro timer',
-	height: 330,
-	width: 340,
+	browserWindow: {
+		height: 330,
+		width: 340
+	},
 	icon: path.join(__dirname, icon)
 });
 
@@ -52,26 +57,31 @@ mb.app.on('quit', () => {
 });
 
 mb.on('ready', () => {
-	windowState = windowStateKeeper()
+	windowState = windowStateKeeper();
 	windowState.manage(mb.window);
-})
+});
 
 mb.on('after-show', () => {
-	if (typeof (windowState.x) === 'number' && typeof (windowState.y) === 'number') {
+	if (
+		typeof windowState.x === 'number'
+		&& typeof windowState.y === 'number'
+	) {
 		mb.window.setPosition(windowState.x, windowState.y, false);
 	}
-})
+});
 
 global.timer.onTime(function(time) {
-  if(showTimer) {
-    if (time.ms !== workTimer
-         || time.ms !== relaxTimer
-         || time.ms !== longRelaxTimer) {
-      mb.tray.setTitle(timeFormat(new Date(time.ms)));
-    }
-  } else {
-    mb.tray.setTitle('');
-  }
+	if (showTimer) {
+		if (
+			time.ms !== workTimer
+			|| time.ms !== relaxTimer
+			|| time.ms !== longRelaxTimer
+		) {
+			mb.tray.setTitle(timeFormat(new Date(time.ms)));
+		}
+	} else {
+		mb.tray.setTitle('');
+	}
 
 	mb.window.webContents.send('update-timer', getProgress());
 });
@@ -79,13 +89,13 @@ global.timer.onTime(function(time) {
 global.timer.onDone(function() {
 	mb.window.webContents.send('end-timer');
 
-	if(isRelaxTime) {
+	if (isRelaxTime) {
 		isRelaxTime = false;
 		global.timer.reset(workTimer);
 	} else {
 		isRelaxTime = true;
 		pomodoroCount++;
-		if(pomodoroCount % 4 === 0) {
+		if (pomodoroCount % 4 === 0) {
 			global.timer.reset(longRelaxTimer);
 		} else {
 			global.timer.reset(relaxTimer);
@@ -106,7 +116,7 @@ ipcMain.on('reset-timer', function() {
 ipcMain.on('toggle-timer', function() {
 	global.timer.startstop();
 	mb.window.webContents.send('update-timer', getProgress());
-	if(global.timer.isStopped()) mb.tray.setTitle('Paused');
+	if (global.timer.isStopped()) mb.tray.setTitle('Paused');
 });
 
 ipcMain.on('settings-updated', function() {
@@ -122,7 +132,7 @@ ipcMain.on('request-config', function(event) {
 		workTimer: workTimer / 60 / 1000,
 		relaxTimer: relaxTimer / 60 / 1000,
 		longRelaxTimer: longRelaxTimer / 60 / 1000,
-    showTimer: showTimer,
+		showTimer: showTimer,
 		launchOnStartup: launchOnStartup
 	};
 });
@@ -139,14 +149,18 @@ function getConfig() {
 		workTimer = data.workTimer * 60 * 1000;
 		relaxTimer = data.relaxTimer * 60 * 1000;
 		longRelaxTimer = data.longRelaxTimer * 60 * 1000;
-    showTimer = data.showTimer;
+		showTimer = data.showTimer;
 		launchOnStartup = data.launchOnStartup;
 
-		(launchOnStartup ? autolauncher.enable() : autolauncher.disable())
-		.then(function(err) {
-			dialog.showErrorBox('Error on adding launch on startup functionality', err);
-		});
-	} catch(err) {
+		(launchOnStartup ? autolauncher.enable() : autolauncher.disable()).then(
+			function(err) {
+				dialog.showErrorBox(
+					'Error on adding launch on startup functionality',
+					err
+				);
+			}
+		);
+	} catch (err) {
 		console.log('Didn\'t find previous config. Using default settings'); // eslint-disable-line no-console
 	}
 }
@@ -154,8 +168,8 @@ function getConfig() {
 function getProgress() {
 	let progress, max;
 
-	if(isRelaxTime) {
-		if(pomodoroCount % 4 === 0) {
+	if (isRelaxTime) {
+		if (pomodoroCount % 4 === 0) {
 			max = longRelaxTimer;
 		} else {
 			max = relaxTimer;
@@ -164,9 +178,9 @@ function getProgress() {
 		max = workTimer;
 	}
 
-	progress = (max - global.timer.ms) / (max / 100) * 0.01;
+	progress = ((max - global.timer.ms) / (max / 100)) * 0.01;
 
-	if(progress < 0) {
+	if (progress < 0) {
 		progress = 0.01;
 	}
 	return progress;
