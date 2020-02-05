@@ -91,10 +91,6 @@ module.exports = {
         "max-params": "error",
         "max-statements": "off",
         "max-statements-per-line": "error",
-        "multiline-ternary": [
-            "error",
-            "never"
-        ],
         "new-cap": "error",
         "new-parens": "error",
         "newline-after-var": [

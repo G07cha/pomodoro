@@ -29,12 +29,18 @@ let mb = menubar({
 	tooltip: 'Pomodoro timer',
 	browserWindow: {
 		height: 330,
-		width: 340
+		width: 340,
+		webPreferences: {
+			nodeIntegration: true
+	}
 	},
 	icon: path.join(__dirname, icon)
 });
 
-let autolauncher = new AutoLaunch({ name: 'Pomodoro' });
+mb.app.allowRendererProcessReuse = true;
+
+let autolauncher = new AutoLaunch({ name: 'Pomodoro',
+mac: { useLaunchAgent: true } });
 
 getConfig();
 
@@ -63,7 +69,8 @@ mb.on('ready', () => {
 
 mb.on('after-show', () => {
 	if (
-		typeof windowState.x === 'number'
+		windowState
+		&& typeof windowState.x === 'number'
 		&& typeof windowState.y === 'number'
 	) {
 		mb.window.setPosition(windowState.x, windowState.y, false);
@@ -152,11 +159,11 @@ function getConfig() {
 		showTimer = data.showTimer;
 		launchOnStartup = data.launchOnStartup;
 
-		(launchOnStartup ? autolauncher.enable() : autolauncher.disable()).then(
+		(launchOnStartup ? autolauncher.enable() : autolauncher.disable()).catch(
 			function(err) {
 				dialog.showErrorBox(
 					'Error on adding launch on startup functionality',
-					err
+					`Error: ${err}`
 				);
 			}
 		);

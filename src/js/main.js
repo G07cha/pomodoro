@@ -111,7 +111,10 @@ function createWindow() {
 		height: 500,
 		frame: false,
 		x: windowState.x,
-		y: windowState.y
+		y: windowState.y,
+		webPreferences: {
+			nodeIntegration: true
+	}
 	});
 
 	windowState.manage(win);
