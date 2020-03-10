@@ -62,19 +62,23 @@ $(document).ready(function() {
 	 * Exit from settings without settings(Cancel action)
 	 */
 	$('#cancelBtn').on('click', function() {
-		dialog.showMessageBox(
-			{
+        let options = {
 				type: 'question',
 				title: 'Warning',
 				message: 'Settings will not save! Are you sure?',
-				buttons: ['Yes', 'No']
-			},
-			function(response) {
-				// 0 === "Yes" button
-				if (response === 0) {
-					settingsWindow.hide();
-				}
+				buttons: ['Yes', 'No'],
+                defaultId: 1,
+                cancelId: 1
 			}
+
+		dialog.showMessageBox(options).then((result) => {
+				// 0 === "Yes" button
+				if (result.response === 0) {
+					settingsWindow.hide();
+                } else {
+                    settingsWindow.show();
+                }
+            }
 		);
 	});
 });
