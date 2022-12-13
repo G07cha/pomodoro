@@ -30,12 +30,12 @@
     "timer-stopwatch-dev": "^1.1.0"
   },
   "devDependencies": {
-    "ava": "^3.2.0",
+    "ava": "^5.1.0",
     "bower": "^1.8.8",
     "devtron": "^1.4.0",
-    "electron": "^8.5.2",
-    "electron-builder": "^22.3.2",
-    "electron-packager": "^14.2.0",
+    "electron": "^22.0.0",
+    "electron-builder": "^23.6.0",
+    "electron-packager": "^17.1.1",
     "eslint": "^6.8.0",
     "prettier": "^1.19.1",
     "prettier-eslint": "^9.0.1",
