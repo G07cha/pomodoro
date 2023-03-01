@@ -39,7 +39,7 @@
     "eslint": "^6.8.0",
     "prettier": "^1.19.1",
     "prettier-eslint": "^9.0.1",
-    "spectron": "^10.0.1"
+    "spectron": "^19.0.0"
   },
   "build": {
     "productName": "Pomodoro",
