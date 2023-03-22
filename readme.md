@@ -1,4 +1,4 @@
-# Tauri + Vanilla
+# Pomodoro
 
 This template should help get you started developing with Tauri in vanilla HTML, CSS and Javascript.
 
@@ -17,4 +17,10 @@ This template should help get you started developing with Tauri in vanilla HTML,
 
 ```
 npm install
+```
+
+To run full app execute the following command:
+
+```
+npm start
 ```

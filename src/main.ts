@@ -1,23 +1,60 @@
-import './style.css';
-import typescriptLogo from './typescript.svg';
-import { setupCounter } from './counter';
+import './style.less';
+import { invoke, listen } from './utils/tauri-events';
+import * as theme from './utils/theme';
+import * as time from './utils/time';
+import { TimerIcon, TimerMode, TimerUIController } from './views/timer';
+import { message } from '@tauri-apps/api/dialog';
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`;
+theme.followSystemTheme();
+const timerUI = new TimerUIController();
+let mode = TimerMode.Work;
+let cycle = 0;
+let timers = {
+  Work: 0,
+  Relax: 0,
+  LongRelax: 0,
+};
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!);
+invoke('get_settings').then((value: any) => {
+  timers = {
+    Work: value.work_duration.secs,
+    Relax: value.relax_duration.secs,
+    LongRelax: value.long_relax_duration.secs,
+  };
+  mode = value.mode;
+  cycle = value.cycles;
+});
+
+listen<number>('timer-tick', ({ payload: timeSecs }) => {
+  timerUI.setText(time.formatTime(timeSecs * 1000));
+  timerUI.setProgress(((timeSecs / timers.Work) * 100 - 100) * -1);
+});
+
+listen<{ is_running: boolean; cycle: number; mode: TimerMode }>(
+  'timer-end',
+  ({ payload }) => {
+    mode = payload.mode;
+    cycle = payload.cycle;
+    timerUI.hideIcon(TimerIcon.Play);
+    timerUI.setMode(mode);
+    timerUI.setCycle(cycle % 5);
+
+    message('Timer is done', { type: 'info' }).then(() =>
+      invoke('toggle_timer')
+    );
+  }
+);
+
+listen<boolean>('timer-state', ({ payload: isRunning }) => {
+  if (isRunning) {
+    timerUI.hideIcon(TimerIcon.Play);
+    timerUI.setMode(mode);
+    timerUI.setCycle(cycle % 5);
+  } else {
+    timerUI.showIcon(TimerIcon.Play);
+    timerUI.setText('');
+    timerUI.setCycle(0);
+  }
+});
+
+window.addEventListener('click', () => invoke('toggle_timer'));

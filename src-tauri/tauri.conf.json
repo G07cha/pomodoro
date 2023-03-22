@@ -1,17 +1,21 @@
 {
   "build": {
-    "beforeBuildCommand": "npm run build",
-    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build:front",
+    "beforeDevCommand": "npm run start:front",
     "devPath": "http://localhost:5173",
     "distDir": "../dist"
   },
   "package": {
-    "productName": "pomodoro",
+    "productName": "Pomodoro",
     "version": "0.1.0"
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "all": false,
+      "dialog": {
+        "all": false,
+        "message": true
+      }
     },
     "bundle": {
       "active": true,
@@ -52,14 +56,25 @@
     "updater": {
       "active": false
     },
+    "macOSPrivateApi": true,
     "windows": [
       {
+        "decorations": false,
         "fullscreen": false,
-        "height": 600,
-        "resizable": true,
+        "height": 170,
+        "resizable": false,
         "title": "Pomodoro",
-        "width": 800
+        "width": 170,
+        "focus": false,
+        "alwaysOnTop": true,
+        "transparent": true,
+        "visible": false
       }
-    ]
+    ],
+    "systemTray": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true,
+      "menuOnLeftClick": true
+    }
   }
 }
