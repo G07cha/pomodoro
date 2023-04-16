@@ -53,6 +53,7 @@ impl Timer {
     self.is_running.store(false, Ordering::SeqCst);
 
     // Joining in event handler causes deadlock, do we even need to join it?
+    // TODO: Yes we do! Or have a single thread running for the whole lifetime
     // self
     //   .timer_thread
     //   .take()
@@ -80,6 +81,7 @@ impl Timer {
 
     self.timer_thread.replace(thread::spawn(move || {
       let mut total_elapsed = elapsed + current_start.elapsed();
+
       while is_running.load(Ordering::SeqCst) && total_elapsed < duration {
         if let Some(ref event_handler) = event_handler {
           event_handler(TimerEvent::Tick {

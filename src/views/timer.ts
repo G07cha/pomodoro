@@ -1,9 +1,5 @@
+import { TimerMode } from '../../src-tauri/bindings/TimerMode';
 import * as dom from '../utils/dom';
-
-export enum TimerMode {
-  Work = 'Work',
-  Relax = 'Relax',
-}
 
 export enum TimerIcon {
   Play = 'play',

@@ -13,7 +13,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@bindings/*": ["./src-tauri/bindings/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src", "src-tauri/bindings"]
 }

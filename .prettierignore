@@ -4,4 +4,4 @@
 coverage
 dist
 node_modules
-src-tauri/**/*.rs
+src-tauri

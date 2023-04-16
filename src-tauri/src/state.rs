@@ -1,8 +1,11 @@
 use std::{sync::Mutex, time::Duration};
 
+use ts_rs::TS;
+
 use crate::utils::timer::Timer;
 
-#[derive(Clone, Copy, serde::Serialize, Debug)]
+#[derive(Clone, Copy, serde::Serialize, Debug, TS)]
+#[ts(export)]
 pub enum TimerMode {
   Work,
   Relax,

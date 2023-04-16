@@ -8,9 +8,11 @@ use std::time::Duration;
 
 use commands::settings::get_settings;
 use commands::timer::toggle_timer;
+use serde::Serialize;
 use state::{AppState, SettingsState};
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
+use ts_rs::TS;
 use ui::tray::setup_tray;
 mod commands;
 mod state;
@@ -21,8 +23,9 @@ use crate::state::TimerMode;
 use crate::ui::window::decorate_window;
 use crate::utils::timer::{Timer, TimerEvent, TimerSettings};
 
-#[derive(Clone, serde::Serialize)]
-struct TimerStatePayload {
+#[derive(Clone, Serialize, TS)]
+#[ts(export)]
+struct TimerEndPayload {
   mode: TimerMode,
   cycle: u32,
   is_running: bool,
@@ -103,9 +106,9 @@ fn main() {
             }
 
             window
-              .emit::<TimerStatePayload>(
+              .emit::<TimerEndPayload>(
                 "timer-end",
-                TimerStatePayload {
+                TimerEndPayload {
                   mode: settings.mode,
                   cycle: settings.cycles,
                   is_running: timer.is_running(),
