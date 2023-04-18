@@ -2,9 +2,9 @@ use crate::state::AppState;
 
 #[tauri::command]
 pub fn toggle_timer(window: tauri::Window, state: tauri::State<'_, AppState>) {
-  let mut timer = state.timer.lock().unwrap();
+  state.timer.toggle();
 
-  timer.toggle();
-
-  window.emit("timer-state", timer.is_running()).unwrap()
+  window
+    .emit("timer-state", state.timer.is_running())
+    .unwrap()
 }

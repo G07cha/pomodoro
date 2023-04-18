@@ -1,8 +1,10 @@
-use std::{sync::Mutex, time::Duration};
+use std::{
+  sync::{Arc, Mutex},
+  time::Duration,
+};
 
+use ticking_timer::Timer;
 use ts_rs::TS;
-
-use crate::utils::timer::Timer;
 
 #[derive(Clone, Copy, serde::Serialize, Debug, TS)]
 #[ts(export)]
@@ -21,6 +23,6 @@ pub struct SettingsState {
 }
 
 pub struct AppState {
-  pub timer: Mutex<Timer>,
+  pub timer: Arc<Timer>,
   pub settings: Mutex<SettingsState>,
 }

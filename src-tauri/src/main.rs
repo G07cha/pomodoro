@@ -3,7 +3,8 @@
   windows_subsystem = "windows"
 )]
 
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
+use std::thread;
 use std::time::Duration;
 
 use commands::settings::get_settings;
@@ -12,16 +13,15 @@ use serde::Serialize;
 use state::{AppState, SettingsState};
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
+use ticking_timer::Timer;
 use ts_rs::TS;
 use ui::tray::setup_tray;
 mod commands;
 mod state;
 mod ui;
-mod utils;
 
 use crate::state::TimerMode;
 use crate::ui::window::decorate_window;
-use crate::utils::timer::{Timer, TimerEvent, TimerSettings};
 
 #[derive(Clone, Serialize, TS)]
 #[ts(export)]
@@ -44,15 +44,15 @@ fn main() {
     cycles: 0,
     mode: state::TimerMode::Work,
   };
-  let timer = Timer::new(TimerSettings {
-    duration: settings.work_duration,
-    update_frequency: Duration::from_millis(200),
-  });
+
+  let timer = Timer::new(Duration::from_millis(100));
+  let update_receiver = timer.update_receiver.clone();
+  timer.reset(settings.work_duration).unwrap();
 
   tauri::Builder::default()
     .manage(AppState {
-      timer: Mutex::new(timer),
       settings: Mutex::new(settings),
+      timer: Arc::new(timer),
     })
     .setup(|app| {
       let window = app.get_window(WINDOW_LABEL).unwrap();
@@ -63,14 +63,12 @@ fn main() {
       #[cfg(debug_assertions)]
       window.open_devtools();
 
-      let handle = app.handle();
-      app
-        .state::<AppState>()
-        .timer
-        .lock()
-        .unwrap()
-        .on_event(move |event| match event {
-          TimerEvent::Tick { remaining } => {
+      thread::Builder::new()
+        .name("Timer listener".into())
+        .spawn({
+          let handle = app.handle();
+          move || loop {
+            let remaining = update_receiver.recv().unwrap();
             let remaining_secs = remaining.as_secs();
 
             handle
@@ -83,40 +81,45 @@ fn main() {
                 )
                 .as_str(),
               )
-              .unwrap();
+              .expect("Can't update tray title");
 
             handle.emit_all("timer-tick", &remaining_secs).unwrap();
-          }
-          TimerEvent::TimeEnd {} => {
-            let state = handle.state::<AppState>();
-            let mut settings = state.settings.lock().unwrap();
-            let mut timer = state.timer.lock().unwrap();
 
-            if matches!(settings.mode, TimerMode::Work) {
-              settings.mode = TimerMode::Relax;
-              if settings.cycles % 4 == 0 && settings.cycles > 0 {
-                timer.reset(Some(settings.long_relax_duration));
-              } else {
-                timer.reset(Some(settings.relax_duration));
+            if remaining.is_zero() {
+              let state = handle.state::<AppState>();
+              let mut settings = state.settings.lock().unwrap();
+              let timer = &state.timer;
+
+              match settings.mode {
+                TimerMode::Relax => {
+                  settings.mode = TimerMode::Work;
+                  settings.cycles += 1;
+                  timer.reset(settings.work_duration).unwrap();
+                }
+                TimerMode::Work => {
+                  settings.mode = TimerMode::Relax;
+                  let new_duration = if settings.cycles % 4 == 0 {
+                    settings.long_relax_duration
+                  } else {
+                    settings.relax_duration
+                  };
+                  timer.reset(new_duration).unwrap();
+                }
               }
-            } else {
-              settings.mode = TimerMode::Work;
-              settings.cycles += 1;
-              timer.reset(Some(settings.work_duration));
-            }
 
-            window
-              .emit::<TimerEndPayload>(
-                "timer-end",
-                TimerEndPayload {
-                  mode: settings.mode,
-                  cycle: settings.cycles,
-                  is_running: timer.is_running(),
-                },
-              )
-              .unwrap();
+              window
+                .emit::<TimerEndPayload>(
+                  "timer-end",
+                  TimerEndPayload {
+                    mode: settings.mode,
+                    cycle: settings.cycles,
+                    is_running: state.timer.is_running(),
+                  },
+                )
+                .unwrap();
+            }
           }
-        });
+        })?;
 
       Ok(())
     })
