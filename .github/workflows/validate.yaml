@@ -1,0 +1,55 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+name: Validate
+
+jobs:
+  check:
+    name: Lint
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: moonrepo/setup-rust@v0
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint files
+        run: npm run lint
+
+  test:
+    name: Test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: moonrepo/setup-rust@v0
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm test
+
+  format:
+    name: Check formatting
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: moonrepo/setup-rust@v0
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Check files formatting
+        run: npm run format:check
