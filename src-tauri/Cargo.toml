@@ -1,10 +1,9 @@
 [package]
 name = "app"
-version = "0.1.0"
-description = "A Tauri App"
+version = "3.0.0-beta"
+description = "Pomodoro timer app"
 authors = ["G07cha"]
-license = ""
-repository = ""
+license = "MIT"
 default-run = "app"
 edition = "2021"
 rust-version = "1.65"

@@ -1,7 +1,7 @@
 {
   "name": "pomodoro",
   "private": true,
-  "version": "0.0.0",
+  "version": "3.0.0-beta",
   "type": "module",
   "scripts": {
     "start": "RUST_BACKTRACE=1 cargo tauri dev",
