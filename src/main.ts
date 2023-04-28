@@ -1,9 +1,11 @@
+import { message } from '@tauri-apps/api/dialog';
+
 import { TimerStatePayload } from '@bindings/TimerStatePayload';
+
 import { invoke, listen } from './utils/tauri-events';
 import * as theme from './utils/theme';
 import * as time from './utils/time';
 import { TimerIcon, TimerUIController } from './views/timer';
-import { message } from '@tauri-apps/api/dialog';
 
 theme.followSystemTheme();
 

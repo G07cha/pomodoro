@@ -1,7 +1,9 @@
-import { GetSettingsResponse } from '@bindings/GetSettingsResponse';
 import * as autostart from 'tauri-plugin-autostart-api';
-import { SetSettingsPayload } from '@bindings/SetSettingsPayload';
 import { appWindow } from '@tauri-apps/api/window';
+
+import { GetSettingsResponse } from '@bindings/GetSettingsResponse';
+import { SetSettingsPayload } from '@bindings/SetSettingsPayload';
+
 import { invoke } from './utils/tauri-events';
 import * as theme from './utils/theme';
 import { minsToSecs, secsToMins } from './utils/time';

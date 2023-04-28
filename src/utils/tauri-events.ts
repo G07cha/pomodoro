@@ -5,6 +5,7 @@ import {
   UnlistenFn,
 } from '@tauri-apps/api/event';
 import { invoke as tauriInvoke, InvokeArgs } from '@tauri-apps/api/tauri';
+
 import { createLogger } from './logging';
 
 const log = createLogger('EVENTS');
