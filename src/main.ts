@@ -1,7 +1,4 @@
-import { GetSettingsResponse } from '@bindings/GetSettingsResponse';
-import { TimerEndPayload } from '@bindings/TimerEndPayload';
-import { TimerMode } from '@bindings/TimerMode';
-import './style.less';
+import { TimerStatePayload } from '@bindings/TimerStatePayload';
 import { invoke, listen } from './utils/tauri-events';
 import * as theme from './utils/theme';
 import * as time from './utils/time';
@@ -59,3 +56,11 @@ listen<boolean>('timer-running-change', ({ payload: isRunning }) => {
 });
 
 window.addEventListener('click', () => invoke('toggle_timer'));
+
+// Disable animations when window is hidden to avoid jumping timer progress
+const noTransitionStylesheet = new CSSStyleSheet();
+noTransitionStylesheet.replaceSync('* { transition: none !important }');
+document.adoptedStyleSheets = [noTransitionStylesheet];
+document.addEventListener('visibilitychange', () => {
+  noTransitionStylesheet.disabled = document.visibilityState === 'visible';
+});
