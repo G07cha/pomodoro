@@ -18,10 +18,17 @@ export const listen = <TPayload>(
     handler(event);
   });
 
-export const invoke = <TResponse>(
+export const invoke = async <TResponse>(
   cmd: string,
   args?: InvokeArgs
 ): Promise<TResponse> => {
   log('Invoked command', cmd, ...(args ? ['with args', args] : []));
-  return tauriInvoke<TResponse>(cmd, args);
+  const response = await tauriInvoke<TResponse>(cmd, args);
+  log(
+    'Received response for command',
+    cmd,
+    ...(args ? ['with args', args] : []),
+    response
+  );
+  return response;
 };

@@ -9,45 +9,48 @@ import { TimerIcon, TimerUIController } from './views/timer';
 import { message } from '@tauri-apps/api/dialog';
 
 theme.followSystemTheme();
-const timerUI = new TimerUIController();
-let mode: TimerMode = 'Work';
-let cycle = 0;
-let timers = {
-  Work: 0,
-  Relax: 0,
-  LongRelax: 0,
-};
 
-invoke<GetSettingsResponse>('get_settings').then((value) => {
-  timers = {
-    Work: value.work_duration,
-    Relax: value.relax_duration,
-    LongRelax: value.long_relax_duration,
-  };
-  mode = value.mode;
-  cycle = value.cycles;
-});
+let {
+  mode,
+  cycle,
+  duration: durationSecs,
+} = await invoke<TimerStatePayload>('get_timer_state');
+const timerUI = new TimerUIController();
+let lastTickTime = '';
+
+timerUI.setText('');
+timerUI.showIcon(TimerIcon.Play);
 
 listen<number>('timer-tick', ({ payload: timeSecs }) => {
-  timerUI.setText(time.formatTime(timeSecs * 1000));
-  timerUI.setProgress(((timeSecs / timers.Work) * 100 - 100) * -1);
+  lastTickTime = time.formatTime(timeSecs);
+  timerUI.setText(time.formatTime(timeSecs));
+  timerUI.setProgress(((timeSecs / durationSecs) * 100 - 100) * -1);
 });
 
-listen<TimerEndPayload>('timer-end', ({ payload }) => {
+listen<TimerStatePayload>('timer-state', ({ payload }) => {
   mode = payload.mode;
   cycle = payload.cycle;
-  timerUI.hideIcon(TimerIcon.Play);
-  timerUI.setMode(mode);
-  timerUI.setCycle(cycle % 5);
+  durationSecs = payload.duration;
 
-  message('Timer is done', { type: 'info' }).then(() => invoke('toggle_timer'));
+  if (payload.is_ended) {
+    timerUI.showIcon(TimerIcon.Play);
+    timerUI.setText('');
+    timerUI.setCycle(0);
+    message('Timer is done', { type: 'info' }).then(() =>
+      invoke('toggle_timer')
+    );
+  } else {
+    timerUI.setMode(mode);
+    timerUI.setCycle(cycle % 5);
+  }
 });
 
-listen<boolean>('timer-state', ({ payload: isRunning }) => {
+listen<boolean>('timer-running-change', ({ payload: isRunning }) => {
   if (isRunning) {
     timerUI.hideIcon(TimerIcon.Play);
     timerUI.setMode(mode);
     timerUI.setCycle(cycle % 5);
+    timerUI.setText(lastTickTime);
   } else {
     timerUI.showIcon(TimerIcon.Play);
     timerUI.setText('');

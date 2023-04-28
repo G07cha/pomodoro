@@ -3,20 +3,22 @@
   windows_subsystem = "windows"
 )]
 
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, RwLock};
 use std::thread;
 use std::time::Duration;
 
-use commands::settings::get_settings;
-use commands::timer::toggle_timer;
+use commands::settings::{get_settings, set_settings};
+use commands::timer::{get_timer_state, toggle_timer};
 use serde::Serialize;
-use state::{AppState, SettingsState};
+use services::fs::load_settings;
+use state::{Pomodoro, Settings};
 use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 use ticking_timer::Timer;
 use ts_rs::TS;
 use ui::tray::setup_tray;
 mod commands;
+mod services;
 mod state;
 mod ui;
 
@@ -25,40 +27,50 @@ use crate::ui::window::decorate_window;
 
 #[derive(Clone, Serialize, TS)]
 #[ts(export)]
-struct TimerEndPayload {
+pub struct TimerStatePayload {
   mode: TimerMode,
   cycle: u32,
-  is_running: bool,
+  is_ended: bool,
+  duration: u32,
 }
 
+pub const MAIN_WINDOW_LABEL: &str = "main";
+pub const SETTINGS_WINDOW_LABEL: &str = "settings";
+
+pub type TimerState = Arc<Timer>;
+pub type SettingsState = RwLock<Settings>;
+pub type PomodoroState = Mutex<Pomodoro>;
+
 fn main() {
-  const WINDOW_LABEL: &str = "main";
-  let settings = SettingsState {
-    work_duration: Duration::from_secs(60 * 25),
-    relax_duration: Duration::from_secs(60 * 5),
-    long_relax_duration: Duration::from_secs(60 * 15),
-    // For testing purposes
-    // work_duration: Duration::from_secs(10),
-    // relax_duration: Duration::from_secs(5),
-    // long_relax_duration: Duration::from_secs(7),
-    cycles: 0,
-    mode: state::TimerMode::Work,
-  };
-
-  let timer = Timer::new(Duration::from_millis(100));
-  let update_receiver = timer.update_receiver.clone();
-  timer.reset(settings.work_duration).unwrap();
-
   tauri::Builder::default()
-    .manage(AppState {
-      settings: Mutex::new(settings),
-      timer: Arc::new(timer),
-    })
+    .manage::<TimerState>(Arc::new(Timer::new(Duration::from_millis(100))))
+    .manage::<SettingsState>(RwLock::new(Settings {
+      work_duration: Duration::from_secs(60 * 25),
+      relax_duration: Duration::from_secs(60 * 5),
+      long_relax_duration: Duration::from_secs(60 * 15),
+    }))
+    .manage::<PomodoroState>(Mutex::new(Pomodoro {
+      cycles: 0,
+      mode: state::TimerMode::Work,
+    }))
     .setup(|app| {
-      let window = app.get_window(WINDOW_LABEL).unwrap();
+      {
+        match load_settings(app.handle()) {
+          Ok(settings) => *app.state::<SettingsState>().write().unwrap() = settings,
+          Err(error) => {
+            eprintln!("Failed to load settings from FS with error {:?}", error);
+          }
+        }
+      }
+
+      let window = app.get_window(MAIN_WINDOW_LABEL).unwrap();
+      {
+        let duration = app.state::<SettingsState>().read().unwrap().work_duration;
+        app.state::<TimerState>().reset(duration).unwrap();
+      }
 
       decorate_window(&window);
-      setup_tray(app, WINDOW_LABEL);
+      setup_tray(app, MAIN_WINDOW_LABEL);
 
       #[cfg(debug_assertions)]
       window.open_devtools();
@@ -67,8 +79,11 @@ fn main() {
         .name("Timer listener".into())
         .spawn({
           let handle = app.handle();
+          let update_receiver = handle.state::<TimerState>().update_receiver.clone();
           move || loop {
-            let remaining = update_receiver.recv().unwrap();
+            let remaining = update_receiver
+              .recv()
+              .expect("Failed to receive timer tick");
             let remaining_secs = remaining.as_secs();
 
             handle
@@ -86,34 +101,38 @@ fn main() {
             handle.emit_all("timer-tick", &remaining_secs).unwrap();
 
             if remaining.is_zero() {
-              let state = handle.state::<AppState>();
-              let mut settings = state.settings.lock().unwrap();
-              let timer = &state.timer;
+              let settings = handle.state::<SettingsState>();
+              let pomodoro_state = handle.state::<PomodoroState>();
+              let mut pomodoro_state = pomodoro_state.lock().unwrap();
 
-              match settings.mode {
+              let new_duration = match pomodoro_state.mode {
                 TimerMode::Relax => {
-                  settings.mode = TimerMode::Work;
-                  settings.cycles += 1;
-                  timer.reset(settings.work_duration).unwrap();
+                  pomodoro_state.mode = TimerMode::Work;
+                  pomodoro_state.cycles += 1;
+
+                  settings.read().unwrap().work_duration
                 }
                 TimerMode::Work => {
-                  settings.mode = TimerMode::Relax;
-                  let new_duration = if settings.cycles % 4 == 0 {
-                    settings.long_relax_duration
-                  } else {
-                    settings.relax_duration
-                  };
-                  timer.reset(new_duration).unwrap();
-                }
-              }
+                  pomodoro_state.mode = TimerMode::Relax;
 
+                  if pomodoro_state.cycles % 4 == 0 && pomodoro_state.cycles > 0 {
+                    settings.read().unwrap().long_relax_duration
+                  } else {
+                    settings.read().unwrap().relax_duration
+                  }
+                }
+              };
+
+              let timer = handle.state::<TimerState>();
+              timer.reset(new_duration).unwrap();
               window
-                .emit::<TimerEndPayload>(
-                  "timer-end",
-                  TimerEndPayload {
-                    mode: settings.mode,
-                    cycle: settings.cycles,
-                    is_running: state.timer.is_running(),
+                .emit::<TimerStatePayload>(
+                  "timer-state",
+                  TimerStatePayload {
+                    mode: pomodoro_state.mode,
+                    cycle: pomodoro_state.cycles,
+                    is_ended: true,
+                    duration: new_duration.as_secs() as u32,
                   },
                 )
                 .unwrap();
@@ -127,7 +146,12 @@ fn main() {
       MacosLauncher::LaunchAgent,
       None,
     ))
-    .invoke_handler(tauri::generate_handler![toggle_timer, get_settings])
+    .invoke_handler(tauri::generate_handler![
+      toggle_timer,
+      get_timer_state,
+      get_settings,
+      set_settings
+    ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

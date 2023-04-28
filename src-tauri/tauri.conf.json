@@ -12,6 +12,9 @@
   "tauri": {
     "allowlist": {
       "all": false,
+      "window": {
+        "close": true
+      },
       "dialog": {
         "all": false,
         "message": true
@@ -32,7 +35,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.pomodoro.dev",
       "longDescription": "",
       "macOS": {
         "entitlements": null,

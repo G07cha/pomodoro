@@ -1,51 +1,8 @@
-:root[data-theme='light'] {
-  --work-timer-gradient-start: rgba(0, 163, 255, 0.5);
-  --work-timer-gradient-end: rgba(37, 69, 239, 0.7);
-
-  --relax-timer-gradient-start: rgba(255, 164, 27, 0.7);
-  --relax-timer-gradient-end: rgba(242, 150, 11, 0.5);
-
-  --timer-background-gradient-start: rgba(128, 128, 128, 0.3);
-  --timer-background-gradient-end: rgba(86, 86, 86, 0.147);
-
-  --font-color: #1a1a1a;
-  --icon-color: #777777;
-}
-
-:root[data-theme='dark'] {
-  --work-timer-gradient-start: rgba(17, 112, 255, 0.5);
-  --work-timer-gradient-end: rgba(36, 66, 222, 0.7);
-
-  --relax-timer-gradient-start: rgba(255, 181, 69, 0.7);
-  --relax-timer-gradient-end: rgba(216, 139, 24, 0.7);
-
-  --timer-background-gradient-start: rgba(255, 255, 255, 0.35);
-  --timer-background-gradient-end: rgba(198, 198, 198, 0.35);
-
-  --font-color: #ffffff;
-  --icon-color: #f2f2f2;
-}
-
-:root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-
-  color-scheme: light dark;
-  color: var(--font-color);
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-}
-
-* {
-  box-sizing: border-box;
-}
+@import "./theme.less";
+@import "./common.less";
 
 html,
 body {
-  margin: 0;
   width: 170px;
   height: 170px;
 }
@@ -129,6 +86,8 @@ body {
   font-weight: 500;
   fill: var(--font-color);
   user-select: none;
+  // Safari only supports prefixed property, see https://caniuse.com/?search=user-select
+  -webkit-user-select: none;
   pointer-events: none;
 }
 
