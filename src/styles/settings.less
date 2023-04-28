@@ -1,45 +1,44 @@
-@import "./theme.less";
-@import "./common.less";
-
+@import './theme.less';
+@import './common.less';
 
 html {
-	background: var(--background);
-	color: var(--font-color);
-	font-weight: 500;
-	padding: 1.5rem;
+  background: var(--background);
+  color: var(--font-color);
+  font-weight: 500;
+  padding: 1.5rem;
 }
 
 label {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 0.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
 }
 
 .input-group {
-	background: var(--card-background);
-	border: 1px solid var(--card-border);
-	border-radius: 5px;
-	padding: 0 0.75rem;
+  background: var(--card-background);
+  border: 1px solid var(--card-border);
+  border-radius: 5px;
+  padding: 0 0.75rem;
 }
 
 .input-group label:not(:last-child) {
-	border-bottom: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border);
 }
 
-input[type="checkbox"] {
-	// Center checkbox with a label (MacOS specific?)
-	margin-top: 5px;
+input[type='checkbox'] {
+  // Center checkbox with a label (MacOS specific?)
+  margin-top: 5px;
 }
 
-input[type="number"] {
-	border-radius: 5px;
-	border: 1px solid var(--card-border);
-	padding: 0.25rem;
+input[type='number'] {
+  border-radius: 5px;
+  border: 1px solid var(--card-border);
+  padding: 0.25rem;
 }
 
 #settings-form {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
