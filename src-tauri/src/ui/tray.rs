@@ -52,7 +52,7 @@ fn create_window_event_handler(app: &mut App) -> impl Fn(SystemTrayEvent) {
               .resizable(false)
               .inner_size(350.0, 230.0)
               .focused(true)
-              .accept_first_mouse(true)
+              .skip_taskbar(true)
               .build()
               .unwrap();
             });

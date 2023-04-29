@@ -34,9 +34,13 @@ appWindow.onCloseRequested(async () => {
     await invoke('set_settings', { newSettings });
   }
 
-  if (formValues.autostart && (await autostart.isEnabled()) === false) {
-    await autostart.enable();
-  } else {
-    await autostart.disable();
+  if (formValues.autostart !== (await autostart.isEnabled())) {
+    if (formValues.autostart) {
+      await autostart.enable();
+    } else {
+      await autostart.disable();
+    }
   }
+
+  appWindow.close();
 });
