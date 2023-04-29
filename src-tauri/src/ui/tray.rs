@@ -72,6 +72,10 @@ pub fn setup_tray(app: &mut App) {
       .add_item(settings_menu_item)
       .add_item(quit_menu_item),
   );
+
+  #[cfg(target_os = "macos")]
+  let system_tray = system_tray.with_menu_on_left_click(false);
+
   let main_window = app.get_window(MAIN_WINDOW_LABEL).unwrap();
 
   main_window.on_window_event({
