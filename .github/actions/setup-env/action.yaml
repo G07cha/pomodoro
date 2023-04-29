@@ -1,0 +1,12 @@
+name: 'Setup environment'
+runs:
+  using: 'composite'
+  steps:
+    - uses: moonrepo/setup-rust@v0
+    - uses: actions/setup-node@v3
+      with:
+        node-version-file: '.nvmrc'
+        cache: 'npm'
+    - name: Install NPM dependencies
+      shell: bash
+      run: npm ci

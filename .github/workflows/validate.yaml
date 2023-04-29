@@ -18,13 +18,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: moonrepo/setup-rust@v0
-      - uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-      - name: Install NPM dependencies
-        run: npm ci
+      - name: Setup environment
+        uses: ./.github/actions/setup-env
       - name: Lint files
         run: npm run lint
 
@@ -33,13 +28,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: moonrepo/setup-rust@v0
-      - uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-      - name: Install NPM dependencies
-        run: npm ci
+      - name: Setup environment
+        uses: ./.github/actions/setup-env
       - name: Run tests
         run: npm test
 
@@ -48,12 +38,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: moonrepo/setup-rust@v0
-      - uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-      - name: Install NPM dependencies
-        run: npm ci
+      - name: Setup environment
+        uses: ./.github/actions/setup-env
       - name: Check files formatting
         run: npm run format:check
