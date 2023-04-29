@@ -7,12 +7,13 @@
   },
   "package": {
     "productName": "Pomodoro",
-    "version": "0.1.0"
+    "version": "../package.json"
   },
   "tauri": {
     "allowlist": {
       "all": false,
       "window": {
+        // To catch onCloseRequested event in settings window
         "close": true
       },
       "dialog": {
@@ -22,7 +23,7 @@
     },
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
+      "category": "Productivity",
       "copyright": "",
       "deb": {
         "depends": []
@@ -35,8 +36,8 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.pomodoro.dev",
-      "longDescription": "",
+      "identifier": "com.g07cha.pomodoro",
+      "longDescription": "Beautiful and configurable pomodoro timer right in your tray",
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
@@ -45,7 +46,7 @@
         "signingIdentity": null
       },
       "resources": [],
-      "shortDescription": "",
+      "shortDescription": "Pomodoro timer",
       "targets": "all",
       "windows": {
         "certificateThumbprint": null,
@@ -54,11 +55,12 @@
       }
     },
     "security": {
-      "csp": null
+      "csp": "Content-Security-Policy: default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; frame-ancestors 'self'; form-action 'self';"
     },
     "updater": {
       "active": false
     },
+    // To enable main window transparency
     "macOSPrivateApi": true,
     "windows": [
       {
