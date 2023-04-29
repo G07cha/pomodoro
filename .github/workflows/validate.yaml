@@ -8,6 +8,10 @@ on:
 
 name: Validate
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
     name: Lint
@@ -19,7 +23,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: Install dependencies
+      - name: Install NPM dependencies
         run: npm ci
       - name: Lint files
         run: npm run lint
@@ -34,7 +38,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: Install dependencies
+      - name: Install NPM dependencies
         run: npm ci
       - name: Run tests
         run: npm test
@@ -49,7 +53,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      - name: Install dependencies
+      - name: Install NPM dependencies
         run: npm ci
       - name: Check files formatting
         run: npm run format:check
