@@ -1,0 +1,40 @@
+on: workflow_dispatch
+
+name: Build
+
+env:
+  RUST_BACKTRACE: 1
+  CARGO_PROFILE_DEV_DEBUG: 0
+
+jobs:
+  build-artifacts:
+    runs-on: ${{ matrix.platform }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup environment
+        uses: ./.github/actions/setup-env
+      - name:
+        run: npm run build
+      - uses: actions/upload-artifact@v2
+        if: matrix.platform == 'ubuntu-latest'
+        with:
+          name: linux-artifacts
+          path: |
+            ./src-tauri/target/release/bundle/appimage/pomodoro_*.AppImage
+            ./src-tauri/target/release/bundle/deb/pomodoro_*.deb
+      - uses: actions/upload-artifact@v2
+        if: matrix.platform == 'windows-latest'
+        with:
+          name: windows-artifacts
+          path: ./src-tauri/target/release/bundle/msi/*
+      - uses: actions/upload-artifact@v2
+        if: matrix.platform == 'macos-latest'
+        with:
+          name: macos-artifacts
+          path: ./src-tauri/target/release/bundle/dmg/Pomodoro_*.dmg

@@ -54,7 +54,7 @@ fn create_timer_listener(app: &mut App) -> impl Fn() {
       .expect("Failed to receive timer tick");
     let remaining_secs = remaining.as_secs();
 
-    #[cfg(not(target_os = "windows"))]
+    #[cfg(target_os = "macos")]
     handle
       .tray_handle()
       .set_title(

@@ -1,6 +1,6 @@
 [package]
 name = "app"
-version = "3.0.0-beta"
+version = "3.0.0"
 description = "Pomodoro timer app"
 authors = ["G07cha"]
 license = "MIT"

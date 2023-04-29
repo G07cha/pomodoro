@@ -1,11 +1,11 @@
 {
   "name": "pomodoro",
   "private": true,
-  "version": "3.0.0-beta",
+  "version": "3.0.0",
   "type": "module",
   "scripts": {
-    "start": "RUST_BACKTRACE=1 cargo tauri dev",
-    "build": "cargo tauri build",
+    "start": "RUST_BACKTRACE=1 tauri dev",
+    "build": "tauri build",
     "start:front": "vite",
     "build:front": "tsc && vite build",
     "preview:front": "vite preview",
@@ -27,6 +27,7 @@
     "test": "npm run test:scripts && npm run test:rust"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^1.2.3",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.59.0",
     "eslint": "^8.38.0",
