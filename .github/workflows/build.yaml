@@ -16,24 +16,24 @@ jobs:
         platform: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup environment
         uses: ./.github/actions/setup-env
       - name:
         run: npm run build
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: matrix.platform == 'ubuntu-latest'
         with:
           name: linux-artifacts
           path: |
             ./src-tauri/target/release/bundle/appimage/pomodoro_*.AppImage
             ./src-tauri/target/release/bundle/deb/pomodoro_*.deb
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: matrix.platform == 'windows-latest'
         with:
           name: windows-artifacts
           path: ./src-tauri/target/release/bundle/msi/*
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: matrix.platform == 'macos-latest'
         with:
           name: macos-artifacts
