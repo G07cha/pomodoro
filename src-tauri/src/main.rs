@@ -12,7 +12,7 @@ use commands::timer::{get_timer_state, toggle_timer};
 use serde::Serialize;
 use services::fs::load_settings;
 use state::{Pomodoro, Settings};
-use tauri::Manager;
+use tauri::{App, Manager};
 use tauri_plugin_autostart::MacosLauncher;
 use ticking_timer::Timer;
 use ts_rs::TS;
@@ -40,6 +40,74 @@ pub const SETTINGS_WINDOW_LABEL: &str = "settings";
 pub type TimerState = Arc<Timer>;
 pub type SettingsState = RwLock<Settings>;
 pub type PomodoroState = Mutex<Pomodoro>;
+
+fn create_timer_listener(app: &mut App) -> impl Fn() {
+  let handle = app.handle();
+  let window = handle
+    .get_window(MAIN_WINDOW_LABEL)
+    .expect("Unable to retrieve main window");
+  let update_receiver = handle.state::<TimerState>().update_receiver.clone();
+
+  move || loop {
+    let remaining = update_receiver
+      .recv()
+      .expect("Failed to receive timer tick");
+    let remaining_secs = remaining.as_secs();
+
+    #[cfg(not(target_os = "windows"))]
+    handle
+      .tray_handle()
+      .set_title(
+        format!(
+          "{minutes:0>2}:{seconds:0>2}",
+          minutes = remaining_secs / 60,
+          seconds = remaining_secs % 60
+        )
+        .as_str(),
+      )
+      .expect("Can't update tray title");
+
+    handle.emit_all("timer-tick", &remaining_secs).unwrap();
+
+    if remaining.is_zero() {
+      let settings = handle.state::<SettingsState>();
+      let pomodoro_state = handle.state::<PomodoroState>();
+      let mut pomodoro_state = pomodoro_state.lock().unwrap();
+
+      let new_duration = match pomodoro_state.mode {
+        TimerMode::Relax => {
+          pomodoro_state.mode = TimerMode::Work;
+          pomodoro_state.cycles += 1;
+
+          settings.read().unwrap().work_duration
+        }
+        TimerMode::Work => {
+          pomodoro_state.mode = TimerMode::Relax;
+
+          if pomodoro_state.cycles % 4 == 0 && pomodoro_state.cycles > 0 {
+            settings.read().unwrap().long_relax_duration
+          } else {
+            settings.read().unwrap().relax_duration
+          }
+        }
+      };
+
+      let timer = handle.state::<TimerState>();
+      timer.reset(new_duration).unwrap();
+      window
+        .emit::<TimerStatePayload>(
+          "timer-state",
+          TimerStatePayload {
+            mode: pomodoro_state.mode,
+            cycle: pomodoro_state.cycles,
+            is_ended: true,
+            duration: new_duration.as_secs() as u32,
+          },
+        )
+        .unwrap();
+    }
+  }
+}
 
 fn main() {
   tauri::Builder::default()
@@ -70,75 +138,14 @@ fn main() {
       }
 
       decorate_window(&window);
-      setup_tray(app, MAIN_WINDOW_LABEL);
+      setup_tray(app);
 
       #[cfg(debug_assertions)]
       window.open_devtools();
 
       thread::Builder::new()
         .name("Timer listener".into())
-        .spawn({
-          let handle = app.handle();
-          let update_receiver = handle.state::<TimerState>().update_receiver.clone();
-          move || loop {
-            let remaining = update_receiver
-              .recv()
-              .expect("Failed to receive timer tick");
-            let remaining_secs = remaining.as_secs();
-
-            handle
-              .tray_handle()
-              .set_title(
-                format!(
-                  "{minutes:0>2}:{seconds:0>2}",
-                  minutes = remaining_secs / 60,
-                  seconds = remaining_secs % 60
-                )
-                .as_str(),
-              )
-              .expect("Can't update tray title");
-
-            handle.emit_all("timer-tick", &remaining_secs).unwrap();
-
-            if remaining.is_zero() {
-              let settings = handle.state::<SettingsState>();
-              let pomodoro_state = handle.state::<PomodoroState>();
-              let mut pomodoro_state = pomodoro_state.lock().unwrap();
-
-              let new_duration = match pomodoro_state.mode {
-                TimerMode::Relax => {
-                  pomodoro_state.mode = TimerMode::Work;
-                  pomodoro_state.cycles += 1;
-
-                  settings.read().unwrap().work_duration
-                }
-                TimerMode::Work => {
-                  pomodoro_state.mode = TimerMode::Relax;
-
-                  if pomodoro_state.cycles % 4 == 0 && pomodoro_state.cycles > 0 {
-                    settings.read().unwrap().long_relax_duration
-                  } else {
-                    settings.read().unwrap().relax_duration
-                  }
-                }
-              };
-
-              let timer = handle.state::<TimerState>();
-              timer.reset(new_duration).unwrap();
-              window
-                .emit::<TimerStatePayload>(
-                  "timer-state",
-                  TimerStatePayload {
-                    mode: pomodoro_state.mode,
-                    cycle: pomodoro_state.cycles,
-                    is_ended: true,
-                    duration: new_duration.as_secs() as u32,
-                  },
-                )
-                .unwrap();
-            }
-          }
-        })?;
+        .spawn(create_timer_listener(app))?;
 
       Ok(())
     })

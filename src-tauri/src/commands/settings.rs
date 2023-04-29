@@ -6,7 +6,7 @@ use ts_rs::TS;
 
 use crate::{
   services::fs::save_settings, state::TimerMode, PomodoroState, SettingsState, TimerState,
-  TimerStatePayload,
+  TimerStatePayload, MAIN_WINDOW_LABEL,
 };
 
 #[derive(Serialize, Clone, TS)]
@@ -51,7 +51,7 @@ pub fn set_settings(
   timer.reset(settings.work_duration).unwrap();
 
   app_handle
-    .get_window(crate::MAIN_WINDOW_LABEL)
+    .get_window(MAIN_WINDOW_LABEL)
     .expect("Cannot find main window")
     .emit(
       "timer-state",
