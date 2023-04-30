@@ -4,7 +4,7 @@
   "version": "3.0.0",
   "type": "module",
   "scripts": {
-    "start": "RUST_BACKTRACE=1 tauri dev",
+    "start": "tauri dev",
     "build": "tauri build",
     "start:front": "vite",
     "build:front": "tsc && vite build",

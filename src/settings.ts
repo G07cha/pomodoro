@@ -10,6 +10,7 @@ import { minsToSecs, secsToMins } from './utils/time';
 import { SettingsUIController } from './views/settings';
 
 theme.followSystemTheme();
+document.addEventListener('contextmenu', (event) => event.preventDefault());
 
 const settings = await invoke<GetSettingsResponse>('get_settings');
 const settingsUI = new SettingsUIController();

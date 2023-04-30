@@ -8,6 +8,7 @@ import * as time from './utils/time';
 import { TimerIcon, TimerUIController } from './views/timer';
 
 theme.followSystemTheme();
+document.addEventListener('contextmenu', (event) => event.preventDefault());
 
 let {
   mode,
