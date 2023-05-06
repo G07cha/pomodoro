@@ -61,7 +61,7 @@ listen<boolean>('timer-running-change', ({ payload: isRunning }) => {
 window.addEventListener('click', () => invoke('toggle_timer'));
 
 // Disable animations when window is hidden to avoid jumping timer progress
-const noTransitionStylesheet = new CSSStyleSheet();
+const noTransitionStylesheet = new CSSStyleSheet({ disabled: true });
 noTransitionStylesheet.replaceSync('* { transition: none !important }');
 document.adoptedStyleSheets = [noTransitionStylesheet];
 document.addEventListener('visibilitychange', () => {
