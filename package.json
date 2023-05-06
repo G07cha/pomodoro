@@ -27,23 +27,23 @@
     "test": "npm run test:scripts && npm run test:rust"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^1.2.3",
-    "@typescript-eslint/eslint-plugin": "^5.59.0",
-    "@typescript-eslint/parser": "^5.59.0",
-    "eslint": "^8.38.0",
+    "@tauri-apps/cli": "^1.3.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
+    "eslint": "^8.40.0",
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-import": "^2.27.5",
     "less": "^4.1.3",
     "postcss-less": "^6.0.0",
-    "prettier": "^2.8.7",
-    "stylelint": "^15.5.0",
+    "prettier": "^2.8.8",
+    "stylelint": "^15.6.1",
     "stylelint-config-recommended": "^12.0.0",
     "typescript": "^5.0.4",
-    "vite": "^4.3.1",
-    "vitest": "^0.30.1"
+    "vite": "^4.3.5",
+    "vitest": "^0.31.0"
   },
   "dependencies": {
-    "@tauri-apps/api": "^1.2.0",
+    "@tauri-apps/api": "^1.3.0",
     "tauri-plugin-autostart-api": "github:tauri-apps/tauri-plugin-autostart"
   }
 }
