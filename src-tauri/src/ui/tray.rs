@@ -20,12 +20,14 @@ fn create_window_event_handler(app: &mut App) -> impl Fn(SystemTrayEvent) {
         let tray_size = size.width as i32;
         let window_size = main_window.outer_size().unwrap();
         let window_width = window_size.width as i32;
+        let window_height = window_size.height as i32;
 
         let tray_icon_x = position.x as i32;
+        let tray_y = position.y as i32;
 
         let window_position = Position::Physical(PhysicalPosition {
           x: (tray_icon_x + (tray_size / 2)) - (window_width / 2),
-          y: 0,
+          y: tray_y - window_height,
         });
 
         main_window.set_position(window_position).unwrap();
