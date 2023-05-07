@@ -1,60 +1,50 @@
 {
   "name": "pomodoro",
-  "version": "2.2.3",
-  "description": "Pomodoro timer build with electron",
-  "license": "MIT",
-  "repository": "https://github.com/G07cha/pomodoro.git",
-  "author": "g07cha",
-  "engines": {
-    "node": ">=12.13.0"
-  },
-  "electronVersion": "1.7.8",
+  "private": true,
+  "version": "3.0.0",
+  "type": "module",
   "scripts": {
-    "postinstall": "bower install --allow-root",
-    "pretest": "electron-packager ./ --platform=darwin --arch=x64 --out=dist --overwrite",
-    "test": "ava",
-    "start": "electron .",
-    "release": "npm run release:win && npm run release:mac",
-    "release:win": "electron-builder --win",
-    "release:mac": "electron-builder --mac",
-    "lint": "eslint ."
-  },
-  "dependencies": {
-    "auto-launch": "^5.0.5",
-    "electron-window-state": "^5.0.3",
-    "human-readable-time": "^0.3.0",
-    "jquery": "^3.4.1",
-    "menubar": "^7.2.0",
-    "photon": "git+https://github.com/connors/photon.git",
-    "retinajs": "^2.1.3",
-    "timer-stopwatch-dev": "^1.1.0"
+    "start": "tauri dev",
+    "build": "tauri build",
+    "start:front": "vite",
+    "build:front": "tsc && vite build",
+    "preview:front": "vite preview",
+    "lint:scripts": "eslint . --ext .ts",
+    "lint:styles": "stylelint ./**/*.less",
+    "lint:rust": "cd src-tauri && cargo clippy",
+    "lint": "npm run lint:scripts && npm run lint:styles && npm run lint:rust",
+    "format:scripts": "prettier . --write --list-different",
+    "format:scripts:check": "prettier . -c",
+    "format:styles": "stylelint ./**/*.less --fix",
+    "format:styles:check": "stylelint ./**/*.less",
+    "format:rust": "cd src-tauri && cargo fmt --all",
+    "format:rust:check": "cd src-tauri && cargo fmt --all -- --check",
+    "format": "npm run format:rust && npm run format:scripts && npm run format:styles",
+    "format:check": "npm run format:rust:check && npm run format:scripts:check && npm run format:styles:check",
+    "test:scripts": "vitest --watch=false",
+    "test:scripts:coverage": "npm run test:scripts -- --coverage",
+    "test:rust": "cd src-tauri && cargo test",
+    "test": "npm run test:scripts && npm run test:rust",
+    "tauri": "tauri"
   },
   "devDependencies": {
-    "ava": "^3.2.0",
-    "bower": "^1.8.8",
-    "devtron": "^1.4.0",
-    "electron": "^8.5.2",
-    "electron-builder": "^22.3.2",
-    "electron-packager": "^14.2.0",
-    "eslint": "^6.8.0",
-    "prettier": "^1.19.1",
-    "prettier-eslint": "^9.0.1",
-    "spectron": "^10.0.1"
+    "@tauri-apps/cli": "^1.3.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
+    "eslint": "^8.40.0",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.27.5",
+    "less": "^4.1.3",
+    "postcss-less": "^6.0.0",
+    "prettier": "^2.8.8",
+    "stylelint": "^15.6.1",
+    "stylelint-config-recommended": "^12.0.0",
+    "typescript": "^5.0.4",
+    "vite": "^4.3.5",
+    "vitest": "^0.31.0"
   },
-  "build": {
-    "productName": "Pomodoro",
-    "appId": "com.g07cha.pomodoro",
-    "publish": {
-      "provider": "github",
-      "releaseType": "draft"
-    },
-    "mac": {
-      "category": "public.app-category.productivity",
-      "icon": "build/icon.icns"
-    },
-    "win": {
-      "target": "nsis",
-      "icon": "build/icon.ico"
-    }
+  "dependencies": {
+    "@tauri-apps/api": "^1.3.0",
+    "tauri-plugin-autostart-api": "github:tauri-apps/tauri-plugin-autostart"
   }
 }

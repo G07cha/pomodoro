@@ -1,31 +1,26 @@
-# Pomodoro [![Build Status](https://travis-ci.org/G07cha/pomodoro.svg?branch=master)](https://travis-ci.org/G07cha/pomodoro)
+# Pomodoro
 
-Time managment tool for Windows and OS X based on [Pomodoro Technique](https://en.wikipedia.org/wiki/Pomodoro_Technique). Build with love and [electron](https://github.com/atom/electron).
+This template should help get you started developing with Tauri in vanilla HTML, CSS and Javascript.
 
-![Here may be screenshot](screenshot.png)
+## Recommended IDE Setup
 
-## Features
-- Alerts
-- Customize work/relax time
-- Nice spinner provided by [kottenator](https://github.com/kottenator/jquery-circle-progress)
-- Minimalistic design
-- Start/stop timer with shortcut(Ctrl + Alt + S)
-- Timer in menu bar
+- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
 
-## Dev
+## Local development
+
+### Prerequisites
+
+- Node v19
+- [Tauri prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites)
+
+### First setup
 
 ```
 npm install
-bower install
 ```
 
-### Run
+To run full app execute the following command:
 
 ```
 npm start
 ```
-
-
-## License
-
-MIT © [Konstantin Azizov](http://g07cha.github.io)

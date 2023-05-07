@@ -1,0 +1,44 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+name: Validate
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Lint
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup environment
+        uses: ./.github/actions/setup-env
+      - name: Lint files
+        run: npm run lint
+
+  test:
+    name: Test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup environment
+        uses: ./.github/actions/setup-env
+      - name: Run tests
+        run: npm test
+
+  format:
+    name: Check formatting
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup environment
+        uses: ./.github/actions/setup-env
+      - name: Check files formatting
+        run: npm run format:check
