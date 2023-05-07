@@ -1,4 +1,6 @@
 name: 'Setup environment'
+description: 'Sets up local action environment with necessary components'
+
 runs:
   using: 'composite'
   steps:
@@ -9,7 +11,7 @@ runs:
         cache: 'npm'
     - name: Install NPM dependencies
       shell: bash
-      run: npm ci
+      run: npm ci --audit=false --ignore-scripts
     - name: Install Linux dependencies
       if: matrix.platform == 'ubuntu-latest'
       shell: bash
