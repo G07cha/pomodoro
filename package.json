@@ -24,7 +24,8 @@
     "test:scripts": "vitest --watch=false",
     "test:scripts:coverage": "npm run test:scripts -- --coverage",
     "test:rust": "cd src-tauri && cargo test",
-    "test": "npm run test:scripts && npm run test:rust"
+    "test": "npm run test:scripts && npm run test:rust",
+    "tauri": "tauri"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.3.0",
