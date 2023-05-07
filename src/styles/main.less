@@ -1,0 +1,121 @@
+@import './theme.less';
+@import './common.less';
+
+html,
+body {
+  width: 170px;
+  height: 170px;
+}
+
+#app {
+  width: 170px;
+  height: 170px;
+  padding: 10px;
+  display: flex;
+}
+
+.timer {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.icon {
+  fill: var(--icon-color);
+}
+
+#play-icon {
+  transform: translate(42%, 37%);
+  visibility: hidden;
+}
+
+.hollow-circle {
+  stroke-width: 18px;
+  fill: none;
+}
+
+#timer-progress {
+  --min-stroke: 0px;
+  --max-stroke: 410px;
+  /* 0-100 value */
+  --current-progress: 0;
+
+  &[data-mode='Work'] {
+    stroke: url(#work-gradient);
+  }
+  &[data-mode='Relax'] {
+    stroke: url(#relax-gradient);
+  }
+  stroke-dashoffset: calc(
+    var(--min-stroke) - var(--max-stroke) * (var(--current-progress) / 100)
+  );
+  stroke-dasharray: 410px;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear;
+}
+
+#background-gradient {
+  stop:first-child {
+    stop-color: var(--timer-background-gradient-start);
+  }
+  stop:last-child {
+    stop-color: var(--timer-background-gradient-end);
+  }
+}
+
+#work-gradient {
+  stop:first-child {
+    stop-color: var(--work-timer-gradient-start);
+  }
+  stop:last-child {
+    stop-color: var(--work-timer-gradient-end);
+  }
+}
+
+#relax-gradient {
+  stop:first-child {
+    stop-color: var(--relax-timer-gradient-start);
+  }
+  stop:last-child {
+    stop-color: var(--relax-timer-gradient-end);
+  }
+}
+
+#timer-text {
+  font-size: 24px;
+  font-weight: 500;
+  fill: var(--font-color);
+  user-select: none;
+  // Safari only supports prefixed property, see https://caniuse.com/?search=user-select
+  -webkit-user-select: none;
+  pointer-events: none;
+}
+
+#timer-cycles {
+  fill: var(--icon-color);
+
+  circle {
+    visibility: hidden;
+  }
+
+  &[data-count='1'] {
+    circle:first-of-type {
+      visibility: visible;
+    }
+  }
+
+  &[data-count='2'] {
+    circle:nth-of-type(1),
+    circle:nth-of-type(2) {
+      visibility: visible;
+    }
+  }
+
+  &[data-count='3'] {
+    circle:nth-of-type(1),
+    circle:nth-of-type(2),
+    circle:nth-of-type(3) {
+      visibility: visible;
+    }
+  }
+}

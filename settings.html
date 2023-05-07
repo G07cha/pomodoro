@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="src/styles/settings.less" />
+  </head>
+  <body>
+    <form id="settings-form">
+      <div class="input-group">
+        <label
+          >Work time
+          <input
+            type="number"
+            min="1"
+            max="9999"
+            required
+            name="work-duration"
+            id="work-duration"
+        /></label>
+        <label
+          >Relax time
+          <input
+            type="number"
+            min="1"
+            max="9999"
+            required
+            name="relax-duration"
+            id="relax-duration"
+        /></label>
+        <label
+          >Long relax time
+          <input
+            type="number"
+            min="1"
+            max="9999"
+            required
+            name="long-relax-duration"
+            id="long-relax-duration"
+        /></label>
+      </div>
+      <div class="input-group">
+        <label
+          >Launch on system startup
+          <input type="checkbox" name="autostart" id="autostart"
+        /></label>
+      </div>
+    </form>
+    <script type="module" src="/src/settings.ts"></script>
+  </body>
+</html>

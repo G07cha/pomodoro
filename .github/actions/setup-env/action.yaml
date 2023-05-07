@@ -1,0 +1,28 @@
+name: 'Setup environment'
+description: 'Sets up local action environment with necessary components'
+
+runs:
+  using: 'composite'
+  steps:
+    # moonrepo/setup-rust already caches some of the paths but it's not optimal so we cache rust dependencies separately
+    - name: Cache cargo dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          src-tauri/target/
+        key: local-cargo-${{ runner.os }}-${{ hashFiles('src-tauri/Cargo.lock') }}
+        restore-keys: local-cargo-${{ runner.os }}-
+    - uses: moonrepo/setup-rust@v0
+      with:
+        cache: false
+    - uses: actions/setup-node@v3
+      with:
+        node-version-file: '.nvmrc'
+        cache: 'npm'
+    - name: Install NPM dependencies
+      shell: bash
+      run: npm ci --audit=false

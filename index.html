@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./src/styles/main.less" />
+  </head>
+  <body>
+    <div id="app">
+      <svg
+        class="timer"
+        viewBox="0 0 150 150"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="work-gradient">
+            <stop offset="0%" />
+            <stop offset="100%" />
+          </linearGradient>
+          <linearGradient id="relax-gradient">
+            <stop offset="0%" />
+            <stop offset="100%" />
+          </linearGradient>
+          <linearGradient id="background-gradient">
+            <stop offset="0%" />
+            <stop offset="100%" />
+          </linearGradient>
+          <filter id="inset-shadow">
+            <feFlood flood-color="black" />
+            <feComposite operator="out" in2="SourceGraphic" />
+            <feGaussianBlur stdDeviation="2" />
+            <feComposite operator="atop" in2="SourceGraphic" />
+          </filter>
+        </defs>
+        <circle
+          filter="url(#inset-shadow)"
+          class="hollow-circle"
+          r="65"
+          cx="50%"
+          cy="50%"
+          stroke="url(#background-gradient)"
+        ></circle>
+        <circle
+          filter="url(#inset-shadow)"
+          class="hollow-circle"
+          id="timer-progress"
+          data-mode="work"
+          r="65"
+          cx="50%"
+          cy="50%"
+        ></circle>
+        <text
+          id="timer-text"
+          x="50%"
+          y="50%"
+          text-anchor="middle"
+          dominant-baseline="central"
+        >
+          00:00
+        </text>
+        <g id="timer-cycles" data-count="0">
+          <circle r="3" cx="35%" cy="70%"></circle>
+          <circle r="3" cx="45%" cy="70%"></circle>
+          <circle r="3" cx="55%" cy="70%"></circle>
+          <circle r="3" cx="65%" cy="70%"></circle>
+        </g>
+        <path
+          id="play-icon"
+          class="icon"
+          d="M35 19.4277C36.3333 20.1975 36.3333 22.122 35 22.8918L3.5 41.0784C2.16666 41.8482 0.499996 40.8859 0.499996 39.3463L0.499996 2.97326C0.499996 1.43366 2.16666 0.471406 3.5 1.24121L35 19.4277Z"
+        />
+      </svg>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
