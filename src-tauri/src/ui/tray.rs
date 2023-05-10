@@ -44,19 +44,25 @@ fn create_window_event_handler(app: &mut App) -> impl Fn(SystemTrayEvent) {
         } else {
           std::thread::scope(|s| {
             s.spawn(|| {
-              tauri::WindowBuilder::new(
+              let settings_window = tauri::WindowBuilder::new(
                 &handle,
                 crate::SETTINGS_WINDOW_LABEL,
                 tauri::WindowUrl::App("settings.html".into()),
               )
               .title("Pomodoro settings")
-              .visible(true)
+              .visible(false)
               .resizable(false)
               .inner_size(350.0, 230.0)
               .focused(true)
               .skip_taskbar(true)
               .build()
               .unwrap();
+
+              // Wait for DOM to load to avoid showing empty screen
+              settings_window.once("window_loaded", {
+                let settings_window = settings_window.clone();
+                move |_| settings_window.show().unwrap()
+              });
             });
           });
         }
