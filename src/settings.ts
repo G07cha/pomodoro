@@ -9,6 +9,8 @@ import * as theme from './utils/theme';
 import { minsToSecs, secsToMins } from './utils/time';
 import { SettingsUIController } from './views/settings';
 
+appWindow.emit('window_loaded');
+
 theme.followSystemTheme();
 document.addEventListener('contextmenu', (event) => event.preventDefault());
 
