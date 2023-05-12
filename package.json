@@ -25,6 +25,7 @@
     "test:scripts:coverage": "npm run test:scripts -- --coverage",
     "test:rust": "cd src-tauri && cargo test",
     "test": "npm run test:scripts && npm run test:rust",
+    "version": "cd src-tauri && cargo bump $npm_package_version && cargo check && git add Cargo.*",
     "tauri": "tauri"
   },
   "devDependencies": {

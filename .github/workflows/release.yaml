@@ -1,13 +1,9 @@
 on:
   push:
-    branches:
-      - master
+    tags:
+      - '*'
 
-name: Release
-
-concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: true
+name: Build release artifacts
 
 env:
   RUST_BACKTRACE: 1
@@ -41,8 +37,6 @@ jobs:
           includeUpdaterJson: true
           tagName: v__VERSION__
           releaseName: 'v__VERSION__'
-          releaseDraft: true
-          prerelease: false
           args: --target ${{ matrix.platform.target }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
