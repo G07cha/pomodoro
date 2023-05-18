@@ -43,7 +43,6 @@
         "exceptionDomain": "",
         "frameworks": [],
         "providerShortName": null,
-        "signingIdentity": null
       },
       "resources": [],
       "shortDescription": "Pomodoro timer",
