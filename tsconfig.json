@@ -4,7 +4,7 @@
     "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "strict": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -15,8 +15,8 @@
     "noImplicitReturns": true,
     "skipLibCheck": true,
     "paths": {
-      "@bindings/*": ["./src-tauri/bindings/*"]
+      "~bindings/*": ["./src-tauri/bindings/*"]
     }
   },
-  "include": ["src", "src-tauri/bindings"]
+  "include": ["src-ui", "src-tauri/bindings"]
 }

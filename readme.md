@@ -8,7 +8,7 @@ Time management tool for Windows and macOS inspired by [Pomodoro Technique](http
 
 ## Installing
 
-To install the application you can grab the installer for your platform from [the latest release](github.com/G07cha/pomodoro/releases/latest/), in case of macOS you need to open the app for the first time with Cmd + right mouse button as I don't feel like spending money on a license from Apple to notarize a free application. Alternatively you can also build the release yourself, to do so please follow the guide below.
+To install the application you can grab the installer for your platform from [the latest release](github.com/G07cha/pomodoro/releases/latest/), in case of macOS you need to open the app for the first time with Cmd + right mouse button as I don't feel like spending money on a license from Apple to notarize a free application. Alternatively you can also build the release yourself by following the guide below.
 
 ## Local development
 
@@ -30,10 +30,10 @@ npm start
 To build a release for the platform you're running it on execute the following command:
 
 ```bash
-npm run build
+TAURI_PRIVATE_KEY=test npm run build
 ```
 
-It will create binaries and installers in `src-tauri/target/release/bundle`.
+It will throw an error `Error invalid utf-8 sequence of 1 bytes from index 0` in the end due to mismatch in updater private key but will create binaries and installers in `src-tauri/target/release/bundle`.
 
 ## License
 

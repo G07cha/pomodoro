@@ -1,6 +1,6 @@
 import { message } from '@tauri-apps/api/dialog';
 
-import { TimerStatePayload } from '@bindings/TimerStatePayload';
+import { TimerStatePayload } from '~bindings/TimerStatePayload';
 
 import { invoke, listen } from './utils/tauri-events';
 import * as theme from './utils/theme';
