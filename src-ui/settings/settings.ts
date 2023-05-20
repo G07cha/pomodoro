@@ -1,13 +1,13 @@
 import * as autostart from 'tauri-plugin-autostart-api';
 import { appWindow } from '@tauri-apps/api/window';
 
-import { GetSettingsResponse } from '@bindings/GetSettingsResponse';
-import { SetSettingsPayload } from '@bindings/SetSettingsPayload';
+import { SetSettingsPayload } from '~bindings/SetSettingsPayload';
+import { GetSettingsResponse } from '~bindings/GetSettingsResponse';
 
-import { invoke } from './utils/tauri-events';
-import * as theme from './utils/theme';
-import { minsToSecs, secsToMins } from './utils/time';
-import { SettingsUIController } from './views/settings';
+import { invoke } from '../utils/tauri-events';
+import * as theme from '../utils/theme';
+import { minsToSecs, secsToMins } from '../utils/time';
+import { SettingsUIController } from '../views/settings';
 
 appWindow.emit('window_loaded');
 

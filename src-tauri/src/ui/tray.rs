@@ -47,7 +47,7 @@ fn create_window_event_handler(app: &mut App) -> impl Fn(SystemTrayEvent) {
               let settings_window = tauri::WindowBuilder::new(
                 &handle,
                 crate::SETTINGS_WINDOW_LABEL,
-                tauri::WindowUrl::App("settings.html".into()),
+                tauri::WindowUrl::App("settings/settings.html".into()),
               )
               .title("Pomodoro settings")
               .visible(false)

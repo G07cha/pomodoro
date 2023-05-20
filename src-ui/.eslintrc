@@ -20,9 +20,18 @@
         "newlines-between": "always",
         "pathGroups": [
           {
-            "pattern": "@bindings/**",
-            "group": "parent"
+            "pattern": "^~",
+            "group": "internal"
           }
+        ],
+        "groups": [
+          "builtin",
+          "unknown",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
         ]
       }
     ]
