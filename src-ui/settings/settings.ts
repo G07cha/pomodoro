@@ -1,47 +1,44 @@
-import * as autostart from 'tauri-plugin-autostart-api';
 import { appWindow } from '@tauri-apps/api/window';
+import { message } from '@tauri-apps/api/dialog';
 
-import { SetSettingsPayload } from '~bindings/SetSettingsPayload';
-import { GetSettingsResponse } from '~bindings/GetSettingsResponse';
-
-import { invoke } from '../utils/tauri-events';
 import * as theme from '../utils/theme';
-import { minsToSecs, secsToMins } from '../utils/time';
-import { SettingsUIController } from '../views/settings';
+import { Duration } from '../utils/duration';
+import { disableContextMenu } from '../utils/dom';
+
+import { SettingsUIController } from './settings.view';
+import { Settings, SettingsService } from './settings.service';
 
 appWindow.emit('window_loaded');
 
 theme.followSystemTheme();
-document.addEventListener('contextmenu', (event) => event.preventDefault());
+disableContextMenu();
 
-const settings = await invoke<GetSettingsResponse>('get_settings');
+const settingsService = new SettingsService();
+const settings = await settingsService.getSettings();
 const settingsUI = new SettingsUIController();
 
 settingsUI.setFormValues({
-  workDuration: secsToMins(settings.work_duration),
-  relaxDuration: secsToMins(settings.relax_duration),
-  longRelaxDuration: secsToMins(settings.long_relax_duration),
-  autostart: await autostart.isEnabled(),
+  ...settings,
+  workDuration: settings.workDuration.mins,
+  relaxDuration: settings.relaxDuration.mins,
+  longRelaxDuration: settings.longRelaxDuration.mins,
 });
 
 appWindow.onCloseRequested(async () => {
   const formValues = settingsUI.getFormValues();
-  const newSettings: SetSettingsPayload = {
+  const newSettings: Settings = {
     ...settings,
-    work_duration: minsToSecs(formValues.workDuration),
-    relax_duration: minsToSecs(formValues.relaxDuration),
-    long_relax_duration: minsToSecs(formValues.longRelaxDuration),
+    workDuration: Duration.fromMins(formValues.workDuration),
+    relaxDuration: Duration.fromMins(formValues.relaxDuration),
+    longRelaxDuration: Duration.fromMins(formValues.longRelaxDuration),
   };
+  console.log(newSettings, settings);
 
   if (JSON.stringify(newSettings) !== JSON.stringify(settings)) {
-    await invoke('set_settings', { newSettings });
-  }
-
-  if (formValues.autostart !== (await autostart.isEnabled())) {
-    if (formValues.autostart) {
-      await autostart.enable();
-    } else {
-      await autostart.disable();
+    try {
+      await settingsService.setSettings(newSettings);
+    } catch (error) {
+      message(`${error}`, { type: 'error', title: 'Unable to save settings' });
     }
   }
 
