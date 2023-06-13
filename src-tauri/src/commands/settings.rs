@@ -12,17 +12,17 @@ use crate::{
 #[derive(Serialize, Clone, TS)]
 #[ts(export)]
 pub struct GetSettingsResponse {
-  work_duration: u32,
-  relax_duration: u32,
-  long_relax_duration: u32,
+  work_duration_secs: u32,
+  relax_duration_secs: u32,
+  long_relax_duration_secs: u32,
 }
 
 #[derive(Deserialize, TS)]
 #[ts(export)]
 pub struct SetSettingsPayload {
-  work_duration: u32,
-  relax_duration: u32,
-  long_relax_duration: u32,
+  work_duration_secs: u32,
+  relax_duration_secs: u32,
+  long_relax_duration_secs: u32,
 }
 
 #[tauri::command]
@@ -30,9 +30,9 @@ pub fn get_settings(settings: tauri::State<'_, SettingsState>) -> GetSettingsRes
   let settings = settings.read().unwrap();
 
   GetSettingsResponse {
-    work_duration: settings.work_duration.as_secs() as u32,
-    relax_duration: settings.relax_duration.as_secs() as u32,
-    long_relax_duration: settings.long_relax_duration.as_secs() as u32,
+    work_duration_secs: settings.work_duration.as_secs() as u32,
+    relax_duration_secs: settings.relax_duration.as_secs() as u32,
+    long_relax_duration_secs: settings.long_relax_duration.as_secs() as u32,
   }
 }
 
@@ -45,9 +45,9 @@ pub fn set_settings(
   app_handle: tauri::AppHandle,
 ) {
   let mut settings = settings.write().unwrap();
-  settings.work_duration = Duration::from_secs(new_settings.work_duration.into());
-  settings.relax_duration = Duration::from_secs(new_settings.relax_duration.into());
-  settings.long_relax_duration = Duration::from_secs(new_settings.long_relax_duration.into());
+  settings.work_duration = Duration::from_secs(new_settings.work_duration_secs.into());
+  settings.relax_duration = Duration::from_secs(new_settings.relax_duration_secs.into());
+  settings.long_relax_duration = Duration::from_secs(new_settings.long_relax_duration_secs.into());
   timer.reset(settings.work_duration).unwrap();
 
   app_handle
@@ -57,7 +57,7 @@ pub fn set_settings(
       "timer-state",
       TimerStatePayload {
         cycle: pomodoro_state.lock().unwrap().cycles,
-        duration: settings.work_duration.as_secs() as u32,
+        duration_secs: settings.work_duration.as_secs() as u32,
         is_ended: false,
         mode: TimerMode::Work,
       },

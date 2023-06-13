@@ -32,6 +32,6 @@ pub fn get_timer_state(
     mode: pomodoro_state.mode,
     cycle: pomodoro_state.cycles,
     is_ended: false,
-    duration: duration.as_secs() as u32,
+    duration_secs: duration.as_secs() as u32,
   }
 }

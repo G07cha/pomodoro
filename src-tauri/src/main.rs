@@ -31,7 +31,7 @@ pub struct TimerStatePayload {
   mode: TimerMode,
   cycle: u32,
   is_ended: bool,
-  duration: u32,
+  duration_secs: u32,
 }
 
 pub const MAIN_WINDOW_LABEL: &str = "main";
@@ -101,7 +101,7 @@ fn create_timer_listener(app: &mut App) -> impl Fn() {
             mode: pomodoro_state.mode,
             cycle: pomodoro_state.cycles,
             is_ended: true,
-            duration: new_duration.as_secs() as u32,
+            duration_secs: new_duration.as_secs() as u32,
           },
         )
         .unwrap();
