@@ -46,7 +46,7 @@ pub fn setup_settings_window(app_handle: &AppHandle) -> Result<Window> {
   let settings_window = tauri::WindowBuilder::new(
     app_handle,
     crate::SETTINGS_WINDOW_LABEL,
-    tauri::WindowUrl::App("/settings/".into()),
+    tauri::WindowUrl::App("/settings/settings.html".into()),
   )
   .title("Pomodoro settings")
   .visible(false)
