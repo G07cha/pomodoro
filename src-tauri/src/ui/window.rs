@@ -1,7 +1,8 @@
+use anyhow::Result;
 #[cfg(target_os = "macos")]
 use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
 
-use tauri::Window;
+use tauri::{AppHandle, Window};
 
 pub fn decorate_window(window: &Window) {
   #[cfg(target_os = "macos")]
@@ -39,4 +40,31 @@ pub fn decorate_window(window: &Window) {
       }
     });
   }
+}
+
+pub fn setup_settings_window(app_handle: &AppHandle) -> Result<Window> {
+  let settings_window = tauri::WindowBuilder::new(
+    app_handle,
+    crate::SETTINGS_WINDOW_LABEL,
+    tauri::WindowUrl::App("settings/settings.html".into()),
+  )
+  .title("Pomodoro settings")
+  .visible(false)
+  .resizable(false)
+  .inner_size(350., 273.)
+  .focused(true)
+  .skip_taskbar(true)
+  .build()?;
+
+  // Wait for DOM to load to avoid showing empty screen
+  settings_window.once("window_loaded", {
+    let settings_window = settings_window.clone();
+    move |_| {
+      settings_window
+        .show()
+        .expect("Failed to show settings window on load")
+    }
+  });
+
+  Ok(settings_window)
 }

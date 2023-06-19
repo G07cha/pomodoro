@@ -1,7 +1,9 @@
+use tauri::{command, State, Window};
+
 use crate::{state::TimerMode, PomodoroState, SettingsState, TimerState, TimerStatePayload};
 
-#[tauri::command]
-pub fn toggle_timer(window: tauri::Window, timer: tauri::State<'_, TimerState>) {
+#[command]
+pub fn toggle_timer(window: Window, timer: State<'_, TimerState>) {
   timer.toggle();
 
   window
@@ -9,10 +11,10 @@ pub fn toggle_timer(window: tauri::Window, timer: tauri::State<'_, TimerState>) 
     .unwrap()
 }
 
-#[tauri::command]
+#[command]
 pub fn get_timer_state(
-  settings: tauri::State<'_, SettingsState>,
-  pomodoro_state: tauri::State<'_, PomodoroState>,
+  settings: State<'_, SettingsState>,
+  pomodoro_state: State<'_, PomodoroState>,
 ) -> TimerStatePayload {
   let settings = settings.read().unwrap();
   let pomodoro_state = pomodoro_state.lock().unwrap();

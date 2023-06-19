@@ -9,11 +9,12 @@ pub enum TimerMode {
   Relax,
 }
 
-#[derive(Clone, Copy, serde::Serialize, serde::Deserialize, Debug)]
+#[derive(Clone, serde::Serialize, serde::Deserialize, Debug, Default)]
 pub struct Settings {
   pub work_duration: Duration,
   pub relax_duration: Duration,
   pub long_relax_duration: Duration,
+  pub toggle_timer_shortcut: Option<String>,
 }
 
 pub struct Pomodoro {
