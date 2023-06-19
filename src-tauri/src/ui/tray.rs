@@ -1,17 +1,18 @@
 use tauri::{
-  api::dialog, App, CustomMenuItem, Manager, PhysicalPosition, Position, SystemTray,
+  api::dialog, App, AppHandle, CustomMenuItem, Manager, PhysicalPosition, Position, SystemTray,
   SystemTrayEvent, SystemTrayMenu, WindowEvent,
 };
 
 use crate::MAIN_WINDOW_LABEL;
 
+use super::window::setup_settings_window;
+
 const QUIT_MENU_ITEM_ID: &str = "quit";
 const SETTINGS_MENU_ITEM_ID: &str = "settings";
 const CHECK_UPDATES_MENU_ITEM_ID: &str = "check_updates";
 
-fn create_window_event_handler(app: &mut App) -> impl Fn(SystemTrayEvent) {
-  let handle = app.handle();
-  let main_window = handle.get_window(MAIN_WINDOW_LABEL).unwrap();
+fn create_window_event_handler(app_handle: AppHandle) -> impl Fn(SystemTrayEvent) {
+  let main_window = app_handle.get_window(MAIN_WINDOW_LABEL).unwrap();
 
   move |event| match event {
     SystemTrayEvent::LeftClick { position, size, .. } => {
@@ -37,38 +38,20 @@ fn create_window_event_handler(app: &mut App) -> impl Fn(SystemTrayEvent) {
       }
     }
     SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {
-      QUIT_MENU_ITEM_ID => handle.exit(0),
+      QUIT_MENU_ITEM_ID => app_handle.exit(0),
       SETTINGS_MENU_ITEM_ID => {
-        if let Some(settings_window) = handle.get_window(crate::SETTINGS_WINDOW_LABEL) {
+        if let Some(settings_window) = app_handle.get_window(crate::SETTINGS_WINDOW_LABEL) {
           settings_window.show().unwrap();
         } else {
           std::thread::scope(|s| {
             s.spawn(|| {
-              let settings_window = tauri::WindowBuilder::new(
-                &handle,
-                crate::SETTINGS_WINDOW_LABEL,
-                tauri::WindowUrl::App("settings/settings.html".into()),
-              )
-              .title("Pomodoro settings")
-              .visible(false)
-              .resizable(false)
-              .inner_size(350.0, 230.0)
-              .focused(true)
-              .skip_taskbar(true)
-              .build()
-              .unwrap();
-
-              // Wait for DOM to load to avoid showing empty screen
-              settings_window.once("window_loaded", {
-                let settings_window = settings_window.clone();
-                move |_| settings_window.show().unwrap()
-              });
+              setup_settings_window(&app_handle).unwrap();
             });
           });
         }
       }
       CHECK_UPDATES_MENU_ITEM_ID => {
-        let handle = handle.clone();
+        let handle = app_handle.clone();
         tauri::async_runtime::spawn(async move {
           let another_handle = handle.clone();
           match tauri::updater::builder(handle).check().await {
@@ -127,7 +110,7 @@ pub fn setup_tray(app: &mut App) {
   });
 
   system_tray
-    .on_event(create_window_event_handler(app))
+    .on_event(create_window_event_handler(app.handle()))
     .build(app)
     .unwrap();
 }

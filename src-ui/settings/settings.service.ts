@@ -1,7 +1,6 @@
 import * as autostart from 'tauri-plugin-autostart-api';
 
-import { GetSettingsResponse } from '~bindings/GetSettingsResponse';
-import { SetSettingsPayload } from '~bindings/SetSettingsPayload';
+import { SettingsPayload } from '~bindings/SettingsPayload';
 
 import { Duration } from '../utils/duration';
 import { invoke } from '../utils/tauri-events';
@@ -11,25 +10,28 @@ export interface Settings {
   relaxDuration: Duration;
   longRelaxDuration: Duration;
   autostart: boolean;
+  toggleTimerShortcut?: string;
 }
 
 export class SettingsService {
   async getSettings(): Promise<Settings> {
-    const settings = await invoke<GetSettingsResponse>('get_settings');
+    const settings = await invoke<SettingsPayload>('get_settings');
 
     return {
       workDuration: Duration.fromSecs(settings.work_duration_secs),
       relaxDuration: Duration.fromSecs(settings.relax_duration_secs),
       longRelaxDuration: Duration.fromSecs(settings.long_relax_duration_secs),
       autostart: await autostart.isEnabled(),
+      toggleTimerShortcut: settings.toggle_timer_shortcut ?? undefined,
     };
   }
 
   async setSettings(newSettings: Settings) {
-    const settings: SetSettingsPayload = {
+    const settings: SettingsPayload = {
       work_duration_secs: newSettings.workDuration.secs,
       relax_duration_secs: newSettings.relaxDuration.secs,
       long_relax_duration_secs: newSettings.longRelaxDuration.secs,
+      toggle_timer_shortcut: newSettings.toggleTimerShortcut || null,
     };
 
     await invoke('set_settings', { newSettings: settings });

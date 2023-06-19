@@ -22,6 +22,7 @@ settingsUI.setFormValues({
   workDuration: settings.workDuration.mins,
   relaxDuration: settings.relaxDuration.mins,
   longRelaxDuration: settings.longRelaxDuration.mins,
+  toggleTimerShortcut: settings.toggleTimerShortcut,
 });
 
 appWindow.onCloseRequested(async () => {
@@ -31,8 +32,8 @@ appWindow.onCloseRequested(async () => {
     workDuration: Duration.fromMins(formValues.workDuration),
     relaxDuration: Duration.fromMins(formValues.relaxDuration),
     longRelaxDuration: Duration.fromMins(formValues.longRelaxDuration),
+    toggleTimerShortcut: formValues.toggleTimerShortcut,
   };
-  console.log(newSettings, settings);
 
   if (JSON.stringify(newSettings) !== JSON.stringify(settings)) {
     try {

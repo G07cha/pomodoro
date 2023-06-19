@@ -1,16 +1,9 @@
-import { afterEach, describe, test, expect, vi, beforeEach } from 'vitest';
+import { afterEach, describe, test, expect, beforeEach } from 'vitest';
 
-import { TimerMode } from '~bindings/TimerMode';
-import { TimerStatePayload } from '~bindings/TimerStatePayload';
-import { GetSettingsResponse } from '~bindings/GetSettingsResponse';
+import { SettingsPayload } from '~bindings/SettingsPayload';
 
 import { Duration } from '../utils/duration';
-import {
-  setupIPCMock,
-  clearMocks,
-  emitEvent,
-  mockCommand,
-} from '../utils/test-ipc';
+import { setupIPCMock, clearMocks, mockCommand } from '../utils/test-ipc';
 
 import { SettingsService } from './settings.service';
 
@@ -24,10 +17,11 @@ describe('Settings service', () => {
   });
 
   test('retrieves and parses settings from backend', async () => {
-    const response: GetSettingsResponse = {
+    const response: SettingsPayload = {
       long_relax_duration_secs: 15,
       relax_duration_secs: 10,
       work_duration_secs: 100,
+      toggle_timer_shortcut: 'Ctrl + C',
     };
     mockCommand('get_settings', response);
     const settingsService = new SettingsService();
@@ -39,6 +33,7 @@ describe('Settings service', () => {
     );
     expect(settings.relaxDuration.secs).toBe(response.relax_duration_secs);
     expect(settings.workDuration.secs).toBe(response.work_duration_secs);
+    expect(settings.toggleTimerShortcut).toBe(response.toggle_timer_shortcut);
   });
 
   test('serializes settings before sending them to backend', async () => {
@@ -47,6 +42,7 @@ describe('Settings service', () => {
 
     settingsService.setSettings({
       autostart: false,
+      toggleTimerShortcut: 'Ctrl + C',
       longRelaxDuration: Duration.fromSecs(20),
       relaxDuration: Duration.fromSecs(15),
       workDuration: Duration.fromSecs(50),
@@ -54,6 +50,7 @@ describe('Settings service', () => {
 
     expect(setSettingsMock).resolves.toEqual({
       newSettings: {
+        toggle_timer_shortcut: 'Ctrl + C',
         long_relax_duration_secs: 20,
         relax_duration_secs: 15,
         work_duration_secs: 50,

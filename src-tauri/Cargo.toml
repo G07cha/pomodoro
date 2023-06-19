@@ -16,11 +16,12 @@ tauri-build = { version = "1.4.0", features = ["config-json5"] }
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.4.0", features = ["config-json5", "dialog-message", "macos-private-api", "system-tray", "updater", "window-close"] }
+tauri = { version = "1.4.0", features = ["test", "global-shortcut", "config-json5", "dialog-message", "macos-private-api", "system-tray", "updater", "window-close"] }
 window-vibrancy = "0.3.2"
 tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
 ts-rs = "6.2.1"
 ticking-timer = { git = "https://github.com/G07cha/ticking-timer", version = "0.1.1" }
+anyhow = "1.0.71"
 
 [dev-dependencies]
 cargo-bump = "1.1.0"
@@ -28,10 +29,10 @@ cargo-bump = "1.1.0"
 [features]
 # by default Tauri runs in production mode
 # when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
-default = [ "custom-protocol" ]
+default = ["custom-protocol"]
 # this feature is used for production builds where `devPath` points to the filesystem
 # DO NOT remove this
-custom-protocol = [ "tauri/custom-protocol" ]
+custom-protocol = ["tauri/custom-protocol"]
 
 [profile.release]
 panic = "abort" # Strip expensive panic clean-up logic

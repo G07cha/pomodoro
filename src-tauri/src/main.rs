@@ -9,16 +9,18 @@ use std::time::Duration;
 
 use commands::settings::{get_settings, set_settings};
 use commands::timer::{get_timer_state, toggle_timer};
+use helpers::fs::load_settings;
+use helpers::shortcuts::setup_shortcuts;
+use helpers::timer::setup_timer_listener;
 use serde::Serialize;
-use services::fs::load_settings;
 use state::{Pomodoro, Settings};
-use tauri::{App, Manager};
+use tauri::{Manager, RunEvent};
 use tauri_plugin_autostart::MacosLauncher;
 use ticking_timer::Timer;
 use ts_rs::TS;
 use ui::tray::setup_tray;
 mod commands;
-mod services;
+mod helpers;
 mod state;
 mod ui;
 
@@ -41,81 +43,14 @@ pub type TimerState = Arc<Timer>;
 pub type SettingsState = RwLock<Settings>;
 pub type PomodoroState = Mutex<Pomodoro>;
 
-fn create_timer_listener(app: &mut App) -> impl Fn() {
-  let handle = app.handle();
-  let window = handle
-    .get_window(MAIN_WINDOW_LABEL)
-    .expect("Unable to retrieve main window");
-  let update_receiver = handle.state::<TimerState>().update_receiver.clone();
-
-  move || loop {
-    let remaining = update_receiver
-      .recv()
-      .expect("Failed to receive timer tick");
-    let remaining_secs = remaining.as_secs();
-
-    #[cfg(target_os = "macos")]
-    handle
-      .tray_handle()
-      .set_title(
-        format!(
-          "{minutes:0>2}:{seconds:0>2}",
-          minutes = remaining_secs / 60,
-          seconds = remaining_secs % 60
-        )
-        .as_str(),
-      )
-      .expect("Can't update tray title");
-
-    handle.emit_all("timer-tick", &remaining_secs).unwrap();
-
-    if remaining.is_zero() {
-      let settings = handle.state::<SettingsState>();
-      let pomodoro_state = handle.state::<PomodoroState>();
-      let mut pomodoro_state = pomodoro_state.lock().unwrap();
-
-      let new_duration = match pomodoro_state.mode {
-        TimerMode::Relax => {
-          pomodoro_state.mode = TimerMode::Work;
-          pomodoro_state.cycles += 1;
-
-          settings.read().unwrap().work_duration
-        }
-        TimerMode::Work => {
-          pomodoro_state.mode = TimerMode::Relax;
-
-          if pomodoro_state.cycles % 4 == 0 && pomodoro_state.cycles > 0 {
-            settings.read().unwrap().long_relax_duration
-          } else {
-            settings.read().unwrap().relax_duration
-          }
-        }
-      };
-
-      let timer = handle.state::<TimerState>();
-      timer.reset(new_duration).unwrap();
-      window
-        .emit::<TimerStatePayload>(
-          "timer-state",
-          TimerStatePayload {
-            mode: pomodoro_state.mode,
-            cycle: pomodoro_state.cycles,
-            is_ended: true,
-            duration_secs: new_duration.as_secs() as u32,
-          },
-        )
-        .unwrap();
-    }
-  }
-}
-
 fn main() {
-  tauri::Builder::default()
+  let app = tauri::Builder::default()
     .manage::<TimerState>(Arc::new(Timer::new(Duration::from_millis(100))))
     .manage::<SettingsState>(RwLock::new(Settings {
       work_duration: Duration::from_secs(60 * 25),
       relax_duration: Duration::from_secs(60 * 5),
       long_relax_duration: Duration::from_secs(60 * 15),
+      toggle_timer_shortcut: None,
     }))
     .manage::<PomodoroState>(Mutex::new(Pomodoro {
       cycles: 0,
@@ -123,29 +58,31 @@ fn main() {
     }))
     .setup(|app| {
       {
-        match load_settings(app.handle()) {
-          Ok(settings) => *app.state::<SettingsState>().write().unwrap() = settings,
+        match load_settings(&app.handle()) {
+          Ok(settings) => {
+            let work_duration = settings.work_duration;
+            *app.state::<SettingsState>().write().unwrap() = settings;
+            app.state::<TimerState>().reset(work_duration).unwrap();
+          }
           Err(error) => {
-            eprintln!("Failed to load settings from FS with error {:?}", error);
+            eprintln!("Failed to load settings with error {:?}", error);
           }
         }
       }
 
-      let window = app.get_window(MAIN_WINDOW_LABEL).unwrap();
       {
-        let duration = app.state::<SettingsState>().read().unwrap().work_duration;
-        app.state::<TimerState>().reset(duration).unwrap();
+        let window = app.get_window(MAIN_WINDOW_LABEL).unwrap();
+        decorate_window(&window);
+
+        #[cfg(debug_assertions)]
+        window.open_devtools();
       }
 
-      decorate_window(&window);
       setup_tray(app);
-
-      #[cfg(debug_assertions)]
-      window.open_devtools();
 
       thread::Builder::new()
         .name("Timer listener".into())
-        .spawn(create_timer_listener(app))?;
+        .spawn(setup_timer_listener(&app.handle()))?;
 
       Ok(())
     })
@@ -159,6 +96,12 @@ fn main() {
       get_settings,
       set_settings
     ])
-    .run(tauri::generate_context!())
-    .expect("error while running tauri application");
+    .build(tauri::generate_context!())
+    .expect("Error while building tauri application");
+
+  app.run(move |app_handle, e| {
+    if matches!(e, RunEvent::Ready) {
+      setup_shortcuts(app_handle);
+    }
+  })
 }
