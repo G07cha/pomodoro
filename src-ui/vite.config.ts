@@ -23,8 +23,9 @@ export default defineConfig({
     sourcemap: !!process.env.TAURI_DEBUG,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        settings: resolve(__dirname, 'settings/settings.html'),
+        main: resolve(__dirname, 'pages/main/main.html'),
+        settings: resolve(__dirname, 'pages/settings/settings.html'),
+        about: resolve(__dirname, 'pages/about/about.html'),
       },
     },
   },

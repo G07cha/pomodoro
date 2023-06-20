@@ -19,6 +19,7 @@ use tauri_plugin_autostart::MacosLauncher;
 use ticking_timer::Timer;
 use ts_rs::TS;
 use ui::tray::setup_tray;
+use ui::window::setup_main_window;
 mod commands;
 mod helpers;
 mod state;
@@ -38,6 +39,7 @@ pub struct TimerStatePayload {
 
 pub const MAIN_WINDOW_LABEL: &str = "main";
 pub const SETTINGS_WINDOW_LABEL: &str = "settings";
+pub const ABOUT_WINDOW_LABEL: &str = "about";
 
 pub type TimerState = Arc<Timer>;
 pub type SettingsState = RwLock<Settings>;
@@ -45,6 +47,7 @@ pub type PomodoroState = Mutex<Pomodoro>;
 
 fn main() {
   let app = tauri::Builder::default()
+    .menu(tauri::Menu::new())
     .manage::<TimerState>(Arc::new(Timer::new(Duration::from_millis(100))))
     .manage::<SettingsState>(RwLock::new(Settings {
       work_duration: Duration::from_secs(60 * 25),
@@ -57,8 +60,10 @@ fn main() {
       mode: state::TimerMode::Work,
     }))
     .setup(|app| {
+      let app_handle = app.handle();
+
       {
-        match load_settings(&app.handle()) {
+        match load_settings(&app_handle) {
           Ok(settings) => {
             let work_duration = settings.work_duration;
             *app.state::<SettingsState>().write().unwrap() = settings;
@@ -71,18 +76,18 @@ fn main() {
       }
 
       {
-        let window = app.get_window(MAIN_WINDOW_LABEL).unwrap();
-        decorate_window(&window);
+        let main_window = setup_main_window(&app_handle).unwrap();
+        decorate_window(&main_window);
 
         #[cfg(debug_assertions)]
-        window.open_devtools();
+        main_window.open_devtools();
       }
 
       setup_tray(app);
 
       thread::Builder::new()
         .name("Timer listener".into())
-        .spawn(setup_timer_listener(&app.handle()))?;
+        .spawn(setup_timer_listener(&app_handle))?;
 
       Ok(())
     })

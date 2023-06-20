@@ -3,14 +3,15 @@ import { afterEach, describe, test, expect, vi, beforeEach } from 'vitest';
 import { TimerMode } from '~bindings/TimerMode';
 import { TimerStatePayload } from '~bindings/TimerStatePayload';
 
-import { TimerService } from './timer.service';
-import { Duration } from './utils/duration';
+import { Duration } from '../../utils/duration';
 import {
   setupIPCMock,
   clearMocks,
   emitEvent,
   mockCommand,
-} from './utils/test-ipc';
+} from '../../utils/test-ipc';
+
+import { TimerService } from './timer.service';
 
 describe('Timer service', () => {
   beforeEach(() => {

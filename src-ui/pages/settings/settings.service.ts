@@ -2,8 +2,8 @@ import * as autostart from 'tauri-plugin-autostart-api';
 
 import { SettingsPayload } from '~bindings/SettingsPayload';
 
-import { Duration } from '../utils/duration';
-import { invoke } from '../utils/tauri-events';
+import { Duration } from '../../utils/duration';
+import { invoke } from '../../utils/tauri-events';
 
 export interface Settings {
   workDuration: Duration;

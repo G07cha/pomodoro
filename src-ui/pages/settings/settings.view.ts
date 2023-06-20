@@ -1,5 +1,5 @@
-import * as dom from '../utils/dom';
-import { ShortcutBuilder } from '../utils/shortcut-builder';
+import * as dom from '../../utils/dom';
+import { ShortcutBuilder } from '../../utils/shortcut-builder';
 
 interface FormValues {
   autostart: boolean;

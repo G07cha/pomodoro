@@ -1,9 +1,9 @@
 import { appWindow } from '@tauri-apps/api/window';
 import { message } from '@tauri-apps/api/dialog';
 
-import * as theme from '../utils/theme';
-import { Duration } from '../utils/duration';
-import { disableContextMenu } from '../utils/dom';
+import * as theme from '../../utils/theme';
+import { Duration } from '../../utils/duration';
+import { disableContextMenu } from '../../utils/dom';
 
 import { SettingsUIController } from './settings.view';
 import { Settings, SettingsService } from './settings.service';

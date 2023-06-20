@@ -5,11 +5,12 @@ use tauri::{
 
 use crate::MAIN_WINDOW_LABEL;
 
-use super::window::setup_settings_window;
+use super::window::{setup_about_window, setup_settings_window};
 
 const QUIT_MENU_ITEM_ID: &str = "quit";
 const SETTINGS_MENU_ITEM_ID: &str = "settings";
 const CHECK_UPDATES_MENU_ITEM_ID: &str = "check_updates";
+const ABOUT_MENU_ITEM_ID: &str = "about";
 
 fn create_window_event_handler(app_handle: AppHandle) -> impl Fn(SystemTrayEvent) {
   let main_window = app_handle.get_window(MAIN_WINDOW_LABEL).unwrap();
@@ -50,6 +51,17 @@ fn create_window_event_handler(app_handle: AppHandle) -> impl Fn(SystemTrayEvent
           });
         }
       }
+      ABOUT_MENU_ITEM_ID => {
+        if let Some(about_window) = app_handle.get_window(crate::ABOUT_WINDOW_LABEL) {
+          about_window.show().unwrap();
+        } else {
+          std::thread::scope(|s| {
+            s.spawn(|| {
+              setup_about_window(&app_handle).unwrap();
+            });
+          });
+        }
+      }
       CHECK_UPDATES_MENU_ITEM_ID => {
         let handle = app_handle.clone();
         tauri::async_runtime::spawn(async move {
@@ -86,11 +98,13 @@ pub fn setup_tray(app: &mut App) {
   let settings_menu_item = CustomMenuItem::new(SETTINGS_MENU_ITEM_ID, "Settings");
   let check_updates_menu_item =
     CustomMenuItem::new(CHECK_UPDATES_MENU_ITEM_ID, "Check for updates");
+  let about_menu_item = CustomMenuItem::new(ABOUT_MENU_ITEM_ID, "About");
   let quit_menu_item = CustomMenuItem::new(QUIT_MENU_ITEM_ID, "Quit");
   let system_tray = SystemTray::new().with_menu(
     SystemTrayMenu::new()
       .add_item(settings_menu_item)
       .add_item(check_updates_menu_item)
+      .add_item(about_menu_item)
       .add_native_item(tauri::SystemTrayMenuItem::Separator)
       .add_item(quit_menu_item),
   );

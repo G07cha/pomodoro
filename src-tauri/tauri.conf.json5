@@ -19,6 +19,10 @@
       "dialog": {
         "all": false,
         "message": true
+      },
+      "shell": {
+        "all": false,
+        "open": "^https://github.com/G07cha/pomodoro$"
       }
     },
     "bundle": {
@@ -64,20 +68,6 @@
     },
     // To enable main window transparency
     "macOSPrivateApi": true,
-    "windows": [
-      {
-        "decorations": false,
-        "fullscreen": false,
-        "height": 170,
-        "resizable": false,
-        "title": "Pomodoro",
-        "width": 170,
-        "focus": false,
-        "alwaysOnTop": true,
-        "transparent": true,
-        "visible": false
-      }
-    ],
     "systemTray": {
       "iconPath": "icons/icon.png",
       "iconAsTemplate": true,

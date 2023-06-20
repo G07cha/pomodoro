@@ -2,7 +2,7 @@ use anyhow::Result;
 #[cfg(target_os = "macos")]
 use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
 
-use tauri::{AppHandle, Window};
+use tauri::{AppHandle, TitleBarStyle, Window, WindowBuilder, WindowUrl};
 
 pub fn decorate_window(window: &Window) {
   #[cfg(target_os = "macos")]
@@ -42,13 +42,30 @@ pub fn decorate_window(window: &Window) {
   }
 }
 
+pub fn setup_main_window(app_handle: &AppHandle) -> Result<Window, tauri::Error> {
+  WindowBuilder::new(
+    app_handle,
+    crate::MAIN_WINDOW_LABEL,
+    WindowUrl::App("/pages/main/main.html".into()),
+  )
+  .visible(false)
+  .resizable(false)
+  .inner_size(170., 170.)
+  .focused(false)
+  .skip_taskbar(true)
+  .decorations(false)
+  .always_on_top(true)
+  .transparent(true)
+  .build()
+}
+
 pub fn setup_settings_window(app_handle: &AppHandle) -> Result<Window> {
-  let settings_window = tauri::WindowBuilder::new(
+  let settings_window = WindowBuilder::new(
     app_handle,
     crate::SETTINGS_WINDOW_LABEL,
-    tauri::WindowUrl::App("/settings/settings.html".into()),
+    WindowUrl::App("/pages/settings/settings.html".into()),
   )
-  .title("Pomodoro settings")
+  .title("Settings")
   .visible(false)
   .resizable(false)
   .inner_size(350., 273.)
@@ -67,4 +84,31 @@ pub fn setup_settings_window(app_handle: &AppHandle) -> Result<Window> {
   });
 
   Ok(settings_window)
+}
+
+pub fn setup_about_window(app_handle: &AppHandle) -> Result<Window> {
+  let about_window = WindowBuilder::new(
+    app_handle,
+    crate::ABOUT_WINDOW_LABEL,
+    WindowUrl::App("/pages/about/about.html".into()),
+  )
+  .title("")
+  .resizable(false)
+  .inner_size(350., 265.)
+  .focused(true)
+  .skip_taskbar(true)
+  .title_bar_style(TitleBarStyle::Overlay)
+  .build()?;
+
+  // Wait for DOM to load to avoid showing empty screen
+  about_window.once("window_loaded", {
+    let about_window = about_window.clone();
+    move |_| {
+      about_window
+        .show()
+        .expect("Failed to show settings window on load")
+    }
+  });
+
+  Ok(about_window)
 }

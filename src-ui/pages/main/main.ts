@@ -1,9 +1,13 @@
 import { message } from '@tauri-apps/api/dialog';
 
-import * as theme from './utils/theme';
-import * as time from './utils/time';
+import * as theme from '../../utils/theme';
+import * as time from '../../utils/time';
+import {
+  disableAnimationsWhenInactive,
+  disableContextMenu,
+} from '../../utils/dom';
+
 import { TimerIcon, TimerUIController } from './timer.view';
-import { disableAnimationsWhenInactive, disableContextMenu } from './utils/dom';
 import { TimerService } from './timer.service';
 
 theme.followSystemTheme();

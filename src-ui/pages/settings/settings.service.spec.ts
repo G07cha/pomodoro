@@ -2,8 +2,8 @@ import { afterEach, describe, test, expect, beforeEach } from 'vitest';
 
 import { SettingsPayload } from '~bindings/SettingsPayload';
 
-import { Duration } from '../utils/duration';
-import { setupIPCMock, clearMocks, mockCommand } from '../utils/test-ipc';
+import { Duration } from '../../utils/duration';
+import { setupIPCMock, clearMocks, mockCommand } from '../../utils/test-ipc';
 
 import { SettingsService } from './settings.service';
 
