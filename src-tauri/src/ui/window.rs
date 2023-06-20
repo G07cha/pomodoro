@@ -2,7 +2,10 @@ use anyhow::Result;
 #[cfg(target_os = "macos")]
 use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
 
-use tauri::{AppHandle, TitleBarStyle, Window, WindowBuilder, WindowUrl};
+#[cfg(target_os = "macos")]
+use tauri::TitleBarStyle;
+
+use tauri::{AppHandle, Window, WindowBuilder, WindowUrl};
 
 pub fn decorate_window(window: &Window) {
   #[cfg(target_os = "macos")]
@@ -96,9 +99,12 @@ pub fn setup_about_window(app_handle: &AppHandle) -> Result<Window> {
   .resizable(false)
   .inner_size(350., 265.)
   .focused(true)
-  .skip_taskbar(true)
-  .title_bar_style(TitleBarStyle::Overlay)
-  .build()?;
+  .skip_taskbar(true);
+
+  #[cfg(target_os = "macos")]
+  let about_window = about_window.title_bar_style(TitleBarStyle::Overlay);
+
+  let about_window = about_window.build()?;
 
   // Wait for DOM to load to avoid showing empty screen
   about_window.once("window_loaded", {
