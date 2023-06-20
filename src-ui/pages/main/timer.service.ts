@@ -1,8 +1,8 @@
 import { TimerMode } from '~bindings/TimerMode';
 import { TimerStatePayload } from '~bindings/TimerStatePayload';
 
-import { Duration } from './utils/duration';
-import { listen, invoke } from './utils/tauri-events';
+import { Duration } from '../../utils/duration';
+import { listen, invoke } from '../../utils/tauri-events';
 
 export class TimerService {
   private _mode: TimerMode = 'Work';
