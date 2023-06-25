@@ -1,8 +1,22 @@
 use tauri::{AppHandle, Manager};
 
 use crate::{
-  state::TimerMode, PomodoroState, SettingsState, TimerState, TimerStatePayload, MAIN_WINDOW_LABEL,
+  state::{Pomodoro, TimerMode},
+  PomodoroState, SettingsState, TimerState, TimerStatePayload, MAIN_WINDOW_LABEL,
 };
+
+fn update_pomodoro_state(state: &Pomodoro) -> Pomodoro {
+  match state.mode {
+    TimerMode::Relax => Pomodoro {
+      mode: TimerMode::Work,
+      cycles: state.cycles + 1,
+    },
+    TimerMode::Work => Pomodoro {
+      mode: TimerMode::Relax,
+      cycles: state.cycles,
+    },
+  }
+}
 
 pub fn setup_timer_listener(app_handle: &AppHandle) -> impl Fn() {
   let window = app_handle
@@ -37,26 +51,13 @@ pub fn setup_timer_listener(app_handle: &AppHandle) -> impl Fn() {
       let pomodoro_state = app_handle.state::<PomodoroState>();
       let mut pomodoro_state = pomodoro_state.lock().unwrap();
 
-      let new_duration = match pomodoro_state.mode {
-        TimerMode::Relax => {
-          pomodoro_state.mode = TimerMode::Work;
-          pomodoro_state.cycles += 1;
+      *pomodoro_state = update_pomodoro_state(&pomodoro_state);
+      let new_duration = pomodoro_state.duration(&settings.read().unwrap());
+      app_handle
+        .state::<TimerState>()
+        .reset(new_duration)
+        .unwrap();
 
-          settings.read().unwrap().work_duration
-        }
-        TimerMode::Work => {
-          pomodoro_state.mode = TimerMode::Relax;
-
-          if pomodoro_state.cycles % 4 == 0 && pomodoro_state.cycles > 0 {
-            settings.read().unwrap().long_relax_duration
-          } else {
-            settings.read().unwrap().relax_duration
-          }
-        }
-      };
-
-      let timer = app_handle.state::<TimerState>();
-      timer.reset(new_duration).unwrap();
       window
         .emit::<TimerStatePayload>(
           "timer-state",
