@@ -7,8 +7,8 @@ use std::sync::{Arc, Mutex, RwLock};
 use std::thread;
 use std::time::Duration;
 
-use commands::settings::{get_settings, set_settings};
-use commands::timer::{get_timer_state, toggle_timer};
+use commands::settings::*;
+use commands::timer::*;
 use helpers::fs::load_settings;
 use helpers::shortcuts::setup_shortcuts;
 use helpers::timer::setup_timer_listener;
@@ -46,15 +46,10 @@ pub type SettingsState = RwLock<Settings>;
 pub type PomodoroState = Mutex<Pomodoro>;
 
 fn main() {
-  let app = tauri::Builder::default()
+  tauri::Builder::default()
     .menu(tauri::Menu::new())
     .manage::<TimerState>(Arc::new(Timer::new(Duration::from_millis(100))))
-    .manage::<SettingsState>(RwLock::new(Settings {
-      work_duration: Duration::from_secs(60 * 25),
-      relax_duration: Duration::from_secs(60 * 5),
-      long_relax_duration: Duration::from_secs(60 * 15),
-      toggle_timer_shortcut: None,
-    }))
+    .manage::<SettingsState>(RwLock::new(Settings::default()))
     .manage::<PomodoroState>(Mutex::new(Pomodoro {
       cycles: 0,
       mode: state::TimerMode::Work,
@@ -102,11 +97,10 @@ fn main() {
       set_settings
     ])
     .build(tauri::generate_context!())
-    .expect("Error while building tauri application");
-
-  app.run(move |app_handle, e| {
-    if matches!(e, RunEvent::Ready) {
-      setup_shortcuts(app_handle);
-    }
-  })
+    .expect("Error while building tauri application")
+    .run(move |app_handle, e| {
+      if matches!(e, RunEvent::Ready) {
+        setup_shortcuts(app_handle);
+      }
+    });
 }

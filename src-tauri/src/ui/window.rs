@@ -45,8 +45,8 @@ pub fn decorate_window(window: &Window) {
   }
 }
 
-pub fn setup_main_window(app_handle: &AppHandle) -> Result<Window, tauri::Error> {
-  WindowBuilder::new(
+pub fn setup_main_window(app_handle: &AppHandle) -> Result<Window> {
+  let main_window = WindowBuilder::new(
     app_handle,
     crate::MAIN_WINDOW_LABEL,
     WindowUrl::App("/pages/main/main.html".into()),
@@ -59,7 +59,9 @@ pub fn setup_main_window(app_handle: &AppHandle) -> Result<Window, tauri::Error>
   .decorations(false)
   .always_on_top(true)
   .transparent(true)
-  .build()
+  .build()?;
+
+  Ok(main_window)
 }
 
 pub fn setup_settings_window(app_handle: &AppHandle) -> Result<Window> {
