@@ -1,0 +1,7 @@
+{
+  "tauri": {
+    "systemTray": {
+      "iconPath": "icons/icon-inverted.png"
+    }
+  }
+}
