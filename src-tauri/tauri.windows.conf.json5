@@ -1,7 +1,7 @@
 {
   "tauri": {
     "systemTray": {
-      "iconPath": "icons/icon-inverted.png"
+      "iconPath": "icons/32x32-inverted.png"
     }
   }
 }
