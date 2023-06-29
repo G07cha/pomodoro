@@ -62,6 +62,8 @@ export class TimerService {
 
   toggle = () => invoke('toggle_timer');
 
+  reset = () => invoke('reset_timer');
+
   get duration() {
     return this._duration;
   }

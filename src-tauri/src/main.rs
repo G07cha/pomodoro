@@ -4,14 +4,13 @@
 )]
 
 use std::sync::{Arc, Mutex, RwLock};
-use std::thread;
 use std::time::Duration;
 
 use commands::settings::*;
 use commands::timer::*;
 use helpers::fs::load_settings;
 use helpers::shortcuts::setup_shortcuts;
-use helpers::timer::setup_timer_listener;
+use helpers::timer::create_timer_listener;
 use serde::Serialize;
 use state::{Pomodoro, Settings};
 use tauri::{Manager, RunEvent};
@@ -48,7 +47,6 @@ pub type PomodoroState = Mutex<Pomodoro>;
 fn main() {
   tauri::Builder::default()
     .menu(tauri::Menu::new())
-    .manage::<TimerState>(Arc::new(Timer::new(Duration::from_millis(100))))
     .manage::<SettingsState>(RwLock::new(Settings::default()))
     .manage::<PomodoroState>(Mutex::new(Pomodoro {
       cycles: 0,
@@ -56,6 +54,18 @@ fn main() {
     }))
     .setup(|app| {
       let app_handle = app.handle();
+      let main_window = setup_main_window(&app_handle).unwrap();
+      decorate_window(&main_window);
+
+      #[cfg(debug_assertions)]
+      main_window.open_devtools();
+
+      let timer = Timer::new(
+        Duration::from_millis(100),
+        create_timer_listener(&app_handle),
+      );
+
+      app_handle.manage::<TimerState>(Arc::new(timer));
 
       {
         match load_settings(&app_handle) {
@@ -70,19 +80,7 @@ fn main() {
         }
       }
 
-      {
-        let main_window = setup_main_window(&app_handle).unwrap();
-        decorate_window(&main_window);
-
-        #[cfg(debug_assertions)]
-        main_window.open_devtools();
-      }
-
       setup_tray(app);
-
-      thread::Builder::new()
-        .name("Timer listener".into())
-        .spawn(setup_timer_listener(&app_handle))?;
 
       Ok(())
     })
@@ -92,6 +90,7 @@ fn main() {
     ))
     .invoke_handler(tauri::generate_handler![
       toggle_timer,
+      reset_timer,
       get_timer_state,
       get_settings,
       set_settings

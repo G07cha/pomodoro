@@ -1,17 +1,18 @@
 use std::time::Duration;
 
+use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
 use crate::commands::settings::SettingsPayload;
 
-#[derive(Clone, Copy, serde::Serialize, serde::Deserialize, Debug, TS)]
+#[derive(Clone, Copy, Serialize, Deserialize, Debug, TS)]
 #[ts(export)]
 pub enum TimerMode {
   Work,
   Relax,
 }
 
-#[derive(Clone, serde::Serialize, serde::Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Settings {
   pub work_duration: Duration,
   pub relax_duration: Duration,
