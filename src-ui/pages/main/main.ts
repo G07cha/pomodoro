@@ -38,7 +38,7 @@ timerService.onEnd(() => {
   timerUI.showIcon(TimerIcon.Play);
   timerUI.setText('');
   timerUI.setCycle(0);
-  message('Timer is done', { type: 'info' }).then(() => timerService.toggle());
+  message('Timer is done', { type: 'info' }).then(() => timerService.reset());
 });
 
 timerService.onPause(() => {

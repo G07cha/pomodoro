@@ -29,11 +29,11 @@ pub fn register_toggle_shortcut<R: Runtime>(
       let app_handle = app_handle.clone();
       move || {
         let timer = app_handle.state::<TimerState>();
-        timer.toggle();
+        timer.toggle().expect("Failed to toggle timer");
         app_handle
           .get_window(MAIN_WINDOW_LABEL)
           .expect("Failed to find main window")
-          .emit("timer-running-change", timer.is_running())
+          .emit("timer-running-change", *timer.is_running())
           .unwrap();
       }
     })?
