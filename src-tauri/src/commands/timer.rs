@@ -1,4 +1,4 @@
-use tauri::{command, State, Window};
+use tauri::{command, Runtime, State, Window};
 
 use crate::{
   state::{Pomodoro, TimerMode},
@@ -19,7 +19,10 @@ fn update_pomodoro_state(state: &Pomodoro) -> Pomodoro {
 }
 
 #[command]
-pub fn toggle_timer(window: Window, timer: State<'_, TimerState>) -> Result<(), String> {
+pub fn toggle_timer<R: Runtime>(
+  window: Window<R>,
+  timer: State<'_, TimerState>,
+) -> Result<(), String> {
   timer
     .toggle()
     .map_err(|_| "Failed to toggle timer".to_string())?;
@@ -30,8 +33,8 @@ pub fn toggle_timer(window: Window, timer: State<'_, TimerState>) -> Result<(), 
 }
 
 #[command]
-pub fn reset_timer(
-  window: Window,
+pub fn reset_timer<R: Runtime>(
+  window: Window<R>,
   timer: State<'_, TimerState>,
   pomodoro_state: State<'_, PomodoroState>,
   settings: State<'_, SettingsState>,

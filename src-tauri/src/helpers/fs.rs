@@ -1,13 +1,13 @@
 use anyhow::{Context, Result};
 use std::fs;
 
-use tauri::AppHandle;
+use tauri::{AppHandle, Runtime};
 
 use crate::state::Settings;
 
 const SETTINGS_FILENAME: &str = "settings.json";
 
-pub fn load_settings(handle: &AppHandle) -> Result<Settings> {
+pub fn load_settings<R: Runtime>(handle: &AppHandle<R>) -> Result<Settings> {
   let app_data_dir = handle
     .path_resolver()
     .app_data_dir()
@@ -21,7 +21,7 @@ pub fn load_settings(handle: &AppHandle) -> Result<Settings> {
   Ok(parsed_settings)
 }
 
-pub fn save_settings(handle: &AppHandle, new_settings: &Settings) -> Result<()> {
+pub fn save_settings<R: Runtime>(handle: &AppHandle<R>, new_settings: &Settings) -> Result<()> {
   let app_data_dir = handle
     .path_resolver()
     .app_data_dir()
@@ -36,4 +36,49 @@ pub fn save_settings(handle: &AppHandle, new_settings: &Settings) -> Result<()> 
     .with_context(|| format!("Failed to write settings to {}", settings_path.display()))?;
 
   Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+  use anyhow::Result;
+  use serial_test::serial;
+  use std::time::Duration;
+  use tauri::test;
+  use tauri::Manager;
+
+  #[serial(fs)]
+  #[test]
+  fn it_saves_settings() {
+    let app_handle = test::mock_app().app_handle();
+
+    assert!(save_settings(
+      &app_handle,
+      &Settings {
+        work_duration: Duration::from_secs(100),
+        relax_duration: Duration::from_secs(50),
+        long_relax_duration: Duration::from_secs(70),
+        toggle_timer_shortcut: Some("Ctrl + F".to_string())
+      }
+    )
+    .is_ok())
+  }
+
+  #[serial(fs)]
+  #[test]
+  fn it_loads_settings() -> Result<()> {
+    let app_handle = test::mock_app().app_handle();
+    let settings = Settings {
+      work_duration: Duration::from_secs(100),
+      relax_duration: Duration::from_secs(200),
+      long_relax_duration: Duration::from_secs(300),
+      toggle_timer_shortcut: Some("Ctrl + A".to_string()),
+    };
+
+    save_settings(&app_handle, &settings)?;
+
+    assert_eq!(load_settings(&app_handle)?, settings);
+
+    Ok(())
+  }
 }

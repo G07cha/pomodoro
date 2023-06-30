@@ -12,7 +12,7 @@ pub enum TimerMode {
   Relax,
 }
 
-#[derive(Clone, Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug, PartialEq, Eq)]
 pub struct Settings {
   pub work_duration: Duration,
   pub relax_duration: Duration,

@@ -1,6 +1,6 @@
 use tauri::{
-  api::dialog, App, AppHandle, CustomMenuItem, Manager, PhysicalPosition, Position, SystemTray,
-  SystemTrayEvent, SystemTrayMenu, WindowEvent,
+  api::dialog, App, AppHandle, CustomMenuItem, Manager, PhysicalPosition, Position, Runtime,
+  SystemTray, SystemTrayEvent, SystemTrayMenu, WindowEvent,
 };
 
 use crate::MAIN_WINDOW_LABEL;
@@ -12,7 +12,7 @@ const SETTINGS_MENU_ITEM_ID: &str = "settings";
 const CHECK_UPDATES_MENU_ITEM_ID: &str = "check_updates";
 const ABOUT_MENU_ITEM_ID: &str = "about";
 
-fn create_window_event_handler(app_handle: AppHandle) -> impl Fn(SystemTrayEvent) {
+fn create_window_event_handler<R: Runtime>(app_handle: AppHandle<R>) -> impl Fn(SystemTrayEvent) {
   let main_window = app_handle.get_window(MAIN_WINDOW_LABEL).unwrap();
 
   move |event| match event {
@@ -94,7 +94,7 @@ fn create_window_event_handler(app_handle: AppHandle) -> impl Fn(SystemTrayEvent
   }
 }
 
-pub fn setup_tray(app: &mut App) {
+pub fn setup_tray<R: Runtime>(app: &mut App<R>) {
   let settings_menu_item = CustomMenuItem::new(SETTINGS_MENU_ITEM_ID, "Settings");
   let check_updates_menu_item =
     CustomMenuItem::new(CHECK_UPDATES_MENU_ITEM_ID, "Check for updates");

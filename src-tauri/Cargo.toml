@@ -25,6 +25,7 @@ anyhow = "1.0.71"
 
 [dev-dependencies]
 cargo-bump = "1.1.0"
+serial_test = "2.0.0"
 
 [features]
 # by default Tauri runs in production mode

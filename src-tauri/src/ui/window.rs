@@ -5,9 +5,9 @@ use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
 #[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
 
-use tauri::{AppHandle, Window, WindowBuilder, WindowUrl};
+use tauri::{AppHandle, Runtime, Window, WindowBuilder, WindowUrl};
 
-pub fn decorate_window(window: &Window) {
+pub fn decorate_window<R: Runtime>(window: &Window<R>) {
   #[cfg(target_os = "macos")]
   apply_vibrancy(
     window,
@@ -45,7 +45,7 @@ pub fn decorate_window(window: &Window) {
   }
 }
 
-pub fn setup_main_window(app_handle: &AppHandle) -> Result<Window> {
+pub fn setup_main_window<R: Runtime>(app_handle: &AppHandle<R>) -> Result<Window<R>> {
   let main_window = WindowBuilder::new(
     app_handle,
     crate::MAIN_WINDOW_LABEL,
@@ -64,7 +64,7 @@ pub fn setup_main_window(app_handle: &AppHandle) -> Result<Window> {
   Ok(main_window)
 }
 
-pub fn setup_settings_window(app_handle: &AppHandle) -> Result<Window> {
+pub fn setup_settings_window<R: Runtime>(app_handle: &AppHandle<R>) -> Result<Window<R>> {
   let settings_window = WindowBuilder::new(
     app_handle,
     crate::SETTINGS_WINDOW_LABEL,
@@ -91,7 +91,7 @@ pub fn setup_settings_window(app_handle: &AppHandle) -> Result<Window> {
   Ok(settings_window)
 }
 
-pub fn setup_about_window(app_handle: &AppHandle) -> Result<Window> {
+pub fn setup_about_window<R: Runtime>(app_handle: &AppHandle<R>) -> Result<Window<R>> {
   let about_window = WindowBuilder::new(
     app_handle,
     crate::ABOUT_WINDOW_LABEL,
