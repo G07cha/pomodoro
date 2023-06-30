@@ -44,11 +44,11 @@ body {
 		 #732982 100%,
 		 #E7484F 100%
 	 );
- animation: slideBackground 2s linear infinite;
+ animation: slideBackground 60s linear infinite;
 }
 
 @keyframes slideBackground {
   to {
-    background-position: 200px;
+    background-position: 8000px;
   }
 }
