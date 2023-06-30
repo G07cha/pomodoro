@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use tauri::{command, AppHandle, Manager, State};
+use tauri::{command, AppHandle, Manager, Runtime, State};
 use ts_rs::TS;
 
 use crate::{
@@ -41,12 +41,12 @@ pub fn get_settings(settings: State<'_, SettingsState>) -> Result<SettingsPayloa
 }
 
 #[command]
-pub fn set_settings(
+pub fn set_settings<R: Runtime>(
   new_settings: SettingsPayload,
   settings: State<'_, SettingsState>,
   timer: State<'_, TimerState>,
   pomodoro_state: State<'_, PomodoroState>,
-  app_handle: AppHandle,
+  app_handle: AppHandle<R>,
 ) -> Result<(), String> {
   let mut settings = settings.write().unwrap();
   let old_settings = settings.clone();

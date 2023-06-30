@@ -25,7 +25,6 @@ mod state;
 mod ui;
 
 use crate::state::TimerMode;
-use crate::ui::window::decorate_window;
 
 #[derive(Clone, Serialize, TS)]
 #[ts(export)]
@@ -44,8 +43,8 @@ pub type TimerState = Arc<Timer>;
 pub type SettingsState = RwLock<Settings>;
 pub type PomodoroState = Mutex<Pomodoro>;
 
-fn main() {
-  tauri::Builder::default()
+fn create_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
+  builder
     .menu(tauri::Menu::new())
     .manage::<SettingsState>(RwLock::new(Settings::default()))
     .manage::<PomodoroState>(Mutex::new(Pomodoro {
@@ -55,7 +54,9 @@ fn main() {
     .setup(|app| {
       let app_handle = app.handle();
       let main_window = setup_main_window(&app_handle).unwrap();
-      decorate_window(&main_window);
+
+      #[cfg(not(test))]
+      crate::ui::window::decorate_window(&main_window);
 
       #[cfg(debug_assertions)]
       main_window.open_devtools();
@@ -97,9 +98,25 @@ fn main() {
     ])
     .build(tauri::generate_context!())
     .expect("Error while building tauri application")
-    .run(move |app_handle, e| {
-      if matches!(e, RunEvent::Ready) {
-        setup_shortcuts(app_handle);
-      }
-    });
+}
+
+fn main() {
+  let app = create_app(tauri::Builder::default());
+  app.run(move |app_handle, e| {
+    if matches!(e, RunEvent::Ready) {
+      setup_shortcuts(app_handle);
+    }
+  });
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+  use tauri::Manager;
+
+  #[test]
+  fn it_creates_main_window() {
+    let app = create_app(tauri::test::mock_builder());
+    assert!(app.get_window(MAIN_WINDOW_LABEL).is_some());
+  }
 }

@@ -1,10 +1,10 @@
 use std::time::Duration;
 
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Manager, Runtime};
 
 use crate::{PomodoroState, TimerStatePayload, MAIN_WINDOW_LABEL};
 
-pub fn create_timer_listener(app_handle: &AppHandle) -> impl Fn(Duration) {
+pub fn create_timer_listener<R: Runtime>(app_handle: &AppHandle<R>) -> impl Fn(Duration) {
   let app_handle = app_handle.clone();
   let main_window = app_handle.get_window(MAIN_WINDOW_LABEL).unwrap();
 
