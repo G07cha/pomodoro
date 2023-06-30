@@ -14,7 +14,7 @@ body {
 .buttons {
 	display: flex;
 	gap: .5rem;
-	margin-top: 2rem;
+	margin: 2rem 0;
 }
 
 .button-link {
@@ -25,7 +25,7 @@ body {
 	border: 1px solid #373636;
 }
 
-.button-link:hover{
+.button-link:hover {
 	color: #f2f2f2;
 	border-color: transparent;
 	background-image: linear-gradient(
