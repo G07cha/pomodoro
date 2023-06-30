@@ -1,0 +1,53 @@
+body {
+	background: #f2f2f2;
+	color: #373636;
+  font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	max-width: 500px;
+	text-align: center;
+	margin: 1rem auto;
+}
+
+.buttons {
+	display: flex;
+	gap: .5rem;
+	margin-top: 2rem;
+}
+
+.button-link {
+	color: #373636;
+	text-decoration: none;
+	border-radius: 5px;
+	padding: 5px 10px;
+	border: 1px solid #373636;
+}
+
+.button-link:hover{
+	color: #f2f2f2;
+	border-color: transparent;
+	background-image: linear-gradient(
+		 to right, 
+		 #E7484F,
+		 #E7484F 16.65%,
+		 #F68B1D 16.65%,
+		 #F68B1D 33.3%,
+		 #FCED00 33.3%,
+		 #FCED00 49.95%,
+		 #009E4F 49.95%,
+		 #009E4F 66.6%,
+		 #00AAC3 66.6%,
+		 #00AAC3 83.25%,
+		 #732982 83.25%,
+		 #732982 100%,
+		 #E7484F 100%
+	 );
+ animation: slideBackground 2s linear infinite;
+}
+
+@keyframes slideBackground {
+  to {
+    background-position: 200px;
+  }
+}
