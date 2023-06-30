@@ -30,7 +30,7 @@
   "devDependencies": {
     "@tauri-apps/cli": "^1.4.0",
     "@typescript-eslint/eslint-plugin": "^5.60.0",
-    "@typescript-eslint/parser": "^5.60.0",
+    "@typescript-eslint/parser": "^5.60.1",
     "eslint": "^8.43.0",
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-import": "^2.27.5",
