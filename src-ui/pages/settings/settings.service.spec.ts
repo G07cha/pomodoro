@@ -29,7 +29,7 @@ describe('Settings service', () => {
     const settings = await settingsService.getSettings();
 
     expect(settings.longRelaxDuration.secs).toBe(
-      response.long_relax_duration_secs
+      response.long_relax_duration_secs,
     );
     expect(settings.relaxDuration.secs).toBe(response.relax_duration_secs);
     expect(settings.workDuration.secs).toBe(response.work_duration_secs);

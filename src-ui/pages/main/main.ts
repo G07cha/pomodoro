@@ -30,7 +30,7 @@ timerService.onTick((duration) => {
   lastTickTime = time.formatTime(duration);
   timerUI.setText(lastTickTime);
   timerUI.setProgress(
-    ((duration.secs / timerService.duration.secs) * 100 - 100) * -1
+    ((duration.secs / timerService.duration.secs) * 100 - 100) * -1,
   );
 });
 

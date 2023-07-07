@@ -35,7 +35,7 @@ export class TimerUIController {
   setProgress(progress: number) {
     this.timerProgressElement.style.setProperty(
       '--current-progress',
-      progress.toString()
+      progress.toString(),
     );
   }
 
