@@ -19,22 +19,22 @@ export class SettingsUIController {
 
   constructor() {
     this.autostartInput = dom.getElementByIdOrThrow(
-      'autostart'
+      'autostart',
     ) as HTMLInputElement;
     this.toggleShortcutInput = dom.getElementByIdOrThrow(
-      'toggleShortcut'
+      'toggleShortcut',
     ) as HTMLInputElement;
     this.longRelaxDurationInput = dom.getElementByIdOrThrow(
-      'long-relax-duration'
+      'long-relax-duration',
     ) as HTMLInputElement;
     this.relaxDurationInput = dom.getElementByIdOrThrow(
-      'relax-duration'
+      'relax-duration',
     ) as HTMLInputElement;
     this.workDurationInput = dom.getElementByIdOrThrow(
-      'work-duration'
+      'work-duration',
     ) as HTMLInputElement;
     this.settingsForm = dom.getElementByIdOrThrow(
-      'settings-form'
+      'settings-form',
     ) as HTMLFormElement;
 
     const shortcutBuilder = new ShortcutBuilder();
@@ -59,7 +59,7 @@ export class SettingsUIController {
     });
 
     this.toggleShortcutInput.addEventListener('keyup', () =>
-      shortcutBuilder.clear()
+      shortcutBuilder.clear(),
     );
   }
 
@@ -78,15 +78,15 @@ export class SettingsUIController {
       toggleTimerShortcut: formData.get('toggleShortcut')?.toString(),
       longRelaxDuration: parseInt(
         formData.get('long-relax-duration')?.toString() ?? '0',
-        10
+        10,
       ),
       relaxDuration: parseInt(
         formData.get('relax-duration')?.toString() ?? '0',
-        10
+        10,
       ),
       workDuration: parseInt(
         formData.get('work-duration')?.toString() ?? '0',
-        10
+        10,
       ),
     };
 

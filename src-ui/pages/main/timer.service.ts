@@ -15,7 +15,7 @@ export class TimerService {
         this._mode = mode;
         this._cycle = cycle;
         this._duration = Duration.fromSecs(duration_secs);
-      }
+      },
     );
   }
 

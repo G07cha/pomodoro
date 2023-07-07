@@ -12,7 +12,7 @@ const log = createLogger('EVENTS');
 
 export const listen = <TPayload>(
   eventName: EventName,
-  handler: EventCallback<TPayload>
+  handler: EventCallback<TPayload>,
 ): Promise<UnlistenFn> =>
   tauriListen<TPayload>(eventName, (event) => {
     log('Received event', eventName, 'with payload', event.payload);
@@ -21,7 +21,7 @@ export const listen = <TPayload>(
 
 export const invoke = async <TResponse>(
   cmd: string,
-  args?: InvokeArgs
+  args?: InvokeArgs,
 ): Promise<TResponse> => {
   log('Invoked command', cmd, ...(args ? ['with args', args] : []));
   const response = await tauriInvoke<TResponse>(cmd, args);
@@ -29,7 +29,7 @@ export const invoke = async <TResponse>(
     'Received response for command',
     cmd,
     ...(args ? ['with args', args] : []),
-    response
+    response,
   );
   return response;
 };

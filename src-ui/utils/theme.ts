@@ -21,7 +21,7 @@ export const followSystemTheme = () => {
   };
 
   handleSystemThemeChange(
-    new MediaQueryListEvent('init', { matches: matchMediaPrefDark.matches })
+    new MediaQueryListEvent('init', { matches: matchMediaPrefDark.matches }),
   );
 
   matchMediaPrefDark.addEventListener('change', handleSystemThemeChange);

@@ -11,7 +11,7 @@ export class ShortcutBuilder {
         value
           .replace(/^(Key|Digit)/, '')
           .replace(/^Meta/, 'Super')
-          .replace(/(Left|Right)$/, '')
+          .replace(/(Left|Right)$/, ''),
       )
       .join(' + ');
 }
