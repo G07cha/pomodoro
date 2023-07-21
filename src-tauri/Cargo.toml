@@ -21,7 +21,7 @@ window-vibrancy = "0.4.0"
 tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
 ts-rs = "6.2.1"
 ticking-timer = { git = "https://github.com/g07cha/ticking-timer", branch = "main" }
-anyhow = "1.0.71"
+anyhow = "1.0.72"
 
 [dev-dependencies]
 cargo-bump = "1.1.0"
