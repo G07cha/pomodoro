@@ -27,7 +27,7 @@ jobs:
 
     runs-on: ${{ matrix.platform.host }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup environment
         uses: ./.github/actions/setup-env
       - name: Add target
