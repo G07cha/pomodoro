@@ -34,7 +34,7 @@
     "eslint": "^8.48.0",
     "eslint-import-resolver-typescript": "^3.6.0",
     "eslint-plugin-import": "^2.28.1",
-    "happy-dom": "^11.0.2",
+    "happy-dom": "^12.1.5",
     "less": "^4.2.0",
     "postcss-less": "^6.0.0",
     "prettier": "^3.0.3",
