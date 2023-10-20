@@ -46,6 +46,6 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.5.0",
-    "tauri-plugin-autostart-api": "github:tauri-apps/tauri-plugin-autostart"
+    "tauri-plugin-autostart-api": "github:tauri-apps/tauri-plugin-autostart#v1"
   }
 }
