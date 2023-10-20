@@ -82,7 +82,7 @@ checksum = "a4668cab20f66d8d020e1fbc0ebe47217433c1b6c8f2040faf858554e394ace6"
 
 [[package]]
 name = "app"
-version = "3.3.0"
+version = "3.3.1"
 dependencies = [
  "anyhow",
  "cargo-bump",
