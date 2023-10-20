@@ -4,13 +4,14 @@ description: 'Sets up local action environment with necessary components'
 runs:
   using: 'composite'
   steps:
-    - uses: moonrepo/setup-rust@v0
+    - uses: moonrepo/setup-rust@v1
       with:
         cache: false
     # moonrepo/setup-rust already caches some of the paths but it's not optimal so we cache rust dependencies separately
     - uses: Swatinem/rust-cache@v2
       with:
-        workspaces: src-tauri
+        workspaces: |
+          src-tauri
         shared-key: base-env
     - uses: actions/setup-node@v3
       with:
