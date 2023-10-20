@@ -22,7 +22,7 @@ pub fn decorate_window<R: Runtime>(window: &Window<R>) {
     use tauri::{Theme, WindowEvent};
     use window_vibrancy::apply_acrylic;
 
-    fn apply_windows_theme(theme: &Theme, window: &Window) {
+    fn apply_windows_theme<R: Runtime>(theme: &Theme, window: &Window<R>) {
       match theme {
         Theme::Light => apply_acrylic(window, Some((255, 255, 255, 125)))
           .expect("Unsupported platform! 'apply_acrylic' is only supported on Windows"),
