@@ -64,7 +64,7 @@
       "active": true,
       "dialog": true,
       "endpoints": ["https://github.com/G07cha/pomodoro/releases/latest/download/latest.json"],
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDY0MkNGRDMxQTcwQjE3QQpSV1I2c1hBYTA4OUNCczQ5eThCa3B2TkNaQ2pXdFQ0NmVhVFhqUnhYU3l6bkxqQWNncWIySkwzMgo="
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDM1M0VBNjI2OUMxM0M3RDUKUldUVnh4T2NKcVkrTldqQVJQWVhsRm9iTmdWZUFJK1FmM0Zpcm9nZGQ2NzgxQVRWQlRtSkxpUW0K"
     },
     // To enable main window transparency
     "macOSPrivateApi": true,
