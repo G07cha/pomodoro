@@ -3,6 +3,7 @@ import { ShortcutBuilder } from '../../utils/shortcut-builder';
 
 interface FormValues {
   autostart: boolean;
+  shouldPlaySound: boolean;
   toggleTimerShortcut?: string;
   longRelaxDuration: number;
   relaxDuration: number;
@@ -15,6 +16,7 @@ export class SettingsUIController {
   longRelaxDurationInput: HTMLInputElement;
   relaxDurationInput: HTMLInputElement;
   workDurationInput: HTMLInputElement;
+  shouldPlaySoundInput: HTMLInputElement;
   settingsForm: HTMLFormElement;
 
   constructor() {
@@ -22,7 +24,7 @@ export class SettingsUIController {
       'autostart',
     ) as HTMLInputElement;
     this.toggleShortcutInput = dom.getElementByIdOrThrow(
-      'toggleShortcut',
+      'toggle-shortcut',
     ) as HTMLInputElement;
     this.longRelaxDurationInput = dom.getElementByIdOrThrow(
       'long-relax-duration',
@@ -32,6 +34,9 @@ export class SettingsUIController {
     ) as HTMLInputElement;
     this.workDurationInput = dom.getElementByIdOrThrow(
       'work-duration',
+    ) as HTMLInputElement;
+    this.shouldPlaySoundInput = dom.getElementByIdOrThrow(
+      'should-play-sound',
     ) as HTMLInputElement;
     this.settingsForm = dom.getElementByIdOrThrow(
       'settings-form',
@@ -69,13 +74,15 @@ export class SettingsUIController {
     this.longRelaxDurationInput.value = values.longRelaxDuration.toString();
     this.relaxDurationInput.value = values.relaxDuration.toString();
     this.workDurationInput.value = values.workDuration.toString();
+    this.shouldPlaySoundInput.checked = Boolean(values.shouldPlaySound);
   }
 
   getFormValues(): FormValues {
     const formData = new FormData(this.settingsForm);
     const formValues: FormValues = {
       autostart: formData.get('autostart') === 'on',
-      toggleTimerShortcut: formData.get('toggleShortcut')?.toString(),
+      shouldPlaySound: formData.get('should-play-sound') === 'on',
+      toggleTimerShortcut: formData.get('toggle-shortcut')?.toString(),
       longRelaxDuration: parseInt(
         formData.get('long-relax-duration')?.toString() ?? '0',
         10,

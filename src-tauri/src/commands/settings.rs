@@ -11,13 +11,14 @@ use crate::{
   PomodoroState, SettingsState, TimerState, TimerStatePayload, MAIN_WINDOW_LABEL,
 };
 
-#[derive(Serialize, Deserialize, TS)]
+#[derive(Serialize, Deserialize, TS, Debug)]
 #[ts(export)]
 pub struct SettingsPayload {
   pub work_duration_secs: u32,
   pub relax_duration_secs: u32,
   pub long_relax_duration_secs: u32,
   pub toggle_timer_shortcut: Option<String>,
+  pub should_play_sound: Option<bool>,
 }
 
 impl From<Settings> for SettingsPayload {
@@ -27,6 +28,7 @@ impl From<Settings> for SettingsPayload {
       relax_duration_secs: settings.relax_duration.as_secs() as u32,
       work_duration_secs: settings.work_duration.as_secs() as u32,
       toggle_timer_shortcut: settings.toggle_timer_shortcut,
+      should_play_sound: settings.should_play_sound,
     }
   }
 }

@@ -3,13 +3,17 @@
   windows_subsystem = "windows"
 )]
 
+use std::path::PathBuf;
+use std::sync::mpsc;
 use std::sync::{Arc, Mutex, RwLock};
+use std::thread;
 use std::time::Duration;
 
 use commands::settings::*;
 use commands::timer::*;
 use helpers::fs::load_settings;
 use helpers::shortcuts::setup_shortcuts;
+use helpers::sound::SoundPlayer;
 use helpers::timer::create_timer_listener;
 use serde::Serialize;
 use state::{Pomodoro, Settings};
@@ -19,6 +23,7 @@ use ticking_timer::Timer;
 use ts_rs::TS;
 use ui::tray::setup_tray;
 use ui::window::setup_main_window;
+
 mod commands;
 mod helpers;
 mod state;
@@ -43,6 +48,36 @@ pub type TimerState = Arc<Timer>;
 pub type SettingsState = RwLock<Settings>;
 pub type PomodoroState = Mutex<Pomodoro>;
 
+fn create_audio_notification_thread<R: tauri::Runtime>(
+  app_handle: &tauri::AppHandle<R>,
+  timer_end_receiver: mpsc::Receiver<()>,
+) {
+  let bell_audio_path = app_handle
+    .path_resolver()
+    .resolve_resource("resources/audio/bell.mp3")
+    .map(PathBuf::into_os_string)
+    .and_then(|s| s.into_string().ok());
+
+  thread::spawn({
+    let app_handle = app_handle.clone();
+    move || match SoundPlayer::new() {
+      Ok(sound_player) => match bell_audio_path {
+        Some(bell_audio_path) => {
+          for _ in timer_end_receiver {
+            let settings_state = app_handle.state::<SettingsState>();
+            let settings_state = settings_state.read().unwrap();
+            if settings_state.should_play_sound == Some(true) {
+              sound_player.play(bell_audio_path.clone()).unwrap();
+            }
+          }
+        }
+        None => eprintln!("Can't resolve bell sound file path"),
+      },
+      Err(error) => eprintln!("Unable to initialize sound player due to error {:?}", error),
+    }
+  });
+}
+
 fn create_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
   builder
     .menu(tauri::Menu::new())
@@ -61,24 +96,29 @@ fn create_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
       #[cfg(debug_assertions)]
       main_window.open_devtools();
 
+      let (timer_end_sender, timer_end_receiver) = mpsc::sync_channel(1);
+
       let timer = Timer::new(
         Duration::from_millis(100),
-        create_timer_listener(&app_handle),
+        create_timer_listener(&app_handle, timer_end_sender),
       );
+
+      create_audio_notification_thread(&app_handle, timer_end_receiver);
 
       app_handle.manage::<TimerState>(Arc::new(timer));
 
       {
+        let mut work_duration = app.state::<SettingsState>().read().unwrap().work_duration;
         match load_settings(&app_handle) {
           Ok(settings) => {
-            let work_duration = settings.work_duration;
+            work_duration = settings.work_duration;
             *app.state::<SettingsState>().write().unwrap() = settings;
-            app.state::<TimerState>().reset(work_duration).unwrap();
           }
           Err(error) => {
             eprintln!("Failed to load settings with error {:?}", error);
           }
         }
+        app.state::<TimerState>().reset(work_duration).unwrap();
       }
 
       setup_tray(app);

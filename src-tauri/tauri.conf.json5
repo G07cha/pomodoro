@@ -23,6 +23,9 @@
       "shell": {
         "all": false,
         "open": "^https://github.com/G07cha/pomodoro$"
+      },
+      "fs": {
+        "scope": ["$RESOURCE/*"]
       }
     },
     "bundle": {
@@ -34,11 +37,14 @@
       },
       "externalBin": [],
       "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
+        "resources/icons/32x32.png",
+        "resources/icons/128x128.png",
+        "resources/icons/128x128@2x.png",
+        "resources/icons/icon.icns",
+        "resources/icons/icon.ico"
+      ],
+      "resources": [
+        "resources/audio/*"
       ],
       "identifier": "com.g07cha.pomodoro",
       "longDescription": "Beautiful and configurable pomodoro timer right in your tray",
@@ -48,7 +54,6 @@
         "frameworks": [],
         "providerShortName": null,
       },
-      "resources": [],
       "shortDescription": "Pomodoro timer",
       "targets": "all",
       "windows": {
@@ -69,7 +74,7 @@
     // To enable main window transparency
     "macOSPrivateApi": true,
     "systemTray": {
-      "iconPath": "icons/icon.png",
+      "iconPath": "resources/icons/icon.png",
       "iconAsTemplate": true,
       "menuOnLeftClick": true
     }
