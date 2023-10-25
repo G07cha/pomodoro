@@ -18,6 +18,7 @@ pub struct Settings {
   pub relax_duration: Duration,
   pub long_relax_duration: Duration,
   pub toggle_timer_shortcut: Option<String>,
+  pub should_play_sound: Option<bool>,
 }
 
 impl From<SettingsPayload> for Settings {
@@ -27,6 +28,7 @@ impl From<SettingsPayload> for Settings {
       relax_duration: Duration::from_secs(payload.relax_duration_secs.into()),
       work_duration: Duration::from_secs(payload.work_duration_secs.into()),
       toggle_timer_shortcut: payload.toggle_timer_shortcut,
+      should_play_sound: payload.should_play_sound,
     }
   }
 }
@@ -38,6 +40,7 @@ impl Default for Settings {
       relax_duration: Duration::from_secs(60 * 5),
       long_relax_duration: Duration::from_secs(60 * 15),
       toggle_timer_shortcut: None,
+      should_play_sound: Some(false),
     }
   }
 }

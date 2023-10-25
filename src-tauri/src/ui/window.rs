@@ -73,7 +73,7 @@ pub fn setup_settings_window<R: Runtime>(app_handle: &AppHandle<R>) -> Result<Wi
   .title("Settings")
   .visible(false)
   .resizable(false)
-  .inner_size(350., 273.)
+  .inner_size(350., 298.)
   .focused(true)
   .skip_taskbar(true)
   .build()?;

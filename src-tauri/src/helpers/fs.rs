@@ -58,7 +58,8 @@ mod tests {
         work_duration: Duration::from_secs(100),
         relax_duration: Duration::from_secs(50),
         long_relax_duration: Duration::from_secs(70),
-        toggle_timer_shortcut: Some("Ctrl + F".to_string())
+        toggle_timer_shortcut: Some("Ctrl + F".to_string()),
+        should_play_sound: Some(true)
       }
     )
     .is_ok())
@@ -73,6 +74,7 @@ mod tests {
       relax_duration: Duration::from_secs(200),
       long_relax_duration: Duration::from_secs(300),
       toggle_timer_shortcut: Some("Ctrl + A".to_string()),
+      should_play_sound: Some(true),
     };
 
     save_settings(&app_handle, &settings)?;

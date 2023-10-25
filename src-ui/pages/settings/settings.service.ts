@@ -11,6 +11,7 @@ export interface Settings {
   longRelaxDuration: Duration;
   autostart: boolean;
   toggleTimerShortcut?: string;
+  shouldPlaySound: boolean;
 }
 
 export class SettingsService {
@@ -22,7 +23,8 @@ export class SettingsService {
       relaxDuration: Duration.fromSecs(settings.relax_duration_secs),
       longRelaxDuration: Duration.fromSecs(settings.long_relax_duration_secs),
       autostart: await autostart.isEnabled(),
-      toggleTimerShortcut: settings.toggle_timer_shortcut ?? undefined,
+      toggleTimerShortcut: settings.toggle_timer_shortcut ?? '',
+      shouldPlaySound: Boolean(settings.should_play_sound),
     };
   }
 
@@ -32,6 +34,7 @@ export class SettingsService {
       relax_duration_secs: newSettings.relaxDuration.secs,
       long_relax_duration_secs: newSettings.longRelaxDuration.secs,
       toggle_timer_shortcut: newSettings.toggleTimerShortcut || null,
+      should_play_sound: newSettings.shouldPlaySound,
     };
 
     await invoke('set_settings', { newSettings: settings });

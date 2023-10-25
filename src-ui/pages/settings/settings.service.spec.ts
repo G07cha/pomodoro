@@ -22,6 +22,7 @@ describe('Settings service', () => {
       relax_duration_secs: 10,
       work_duration_secs: 100,
       toggle_timer_shortcut: 'Ctrl + C',
+      should_play_sound: false,
     };
     mockCommand('get_settings', response);
     const settingsService = new SettingsService();
@@ -46,6 +47,7 @@ describe('Settings service', () => {
       longRelaxDuration: Duration.fromSecs(20),
       relaxDuration: Duration.fromSecs(15),
       workDuration: Duration.fromSecs(50),
+      shouldPlaySound: true,
     });
 
     expect(setSettingsMock).resolves.toEqual({
@@ -54,6 +56,7 @@ describe('Settings service', () => {
         long_relax_duration_secs: 20,
         relax_duration_secs: 15,
         work_duration_secs: 50,
+        should_play_sound: true,
       },
     });
   });
