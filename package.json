@@ -37,7 +37,7 @@
     "happy-dom": "^13.2.0",
     "less": "^4.2.0",
     "postcss-less": "^6.0.0",
-    "prettier": "^3.1.1",
+    "prettier": "^3.2.4",
     "stylelint": "^16.1.0",
     "stylelint-config-recommended": "^14.0.0",
     "typescript": "^5.3.3",
