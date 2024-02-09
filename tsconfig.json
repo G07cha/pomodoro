@@ -15,8 +15,8 @@
     "noImplicitReturns": true,
     "skipLibCheck": true,
     "paths": {
-      "~bindings/*": ["./src-tauri/bindings/*"],
-    },
+      "~bindings/*": ["./src-tauri/bindings/*"]
+    }
   },
-  "include": ["src-ui", "src-tauri/bindings"],
+  "include": ["src-ui", "src-tauri/bindings"]
 }
