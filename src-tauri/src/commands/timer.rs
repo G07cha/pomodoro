@@ -39,6 +39,40 @@ pub fn reset_timer<R: Runtime>(
   pomodoro_state: State<'_, PomodoroState>,
   settings: State<'_, SettingsState>,
 ) -> Result<(), String> {
+  let pomodoro_state = pomodoro_state.lock().unwrap();
+
+  let new_duration = pomodoro_state.duration(&settings.read().unwrap());
+  timer
+    .reset(new_duration)
+    .map_err(|_| "Failed to reset timer".to_string())?;
+  timer
+    .resume()
+    .map_err(|_| "Failed to resume timer".to_string())?;
+
+  window
+    .emit::<TimerStatePayload>(
+      "timer-state",
+      TimerStatePayload {
+        mode: pomodoro_state.mode,
+        cycle: pomodoro_state.cycles,
+        is_ended: false,
+        duration_secs: new_duration.as_secs() as u32,
+      },
+    )
+    .map_err(|_| "Failed to communicate new state".to_string())?;
+
+  window
+    .emit("timer-running-change", *timer.is_running())
+    .map_err(|_| "Failed to communicate running state".to_string())
+}
+
+#[command]
+pub fn next_timer_cycle<R: Runtime>(
+  window: Window<R>,
+  timer: State<'_, TimerState>,
+  pomodoro_state: State<'_, PomodoroState>,
+  settings: State<'_, SettingsState>,
+) -> Result<(), String> {
   let mut pomodoro_state = pomodoro_state.lock().unwrap();
 
   *pomodoro_state = update_pomodoro_state(&pomodoro_state);

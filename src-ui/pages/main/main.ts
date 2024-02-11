@@ -7,7 +7,7 @@ import {
   disableContextMenu,
 } from '../../utils/dom';
 
-import { TimerIcon, TimerUIController } from './timer.view';
+import { TimerUIController, UIState } from './timer.view';
 import { TimerService } from './timer.service';
 
 theme.followSystemTheme();
@@ -18,8 +18,7 @@ const timerService = new TimerService();
 const timerUI = new TimerUIController();
 let lastTickTime = '';
 
-timerUI.setText('');
-timerUI.showIcon(TimerIcon.Play);
+timerUI.setUIState(UIState.Reset);
 
 timerService.onStart(() => {
   timerUI.setMode(timerService.mode);
@@ -35,23 +34,28 @@ timerService.onTick((duration) => {
 });
 
 timerService.onEnd(() => {
-  timerUI.showIcon(TimerIcon.Play);
-  timerUI.setText('');
-  timerUI.setCycle(0);
-  message('Timer is done', { type: 'info' }).then(() => timerService.reset());
+  timerUI.setUIState(UIState.Reset);
+  message('Timer is done', { type: 'info' }).then(() =>
+    timerService.nextCycle(),
+  );
 });
 
 timerService.onPause(() => {
-  timerUI.showIcon(TimerIcon.Play);
-  timerUI.setText('');
-  timerUI.setCycle(0);
+  timerUI.setUIState(UIState.Paused);
 });
 
 timerService.onResume(() => {
-  timerUI.hideIcon(TimerIcon.Play);
+  timerUI.setUIState(UIState.Running);
   timerUI.setMode(timerService.mode);
   timerUI.setCycle(timerService.cycle % 5);
   timerUI.setText(lastTickTime);
 });
 
-window.addEventListener('click', () => timerService.toggle());
+timerUI.onPlayClick(() => timerService.toggle());
+timerUI.onRestartClick(() => timerService.reset());
+
+window.addEventListener('click', () => {
+  if (timerService.isRunning) {
+    timerService.toggle();
+  }
+});

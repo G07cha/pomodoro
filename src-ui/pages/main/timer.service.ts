@@ -8,6 +8,7 @@ export class TimerService {
   private _mode: TimerMode = 'Work';
   private _cycle = 0;
   private _duration: Duration = new Duration(0);
+  private _isRunning: boolean = false;
 
   constructor() {
     invoke<TimerStatePayload>('get_timer_state').then(
@@ -48,6 +49,7 @@ export class TimerService {
 
   onPause = (listener: () => void) =>
     listen<boolean>('timer-running-change', ({ payload: isRunning }) => {
+      this._isRunning = isRunning;
       if (isRunning === false) {
         listener();
       }
@@ -64,6 +66,8 @@ export class TimerService {
 
   reset = () => invoke('reset_timer');
 
+  nextCycle = () => invoke('next_timer_cycle');
+
   get duration() {
     return this._duration;
   }
@@ -74,5 +78,9 @@ export class TimerService {
 
   get cycle() {
     return this._cycle;
+  }
+
+  get isRunning(): boolean {
+    return this._isRunning;
   }
 }
