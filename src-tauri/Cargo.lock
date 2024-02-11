@@ -108,6 +108,7 @@ version = "3.4.2"
 dependencies = [
  "anyhow",
  "cargo-bump",
+ "cocoa 0.25.0",
  "rodio",
  "serde",
  "serde_json",

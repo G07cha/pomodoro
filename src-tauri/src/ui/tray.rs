@@ -1,3 +1,7 @@
+use cocoa::{
+  appkit::{NSWindow, NSWindowCollectionBehavior},
+  base::id,
+};
 use tauri::{
   api::dialog, App, AppHandle, CustomMenuItem, Manager, PhysicalPosition, Position, Runtime,
   SystemTray, SystemTrayEvent, SystemTrayMenu, WindowEvent,
@@ -23,19 +27,35 @@ fn create_window_event_handler<R: Runtime>(app_handle: AppHandle<R>) -> impl Fn(
         let tray_size = size.width as i32;
         let window_size = main_window.outer_size().unwrap();
         let window_width = window_size.width as i32;
-        let window_height = window_size.height as i32;
 
         let tray_icon_x = position.x as i32;
         let tray_y = position.y as i32;
+        #[cfg(target_os = "windows")]
+        {
+          let window_height = window_size.height as i32;
+          let window_y = tray_y - window_height;
+        }
+        #[cfg(target_os = "macos")]
+        let window_y = tray_y;
 
         let window_position = Position::Physical(PhysicalPosition {
           x: (tray_icon_x + (tray_size / 2)) - (window_width / 2),
-          y: tray_y - window_height,
+          y: window_y,
         });
-
         main_window.set_position(window_position).unwrap();
         main_window.show().unwrap();
         main_window.set_focus().unwrap();
+
+        #[cfg(target_os = "macos")]
+        {
+          let ns_window = main_window.ns_window().unwrap() as id;
+          unsafe {
+            let mut collection_behavior = ns_window.collectionBehavior();
+            collection_behavior |=
+              NSWindowCollectionBehavior::NSWindowCollectionBehaviorCanJoinAllSpaces;
+            ns_window.setLevel_(10000);
+          }
+        }
       }
     }
     SystemTrayEvent::MenuItemClick { id, .. } => match id.as_str() {

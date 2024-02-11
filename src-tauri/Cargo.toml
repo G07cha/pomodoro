@@ -23,6 +23,7 @@ ts-rs = "7.1.1"
 ticking-timer = { git = "https://github.com/g07cha/ticking-timer", branch = "main" }
 anyhow = "1.0.79"
 rodio = "0.17.3"
+cocoa = "0.25.0"
 
 [dev-dependencies]
 cargo-bump = "1.1.0"
