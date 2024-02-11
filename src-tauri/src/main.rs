@@ -132,6 +132,7 @@ fn create_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
     .invoke_handler(tauri::generate_handler![
       toggle_timer,
       reset_timer,
+      next_timer_cycle,
       get_timer_state,
       get_settings,
       set_settings
