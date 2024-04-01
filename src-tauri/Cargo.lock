@@ -4060,7 +4060,7 @@ dependencies = [
 [[package]]
 name = "ticking-timer"
 version = "0.2.0"
-source = "git+https://github.com/g07cha/ticking-timer?branch=main#3e6b45929c24f054c1617846051cd7e19636c1b0"
+source = "git+https://github.com/g07cha/ticking-timer?branch=main#e2f60085dbc95308f1b3ae2a7e0e27d4f3d77233"
 dependencies = [
  "crossbeam-channel",
  "thiserror",
