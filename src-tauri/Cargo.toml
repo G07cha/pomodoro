@@ -6,7 +6,6 @@ authors = ["G07cha"]
 license = "MIT"
 default-run = "app"
 edition = "2021"
-rust-version = "1.65"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -18,7 +17,7 @@ serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.6.1", features = [ "shell-open", "test", "global-shortcut", "config-json5", "dialog-message", "macos-private-api", "system-tray", "updater", "window-close"] }
 window-vibrancy = "0.4.3"
-tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
+tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 ts-rs = "8.0.0"
 ticking-timer = { git = "https://github.com/g07cha/ticking-timer", branch = "main" }
 anyhow = "1.0.81"
