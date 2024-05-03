@@ -45,7 +45,7 @@
     "vitest": "^1.5.2"
   },
   "dependencies": {
-    "@tauri-apps/api": "^1.5.3",
+    "@tauri-apps/api": "^1.5.4",
     "tauri-plugin-autostart-api": "github:tauri-apps/tauri-plugin-autostart#v1"
   }
 }
