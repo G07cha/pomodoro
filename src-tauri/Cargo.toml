@@ -15,7 +15,7 @@ tauri-build = { version = "1.5.0", features = ["config-json5"] }
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.6.2", features = [ "shell-open", "test", "global-shortcut", "config-json5", "dialog-message", "macos-private-api", "system-tray", "updater", "window-close"] }
+tauri = { version = "1.6.6", features = [ "shell-open", "test", "global-shortcut", "config-json5", "dialog-message", "macos-private-api", "system-tray", "updater", "window-close"] }
 window-vibrancy = "0.4.3"
 tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 ts-rs = "8.1.0"
