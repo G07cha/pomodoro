@@ -3890,7 +3890,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-autostart"
 version = "0.0.0"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v1#76b0f657d1ce0eb273f5b31b6ddf056c7a185d0b"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v1#6ca80db9ac3ebd4031968f50a85f7df524d641a3"
 dependencies = [
  "auto-launch",
  "log",
