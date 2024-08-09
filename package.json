@@ -41,7 +41,7 @@
     "stylelint": "^16.8.1",
     "stylelint-config-recommended": "^14.0.1",
     "typescript": "^5.5.4",
-    "vite": "^5.3.5",
+    "vite": "^5.4.0",
     "vitest": "^2.0.5"
   },
   "dependencies": {
