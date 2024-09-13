@@ -42,7 +42,7 @@
     "stylelint-config-recommended": "^14.0.1",
     "typescript": "^5.5.4",
     "vite": "^5.4.2",
-    "vitest": "^2.0.5"
+    "vitest": "^2.1.0"
   },
   "dependencies": {
     "@tauri-apps/api": "^1.6.0",
