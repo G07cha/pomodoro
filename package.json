@@ -31,7 +31,7 @@
     "@tauri-apps/cli": "^1.6.2",
     "@typescript-eslint/eslint-plugin": "^8.6.0",
     "@typescript-eslint/parser": "^8.6.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.10.0",
     "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-import": "^2.30.0",
     "happy-dom": "^15.7.4",
