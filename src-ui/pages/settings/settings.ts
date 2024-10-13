@@ -1,5 +1,5 @@
-import { appWindow } from '@tauri-apps/api/window';
-import { message } from '@tauri-apps/api/dialog';
+import { message } from '@tauri-apps/plugin-dialog';
+import { getCurrentWebview } from '@tauri-apps/api/webview';
 
 import * as theme from '../../utils/theme';
 import { Duration } from '../../utils/duration';
@@ -8,7 +8,7 @@ import { disableContextMenu } from '../../utils/dom';
 import { SettingsUIController } from './settings.view';
 import { Settings, SettingsService } from './settings.service';
 
-appWindow.emit('window_loaded');
+const webview = getCurrentWebview();
 
 theme.followSystemTheme();
 disableContextMenu();
@@ -24,10 +24,11 @@ settingsUI.setFormValues({
   longRelaxDuration: settings.longRelaxDuration.mins,
 });
 
-appWindow.onCloseRequested(async () => {
+webview.window.onCloseRequested(async () => {
   const formValues = settingsUI.getFormValues();
   const newSettings: Settings = {
     ...settings,
+    autostart: formValues.autostart,
     workDuration: Duration.fromMins(formValues.workDuration),
     relaxDuration: Duration.fromMins(formValues.relaxDuration),
     longRelaxDuration: Duration.fromMins(formValues.longRelaxDuration),
@@ -39,9 +40,9 @@ appWindow.onCloseRequested(async () => {
     try {
       await settingsService.setSettings(newSettings);
     } catch (error) {
-      message(`${error}`, { type: 'error', title: 'Unable to save settings' });
+      message(`${error}`, { kind: 'error', title: 'Unable to save settings' });
     }
   }
 
-  appWindow.close();
+  webview.window.hide();
 });

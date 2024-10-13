@@ -10,18 +10,23 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "1.5.5", features = ["config-json5"] }
+tauri-build = { version = "2", features = ["config-json5"] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.8.0", features = [ "shell-open", "test", "global-shortcut", "config-json5", "dialog-message", "macos-private-api", "system-tray", "updater", "window-close"] }
-window-vibrancy = "0.4.3"
-tauri-plugin-autostart = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri = { version = "2", features = [ "test", "config-json5", "macos-private-api", "tray-icon", "image-png"] }
+window-vibrancy = "0.5.2"
+tauri-plugin-autostart = { version = "2" }
 ts-rs = "10.0.0"
 ticking-timer = { git = "https://github.com/g07cha/ticking-timer", branch = "main" }
 anyhow = "1.0.89"
 rodio = "0.17.3"
+tauri-plugin-fs = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-shell = "2"
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-positioner = { version = "2.0.0", features = ["tray-icon"] }
 
 [dev-dependencies]
 cargo-bump = "1.1.0"
@@ -41,3 +46,7 @@ codegen-units = 1 # Compile crates one after another so the compiler can optimiz
 lto = true # Enables link to optimizations
 opt-level = "s" # Optimize for binary size
 strip = true # Remove debug symbols
+
+[target."cfg(not(any(target_os = \"android\", target_os = \"ios\")))".dependencies]
+tauri-plugin-autostart = "2"
+tauri-plugin-updater = "2"

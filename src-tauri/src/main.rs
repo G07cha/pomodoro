@@ -3,12 +3,12 @@
   windows_subsystem = "windows"
 )]
 
-use std::path::PathBuf;
 use std::sync::mpsc;
 use std::sync::{Arc, Mutex, RwLock};
 use std::thread;
 use std::time::Duration;
 
+use anyhow::Result;
 use commands::settings::*;
 use commands::timer::*;
 use helpers::fs::load_settings;
@@ -51,36 +51,34 @@ pub type PomodoroState = Mutex<Pomodoro>;
 fn create_audio_notification_thread<R: tauri::Runtime>(
   app_handle: &tauri::AppHandle<R>,
   timer_end_receiver: mpsc::Receiver<()>,
-) {
+) -> Result<()> {
   let bell_audio_path = app_handle
-    .path_resolver()
-    .resolve_resource("resources/audio/bell.mp3")
-    .map(PathBuf::into_os_string)
-    .and_then(|s| s.into_string().ok());
+    .path()
+    .resolve("audio/bell.mp3", tauri::path::BaseDirectory::Resource)?
+    .to_string_lossy()
+    .into_owned();
 
   thread::spawn({
     let app_handle = app_handle.clone();
     move || match SoundPlayer::new() {
-      Ok(sound_player) => match bell_audio_path {
-        Some(bell_audio_path) => {
-          for _ in timer_end_receiver {
-            let settings_state = app_handle.state::<SettingsState>();
-            let settings_state = settings_state.read().unwrap();
-            if settings_state.should_play_sound == Some(true) {
-              sound_player.play(bell_audio_path.clone()).unwrap();
-            }
+      Ok(sound_player) => {
+        for _ in timer_end_receiver {
+          let settings_state = app_handle.state::<SettingsState>();
+          let settings_state = settings_state.read().unwrap();
+          if settings_state.should_play_sound == Some(true) {
+            sound_player.play(&bell_audio_path).unwrap();
           }
         }
-        None => eprintln!("Can't resolve bell sound file path"),
-      },
+      }
       Err(error) => eprintln!("Unable to initialize sound player due to error {:?}", error),
     }
   });
+
+  Ok(())
 }
 
 fn create_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
   builder
-    .menu(tauri::Menu::new())
     .manage::<SettingsState>(RwLock::new(Settings::default()))
     .manage::<PomodoroState>(Mutex::new(Pomodoro {
       cycles: 0,
@@ -88,28 +86,36 @@ fn create_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
     }))
     .setup(|app| {
       let app_handle = app.handle();
-      let main_window = setup_main_window(&app_handle).unwrap();
+      let main_window = setup_main_window(app_handle).unwrap();
 
       #[cfg(not(test))]
       crate::ui::window::decorate_window(&main_window);
 
       #[cfg(debug_assertions)]
-      main_window.open_devtools();
+      main_window
+        .get_webview_window(MAIN_WINDOW_LABEL)
+        .expect("failed to get webview window")
+        .open_devtools();
+
+      #[cfg(target_os = "macos")]
+      app_handle
+        .set_activation_policy(tauri::ActivationPolicy::Accessory)
+        .unwrap();
 
       let (timer_end_sender, timer_end_receiver) = mpsc::sync_channel(1);
 
       let timer = Timer::new(
         Duration::from_millis(100),
-        create_timer_listener(&app_handle, timer_end_sender),
+        create_timer_listener(app_handle, timer_end_sender),
       );
 
-      create_audio_notification_thread(&app_handle, timer_end_receiver);
+      create_audio_notification_thread(app_handle, timer_end_receiver).unwrap();
 
       app_handle.manage::<TimerState>(Arc::new(timer));
 
       {
         let mut work_duration = app.state::<SettingsState>().read().unwrap().work_duration;
-        match load_settings(&app_handle) {
+        match load_settings(app_handle) {
           Ok(settings) => {
             work_duration = settings.work_duration;
             *app.state::<SettingsState>().write().unwrap() = settings;
@@ -121,14 +127,10 @@ fn create_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
         app.state::<TimerState>().reset(work_duration).unwrap();
       }
 
-      setup_tray(app);
+      setup_tray(app).unwrap();
 
       Ok(())
     })
-    .plugin(tauri_plugin_autostart::init(
-      MacosLauncher::LaunchAgent,
-      None,
-    ))
     .invoke_handler(tauri::generate_handler![
       toggle_timer,
       reset_timer,
@@ -142,7 +144,20 @@ fn create_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
 }
 
 fn main() {
-  let app = create_app(tauri::Builder::default());
+  let app = create_app(
+    tauri::Builder::default()
+      .plugin(tauri_plugin_autostart::init(
+        MacosLauncher::LaunchAgent,
+        None,
+      ))
+      .plugin(tauri_plugin_shell::init())
+      .plugin(tauri_plugin_dialog::init())
+      .plugin(tauri_plugin_fs::init())
+      .plugin(tauri_plugin_global_shortcut::Builder::default().build())
+      .plugin(tauri_plugin_positioner::init())
+      .plugin(tauri_plugin_updater::Builder::new().build()),
+  );
+
   app.run(move |app_handle, e| {
     if matches!(e, RunEvent::Ready) {
       setup_shortcuts(app_handle);
@@ -153,11 +168,15 @@ fn main() {
 #[cfg(test)]
 mod tests {
   use super::*;
-  use tauri::Manager;
+  use tauri::{Manager, WebviewWindowBuilder};
 
   #[test]
-  fn it_creates_main_window() {
+  fn it_creates_main_window() -> Result<()> {
     let app = create_app(tauri::test::mock_builder());
-    assert!(app.get_window(MAIN_WINDOW_LABEL).is_some());
+    WebviewWindowBuilder::new(&app, MAIN_WINDOW_LABEL, Default::default()).build()?;
+
+    assert!(app.get_webview_window(MAIN_WINDOW_LABEL).is_some());
+
+    Ok(())
   }
 }

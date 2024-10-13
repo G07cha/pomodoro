@@ -1,4 +1,4 @@
-import { message } from '@tauri-apps/api/dialog';
+import { message } from '@tauri-apps/plugin-dialog';
 
 import * as theme from '../../utils/theme';
 import * as time from '../../utils/time';
@@ -35,7 +35,7 @@ timerService.onTick((duration) => {
 
 timerService.onEnd(() => {
   timerUI.setUIState(UIState.Reset);
-  message('Timer is done', { type: 'info' }).then(() =>
+  message('Timer is done', { kind: 'info' }).then(() =>
     timerService.nextCycle(),
   );
 });

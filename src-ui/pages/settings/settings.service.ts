@@ -1,4 +1,4 @@
-import * as autostart from 'tauri-plugin-autostart-api';
+import * as autostart from '@tauri-apps/plugin-autostart';
 
 import { SettingsPayload } from '~bindings/SettingsPayload';
 
@@ -39,9 +39,10 @@ export class SettingsService {
 
     await invoke('set_settings', { newSettings: settings });
 
+    console.log('setings are set');
     if (newSettings.autostart !== (await autostart.isEnabled())) {
       if (newSettings.autostart) {
-        await autostart.enable();
+        await autostart.enable().catch(console.log.bind(console));
       } else {
         await autostart.disable();
       }

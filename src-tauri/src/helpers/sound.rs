@@ -1,4 +1,4 @@
-use anyhow::{Context, Result};
+use anyhow::Result;
 use rodio::OutputStreamHandle;
 use rodio::{Decoder, OutputStream, Source};
 use std::fmt::Display;
@@ -24,8 +24,7 @@ impl SoundPlayer {
   }
 
   pub fn play<P: AsRef<Path> + Display>(&self, path: P) -> Result<()> {
-    let file =
-      BufReader::new(File::open(&path).with_context(|| format!("Failed to open '{}' file", path))?);
+    let file = BufReader::new(File::open(path)?);
     let source = Decoder::new(file)?;
     self.stream_handle.play_raw(source.convert_samples())?;
 

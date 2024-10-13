@@ -1,7 +1,7 @@
 use anyhow::{Context, Result};
 use std::fs;
 
-use tauri::{AppHandle, Runtime};
+use tauri::{AppHandle, Manager, Runtime};
 
 use crate::state::Settings;
 
@@ -9,7 +9,7 @@ const SETTINGS_FILENAME: &str = "settings.json";
 
 pub fn load_settings<R: Runtime>(handle: &AppHandle<R>) -> Result<Settings> {
   let app_data_dir = handle
-    .path_resolver()
+    .path()
     .app_data_dir()
     .context("Failed to resolve app data dir")?;
   let settings_path = app_data_dir.join(SETTINGS_FILENAME);
@@ -23,7 +23,7 @@ pub fn load_settings<R: Runtime>(handle: &AppHandle<R>) -> Result<Settings> {
 
 pub fn save_settings<R: Runtime>(handle: &AppHandle<R>, new_settings: &Settings) -> Result<()> {
   let app_data_dir = handle
-    .path_resolver()
+    .path()
     .app_data_dir()
     .context("Failed to resolve app data dir")?;
   let settings_path = app_data_dir.join(SETTINGS_FILENAME);
@@ -50,7 +50,8 @@ mod tests {
   #[serial(fs)]
   #[test]
   fn it_saves_settings() {
-    let app_handle = test::mock_app().app_handle();
+    let app = test::mock_app();
+    let app_handle = app.app_handle();
 
     assert!(save_settings(
       &app_handle,
@@ -68,7 +69,8 @@ mod tests {
   #[serial(fs)]
   #[test]
   fn it_loads_settings() -> Result<()> {
-    let app_handle = test::mock_app().app_handle();
+    let app = test::mock_app();
+    let app_handle = app.app_handle();
     let settings = Settings {
       work_duration: Duration::from_secs(100),
       relax_duration: Duration::from_secs(200),

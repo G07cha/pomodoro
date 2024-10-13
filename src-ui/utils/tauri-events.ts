@@ -4,7 +4,7 @@ import {
   EventCallback,
   UnlistenFn,
 } from '@tauri-apps/api/event';
-import { invoke as tauriInvoke, InvokeArgs } from '@tauri-apps/api/tauri';
+import { invoke as tauriInvoke, InvokeArgs } from '@tauri-apps/api/core';
 
 import { createLogger } from './logging';
 
