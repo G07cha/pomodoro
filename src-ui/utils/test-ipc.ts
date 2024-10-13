@@ -12,35 +12,34 @@ const pendingCommands: Record<
   }[]
 > = {};
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type MockIPCResponse = Promise<any>;
+
 export const setupIPCMock = () => {
   mockIPC((command, args) => {
     if (
-      'message' in args &&
-      typeof args.message === 'object' &&
-      args.message !== null &&
-      'cmd' in args.message &&
-      'handler' in args.message &&
-      'event' in args.message &&
-      typeof args.message.event === 'string' &&
-      args.message?.cmd === 'listen'
+      args &&
+      'handler' in args &&
+      typeof args.event === 'string' &&
+      command === 'plugin:event|listen'
     ) {
-      const eventCallbackId = `_${args.message.handler}` as keyof typeof window;
+      const eventCallbackId = `_${args.handler}` as keyof typeof window;
       const listener: (payload: unknown) => void = window[eventCallbackId];
-      ipcListeners[args.message.event] = [
-        ...(ipcListeners[args.message.event] ?? []),
+      ipcListeners[args.event] = [
+        ...(ipcListeners[args.event] ?? []),
         listener,
       ];
-      return;
+      return Promise.resolve() as MockIPCResponse;
     }
 
     const matchingHandler = pendingCommands[command]?.pop();
 
     if (matchingHandler) {
       setTimeout(() => matchingHandler?.onComplete(args));
-      return matchingHandler?.response;
+      return Promise.resolve(matchingHandler?.response) as MockIPCResponse;
     }
 
-    return;
+    return Promise.resolve() as MockIPCResponse;
   });
 };
 

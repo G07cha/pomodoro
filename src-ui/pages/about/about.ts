@@ -1,9 +1,10 @@
-import { appWindow } from '@tauri-apps/api/window';
+import { getVersion } from '@tauri-apps/api/app';
 
 import * as theme from '../../utils/theme';
-import { disableContextMenu } from '../../utils/dom';
-
-appWindow.emit('window_loaded');
+import { disableContextMenu, getElementByIdOrThrow } from '../../utils/dom';
 
 theme.followSystemTheme();
 disableContextMenu();
+
+const versionElement = getElementByIdOrThrow('version');
+versionElement.innerText = await getVersion();

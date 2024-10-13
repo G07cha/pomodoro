@@ -1,82 +1,64 @@
 {
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "build": {
     "beforeBuildCommand": "npm run build:front",
     "beforeDevCommand": "npm run start:front",
-    "devPath": "http://localhost:5173",
-    "distDir": "../src-ui/dist"
+    "frontendDist": "../src-ui/dist",
+    "devUrl": "http://localhost:5173"
   },
-  "package": {
-    "productName": "Pomodoro",
-    "version": "../package.json"
-  },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "window": {
-        // To catch onCloseRequested event in settings window
-        "close": true
-      },
-      "dialog": {
-        "all": false,
-        "message": true
-      },
-      "shell": {
-        "all": false,
-        "open": "^https://github.com/G07cha/pomodoro$"
-      },
-      "fs": {
-        "scope": ["$RESOURCE/*"]
-      }
+  "bundle": {
+    "active": true,
+    "category": "Productivity",
+    "copyright": "",
+    "targets": "all",
+    "externalBin": [],
+    "icon": [
+      "resources/icons/32x32.png",
+      "resources/icons/128x128.png",
+      "resources/icons/128x128@2x.png",
+      "resources/icons/icon.icns",
+      "resources/icons/icon.ico"
+    ],
+    "resources": ["resources/audio/*"],
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": ""
     },
-    "bundle": {
-      "active": true,
-      "category": "Productivity",
-      "copyright": "",
+    "longDescription": "Beautiful and configurable pomodoro timer right in your tray",
+    "macOS": {
+      "entitlements": null,
+      "exceptionDomain": "",
+      "frameworks": [],
+      "providerShortName": null
+    },
+    "shortDescription": "Pomodoro timer",
+    "linux": {
       "deb": {
         "depends": []
-      },
-      "externalBin": [],
-      "icon": [
-        "resources/icons/32x32.png",
-        "resources/icons/128x128.png",
-        "resources/icons/128x128@2x.png",
-        "resources/icons/icon.icns",
-        "resources/icons/icon.ico"
-      ],
-      "resources": [
-        "resources/audio/*"
-      ],
-      "identifier": "com.g07cha.pomodoro",
-      "longDescription": "Beautiful and configurable pomodoro timer right in your tray",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-      },
-      "shortDescription": "Pomodoro timer",
-      "targets": "all",
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
       }
     },
-    "security": {
-      "csp": "Content-Security-Policy: default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; frame-ancestors 'self'; form-action 'self';"
-    },
+    "createUpdaterArtifacts": "v1Compatible"
+  },
+  "productName": "Pomodoro",
+  "mainBinaryName": "Pomodoro",
+  "version": "../package.json",
+  "identifier": "com.g07cha.pomodoro",
+  "plugins": {
     "updater": {
-      "active": true,
-      "dialog": true,
-      "endpoints": ["https://github.com/G07cha/pomodoro/releases/latest/download/latest.json"],
+      "endpoints": [
+        "https://github.com/G07cha/pomodoro/releases/latest/download/latest.json"
+      ],
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDM1M0VBNjI2OUMxM0M3RDUKUldUVnh4T2NKcVkrTldqQVJQWVhsRm9iTmdWZUFJK1FmM0Zpcm9nZGQ2NzgxQVRWQlRtSkxpUW0K"
-    },
-    // To enable main window transparency
-    "macOSPrivateApi": true,
-    "systemTray": {
-      "iconPath": "resources/icons/icon.png",
-      "iconAsTemplate": true,
-      "menuOnLeftClick": true
     }
+  },
+  "app": {
+    "macOSPrivateApi": true,
+    "security": {
+      "csp": "Content-Security-Policy: default-src 'none'; script-src 'self'; connect-src ipc: http://ipc.localhost 'self'; img-src 'self'; style-src 'self'; frame-ancestors 'self'; form-action 'self';",
+      "pattern": {
+        "use": "brownfield"
+      }
+    },
   }
 }

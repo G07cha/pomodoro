@@ -1,4 +1,4 @@
-use tauri::{command, Runtime, State, Window};
+use tauri::{command, Emitter, Runtime, State, Window};
 
 use crate::{
   state::{Pomodoro, TimerMode},
@@ -62,8 +62,10 @@ pub fn reset_timer<R: Runtime>(
     .map_err(|_| "Failed to communicate new state".to_string())?;
 
   window
-    .emit("timer-running-change", *timer.is_running())
-    .map_err(|_| "Failed to communicate running state".to_string())
+    .emit("timer-running-change", true)
+    .map_err(|_| "Failed to communicate running state".to_string())?;
+
+  Ok(())
 }
 
 #[command]

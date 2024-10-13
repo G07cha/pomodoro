@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use tauri::{command, AppHandle, Manager, Runtime, State};
+use tauri::{command, AppHandle, Emitter, EventTarget, Runtime, State};
 use ts_rs::TS;
 
 use crate::{
@@ -58,9 +58,8 @@ pub fn set_settings<R: Runtime>(
   timer.reset(settings.work_duration).unwrap();
 
   app_handle
-    .get_window(MAIN_WINDOW_LABEL)
-    .expect("Cannot find main window")
-    .emit(
+    .emit_to(
+      EventTarget::webview_window(MAIN_WINDOW_LABEL),
       "timer-state",
       TimerStatePayload {
         cycle: pomodoro_state.lock().unwrap().cycles,
