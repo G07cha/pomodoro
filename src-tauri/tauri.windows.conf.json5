@@ -1,7 +1,7 @@
 {
   "app": {
     "trayIcon": {
-      "iconPath": "resources/icons/32x32-inverted.png"
+      "iconPath": "resources/icons/32x32-inverted-outlined.png"
     }
   }
 }
