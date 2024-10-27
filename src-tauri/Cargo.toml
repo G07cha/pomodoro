@@ -20,7 +20,7 @@ window-vibrancy = "0.5.2"
 tauri-plugin-autostart = { version = "2" }
 ts-rs = "10.0.0"
 ticking-timer = { git = "https://github.com/g07cha/ticking-timer", branch = "main" }
-anyhow = "1.0.89"
+anyhow = "1.0.91"
 rodio = "0.19.0"
 tauri-plugin-fs = "2"
 tauri-plugin-dialog = "2"
