@@ -88,9 +88,6 @@ fn create_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
       let app_handle = app.handle();
       let main_window = setup_main_window(app_handle).unwrap();
 
-      #[cfg(not(test))]
-      crate::ui::window::decorate_window(&main_window);
-
       #[cfg(debug_assertions)]
       main_window
         .get_webview_window(MAIN_WINDOW_LABEL)
@@ -155,6 +152,7 @@ fn main() {
       .plugin(tauri_plugin_fs::init())
       .plugin(tauri_plugin_global_shortcut::Builder::default().build())
       .plugin(tauri_plugin_positioner::init())
+      .plugin(tauri_nspanel::init())
       .plugin(tauri_plugin_updater::Builder::new().build()),
   );
 
