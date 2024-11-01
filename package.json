@@ -28,7 +28,7 @@
     "tauri": "tauri"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.1.1",
+    "@eslint/compat": "^1.2.2",
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.11.1",
     "@tauri-apps/cli": "^2.0.4",
