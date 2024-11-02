@@ -141,20 +141,22 @@ fn create_app<R: tauri::Runtime>(builder: tauri::Builder<R>) -> tauri::App<R> {
 }
 
 fn main() {
-  let app = create_app(
-    tauri::Builder::default()
-      .plugin(tauri_plugin_autostart::init(
-        MacosLauncher::LaunchAgent,
-        None,
-      ))
-      .plugin(tauri_plugin_shell::init())
-      .plugin(tauri_plugin_dialog::init())
-      .plugin(tauri_plugin_fs::init())
-      .plugin(tauri_plugin_global_shortcut::Builder::default().build())
-      .plugin(tauri_plugin_positioner::init())
-      .plugin(tauri_nspanel::init())
-      .plugin(tauri_plugin_updater::Builder::new().build()),
-  );
+  let builder = tauri::Builder::default()
+    .plugin(tauri_plugin_autostart::init(
+      MacosLauncher::LaunchAgent,
+      None,
+    ))
+    .plugin(tauri_plugin_shell::init())
+    .plugin(tauri_plugin_dialog::init())
+    .plugin(tauri_plugin_fs::init())
+    .plugin(tauri_plugin_global_shortcut::Builder::default().build())
+    .plugin(tauri_plugin_positioner::init())
+    .plugin(tauri_plugin_updater::Builder::new().build());
+
+  #[cfg(target_os = "macos")]
+  let builder = builder.plugin(tauri_nspanel::init());
+
+  let app = create_app(builder);
 
   app.run(move |app_handle, e| {
     if matches!(e, RunEvent::Ready) {

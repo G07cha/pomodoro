@@ -48,15 +48,17 @@ fn handle_menu_event<R: Runtime>(app_handle: &AppHandle<R>, event: MenuEvent) {
                 .dialog()
                 .message("You are already using the latest version of Pomodoro!")
                 .kind(MessageDialogKind::Info)
-                .title("The app is up-to-date");
+                .title("The app is up-to-date")
+                .show(|_| {});
             }
           }
-          Err(_) => {
+          Err(err) => {
             handle
               .dialog()
-              .message("You are already using the latest version of Pomodoro!")
+              .message(err.to_string())
               .kind(MessageDialogKind::Error)
-              .title("Failed to retrieve update");
+              .title("Failed to retrieve update")
+              .show(|_| {});
           }
         }
       });
@@ -173,10 +175,14 @@ pub fn setup_tray<R: Runtime>(app: &mut App<R>) -> Result<()> {
 
   let tray = TrayIconBuilder::with_id(TRAY_ID)
     .menu(&menu)
-    .icon(app.default_window_icon().unwrap().clone());
+    .icon(app.default_window_icon().unwrap().clone())
+    .menu_on_left_click(false)
+    .icon_as_template(true);
 
-  #[cfg(target_os = "macos")]
-  let tray = tray.menu_on_left_click(false).icon_as_template(true);
+  #[cfg(target_os = "windows")]
+  let tray = tray.icon(tauri::include_image!(
+    "resources/icons/128x128-inverted-outlined.png"
+  ));
 
   tray
     .on_menu_event(handle_menu_event)

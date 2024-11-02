@@ -3,8 +3,6 @@ use tauri::{AppHandle, Runtime};
 use tauri_plugin_updater::UpdaterExt;
 
 pub async fn update<R: Runtime>(app: &AppHandle<R>) -> Result<bool> {
-  println!("checking for updates");
-
   if let Some(update) = app.updater()?.check().await? {
     let mut downloaded = 0;
 
