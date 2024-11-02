@@ -15,11 +15,13 @@ To install the application you can grab the installer for your platform from [th
 ### Prerequisites
 
 - Node.js (preferably installed via [nvm](https://github.com/nvm-sh/nvm) to match local version)
-- [Tauri prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites)
+- [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/)
 
 ```bash
 npm install
 ```
+
+### Building
 
 To run full app execute the following command:
 
@@ -34,6 +36,22 @@ TAURI_PRIVATE_KEY=test npm run build
 ```
 
 It will throw an error `Error invalid utf-8 sequence of 1 bytes from index 0` in the end due to mismatch in updater private key but will create binaries and installers in `src-tauri/target/release/bundle`.
+
+## Release
+
+To release a new version you'll need to have `cargo-bump` package installed:
+
+```bash
+cargo install cargo-bump
+```
+
+Afterwards you can bump the npm package version with the following command which will also bump the Cargo version:
+
+```bash
+npm version (patch|minor|major)
+```
+
+And then push it along with the tags to the main branch. Github Actions will create a new draft release and populate it with compiled binaries.
 
 ## License
 
