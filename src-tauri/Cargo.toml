@@ -26,7 +26,7 @@ tauri-plugin-fs = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-shell = "2"
 tauri-plugin-global-shortcut = "2"
-tauri-plugin-positioner = { version = "2.0.0", features = ["tray-icon"] }
+tauri-plugin-positioner = { version = "2.0.2", features = ["tray-icon"] }
 tauri-nspanel = { git = "https://github.com/ahkohd/tauri-nspanel", branch = "v2" }
 monitor = { git = "https://github.com/ahkohd/tauri-toolkit", branch = "v2" }
 
