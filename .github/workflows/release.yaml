@@ -32,6 +32,14 @@ jobs:
         uses: ./.github/actions/setup-env
       - name: Add target
         run: rustup target add ${{ matrix.platform.target }}
+      - uses: apple-actions/import-codesign-certs@v2
+        if: startsWith(matrix.platform.target, 'aarch64-apple-darwin') || startsWith(matrix.platform.target, 'x86_64-apple-darwin')
+        with:
+          p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
+          p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+      - name: Verify certificate
+        if: startsWith(matrix.platform.target, 'aarch64-apple-darwin') || startsWith(matrix.platform.target, 'x86_64-apple-darwin')
+        run: security find-identity -v -p codesigning ${{ runner.temp }}/build.keychain
       - name: Create release
         uses: tauri-apps/tauri-action@v0
         with:
@@ -44,5 +52,5 @@ jobs:
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_UPDATER_PRIVATE_KEY }}
-          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_UPDATER_PASSWORD }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_UPDATER_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_UPDATER_PASSWORD }}
