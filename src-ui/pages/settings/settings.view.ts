@@ -83,15 +83,15 @@ export class SettingsUIController {
       autostart: formData.get('autostart') === 'on',
       shouldPlaySound: formData.get('should-play-sound') === 'on',
       toggleTimerShortcut: formData.get('toggle-shortcut')?.toString(),
-      longRelaxDuration: parseInt(
+      longRelaxDuration: Number.parseInt(
         formData.get('long-relax-duration')?.toString() ?? '0',
         10,
       ),
-      relaxDuration: parseInt(
+      relaxDuration: Number.parseInt(
         formData.get('relax-duration')?.toString() ?? '0',
         10,
       ),
-      workDuration: parseInt(
+      workDuration: Number.parseInt(
         formData.get('work-duration')?.toString() ?? '0',
         10,
       ),

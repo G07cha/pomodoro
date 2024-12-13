@@ -1,4 +1,4 @@
-import { Duration } from './duration';
+import type { Duration } from './duration';
 
 /**
  * @param timeSecs elapsed time in seconds

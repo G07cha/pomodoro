@@ -1,4 +1,4 @@
-import { TimerMode } from '../../../src-tauri/bindings/TimerMode';
+import type { TimerMode } from '../../../src-tauri/bindings/TimerMode';
 import * as dom from '../../utils/dom';
 import { assertType } from '../../utils/type';
 
@@ -8,9 +8,9 @@ export enum TimerIcon {
 }
 
 export enum UIState {
-  Running,
-  Paused,
-  Reset,
+  Running = 0,
+  Paused = 1,
+  Reset = 2,
 }
 
 export class TimerUIController {

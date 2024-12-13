@@ -1,7 +1,7 @@
-import { expect, test, describe } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
-import { formatTime } from './time';
 import { Duration } from './duration';
+import { formatTime } from './time';
 
 describe('formatTime', () => {
   test.each([

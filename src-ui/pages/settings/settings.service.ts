@@ -1,6 +1,6 @@
 import * as autostart from '@tauri-apps/plugin-autostart';
 
-import { SettingsPayload } from '~bindings/SettingsPayload';
+import type { SettingsPayload } from '~bindings/SettingsPayload';
 
 import { Duration } from '../../utils/duration';
 import { invoke } from '../../utils/tauri-events';
