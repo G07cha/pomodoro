@@ -12,7 +12,7 @@ const pendingCommands: Record<
   }[]
 > = {};
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: This is a test utility
 type MockIPCResponse = Promise<any>;
 
 export const setupIPCMock = () => {
@@ -51,7 +51,9 @@ export const emitEvent = (name: string, payload: unknown) => {
     return;
   }
 
-  listeners.forEach((listener) => listener({ payload }));
+  for (const listener of listeners) {
+    listener({ payload });
+  }
 };
 
 export const mockCommand = (command: string, response?: unknown) =>

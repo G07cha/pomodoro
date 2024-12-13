@@ -1,10 +1,10 @@
+import { type InvokeArgs, invoke as tauriInvoke } from '@tauri-apps/api/core';
 import {
+  type EventCallback,
+  type EventName,
+  type UnlistenFn,
   listen as tauriListen,
-  EventName,
-  EventCallback,
-  UnlistenFn,
 } from '@tauri-apps/api/event';
-import { invoke as tauriInvoke, InvokeArgs } from '@tauri-apps/api/core';
 
 import { createLogger } from './logging';
 

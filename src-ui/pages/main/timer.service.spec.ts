@@ -1,14 +1,14 @@
-import { afterEach, describe, test, expect, vi, beforeEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { TimerMode } from '~bindings/TimerMode';
-import { TimerStatePayload } from '~bindings/TimerStatePayload';
+import type { TimerMode } from '~bindings/TimerMode';
+import type { TimerStatePayload } from '~bindings/TimerStatePayload';
 
 import { Duration } from '../../utils/duration';
 import {
-  setupIPCMock,
   clearMocks,
   emitEvent,
   mockCommand,
+  setupIPCMock,
 } from '../../utils/test-ipc';
 
 import { TimerService } from './timer.service';

@@ -1,14 +1,14 @@
-import { TimerMode } from '~bindings/TimerMode';
-import { TimerStatePayload } from '~bindings/TimerStatePayload';
+import type { TimerMode } from '~bindings/TimerMode';
+import type { TimerStatePayload } from '~bindings/TimerStatePayload';
 
 import { Duration } from '../../utils/duration';
-import { listen, invoke } from '../../utils/tauri-events';
+import { invoke, listen } from '../../utils/tauri-events';
 
 export class TimerService {
   private _mode: TimerMode = 'Work';
   private _cycle = 0;
   private _duration: Duration = new Duration(0);
-  private _isRunning: boolean = false;
+  private _isRunning = false;
 
   constructor() {
     invoke<TimerStatePayload>('get_timer_state').then(

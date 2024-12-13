@@ -1,14 +1,14 @@
 import { message } from '@tauri-apps/plugin-dialog';
 
-import * as theme from '../../utils/theme';
-import * as time from '../../utils/time';
 import {
   disableAnimationsWhenInactive,
   disableContextMenu,
 } from '../../utils/dom';
+import * as theme from '../../utils/theme';
+import * as time from '../../utils/time';
 
-import { TimerUIController, UIState } from './timer.view';
 import { TimerService } from './timer.service';
+import { TimerUIController, UIState } from './timer.view';
 
 theme.followSystemTheme();
 disableAnimationsWhenInactive();

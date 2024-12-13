@@ -1,12 +1,12 @@
-import { message } from '@tauri-apps/plugin-dialog';
 import { getCurrentWebview } from '@tauri-apps/api/webview';
+import { message } from '@tauri-apps/plugin-dialog';
 
-import * as theme from '../../utils/theme';
-import { Duration } from '../../utils/duration';
 import { disableContextMenu } from '../../utils/dom';
+import { Duration } from '../../utils/duration';
+import * as theme from '../../utils/theme';
 
+import { type Settings, SettingsService } from './settings.service';
 import { SettingsUIController } from './settings.view';
-import { Settings, SettingsService } from './settings.service';
 
 const webview = getCurrentWebview();
 

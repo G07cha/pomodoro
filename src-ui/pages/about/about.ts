@@ -1,7 +1,7 @@
 import { getVersion } from '@tauri-apps/api/app';
 
-import * as theme from '../../utils/theme';
 import { disableContextMenu, getElementByIdOrThrow } from '../../utils/dom';
+import * as theme from '../../utils/theme';
 
 theme.followSystemTheme();
 disableContextMenu();
