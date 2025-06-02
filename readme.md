@@ -8,7 +8,7 @@ Time management tool for Windows and macOS inspired by [Pomodoro Technique](http
 
 ## Installing
 
-To install the application you can grab the installer for your platform from [the latest release](github.com/G07cha/pomodoro/releases/latest/), in case of macOS you need to open the app for the first time with Cmd + right mouse button as I don't feel like spending money on a license from Apple to notarize a free application. Alternatively you can also build the release yourself by following the guide below.
+To install the application you can grab the installer for your platform from [the latest release](https://github.com/G07cha/pomodoro/releases/latest/), in case of macOS you need to open the app for the first time with Cmd + right mouse button as I don't feel like spending money on a license from Apple to notarize a free application. Alternatively you can also build the release yourself by following the guide below.
 
 ## Local development
 
