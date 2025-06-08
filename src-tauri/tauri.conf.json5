@@ -38,7 +38,7 @@
         "depends": []
       }
     },
-    "createUpdaterArtifacts": "v1Compatible"
+    "createUpdaterArtifacts": true
   },
   "productName": "Pomodoro",
   "mainBinaryName": "Pomodoro",
