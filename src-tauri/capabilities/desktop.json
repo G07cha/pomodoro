@@ -5,12 +5,34 @@
     "windows",
     "linux"
   ],
+  "windows": [
+    "main",
+    "settings",
+    "about"
+  ],
   "permissions": [
+    "core:default",
+    {
+      "identifier": "fs:scope",
+      "allow": [
+        "$RESOURCE/*"
+      ]
+    },
+    "core:window:allow-close",
+    "core:window:allow-destroy",
+    "dialog:default",
+    "dialog:allow-message",
     "updater:default",
     "fs:default",
-    "dialog:default",
-    "shell:default",
     "autostart:default",
-    "global-shortcut:default"
+    "global-shortcut:default",
+    {
+      "identifier": "opener:allow-open-url",
+      "allow": [
+        {
+          "url": "https://github.com/G07cha/pomodoro"
+        }
+      ]
+    }
   ]
 }
