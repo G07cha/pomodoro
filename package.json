@@ -33,7 +33,7 @@
     "@typescript-eslint/eslint-plugin": "^8.12.2",
     "@typescript-eslint/parser": "^8.12.2",
     "globals": "^15.11.0",
-    "happy-dom": "^15.10.2",
+    "happy-dom": "^20.0.2",
     "less": "^4.2.0",
     "postcss-less": "^6.0.0",
     "stylelint": "^16.10.0",
